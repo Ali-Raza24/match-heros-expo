@@ -1,0 +1,1 @@
+export const sendPushNotification: (expoPushToken: string, title: string, body: string, data?: { [key: string]: unknown }) => Promise<void>; 

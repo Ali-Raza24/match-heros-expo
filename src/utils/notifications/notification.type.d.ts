@@ -1,0 +1,1 @@
+export const gameInvitationMessage: (invitorName: string) => string;

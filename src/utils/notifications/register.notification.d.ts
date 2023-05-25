@@ -1,0 +1,1 @@
+export const registerForPushNotificationAsync: () => Promise<string | undefined>;
