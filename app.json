@@ -27,6 +27,14 @@
       ],
       "package": "com.raza_ali81.matchhero"
     },
+    "plugins": [
+      [
+        "@stripe/stripe-react-native",
+        {
+          "enableGooglePay": true
+        }
+      ]
+    ],
     "web": {
       "favicon": "./assets/favicon.png"
     },

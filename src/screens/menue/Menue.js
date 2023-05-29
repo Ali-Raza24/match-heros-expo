@@ -10,7 +10,10 @@ import {
 import SvgImage from "../../../assets/signIn.svg";
 import EditProfile from "../../../assets/editProfile.svg";
 import { logOutUser } from "../../redux/actions";
+import { useSelector } from "react-redux";
 function Menue(props) {
+  const user = useSelector((state) => state.user);
+  // console.log("user data is:#@#@#@", user.name);
   return (
     <>
       <SvgImage
@@ -26,7 +29,8 @@ function Menue(props) {
       <ScrollView contentInsetAdjustmentBehavior="automatic" style={{}}>
         <SafeAreaView style={{ flex: 1 }}>
           <View style={{ width: "80%", alignSelf: "center" }}>
-            <View
+            <TouchableOpacity
+              onPress={() => props.navigation.navigate("Profile")}
               style={{
                 flex: 0.3,
                 width: "100%",
@@ -57,7 +61,7 @@ function Menue(props) {
                     textAlign: "center",
                   }}
                 >
-                  James
+                  {user?.name}
                 </Text>
                 <Text
                   style={{
@@ -68,10 +72,10 @@ function Menue(props) {
                     textAlign: "center",
                   }}
                 >
-                  Jamesjimmy@gmail.com
+                  {user?.email}
                 </Text>
               </View>
-            </View>
+            </TouchableOpacity>
             <TouchableOpacity
               onPress={() => props.navigation.navigate("Token")}
               style={{
@@ -120,6 +124,7 @@ function Menue(props) {
               />
             </TouchableOpacity>
             <TouchableOpacity
+              onPress={() => props.navigation.navigate("Availability")}
               style={{
                 height: 45,
                 width: "100%",

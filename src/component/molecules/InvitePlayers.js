@@ -33,7 +33,7 @@ export default function InvitePlayers(props) {
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState(0);
   const currentUser = useSelector((store) => store.user);
-
+  const [invitePlayersList, setInvitePlayersList] = useState([]);
   useEffect(() => {
     getAllPlayers();
   }, []);
@@ -124,33 +124,50 @@ export default function InvitePlayers(props) {
           renderItem={({ item, index }) => {
             return (
               <>
-                <View key={item?.id} style={styles.teammateContainer}>
+                <TouchableOpacity
+                  onPress={() => {
+                    if (invitePlayersList.includes(item?.id)) {
+                      let newInvitesPlayer = invitePlayersList.filter(
+                        (data) => data != item?.id
+                      );
+                      setInvitePlayersList(newInvitesPlayer);
+                    } else {
+                      setInvitePlayersList([...invitePlayersList, item?.id]);
+                    }
+                  }}
+                  key={item?.id}
+                  style={styles.teammateContainer}
+                >
                   <Image
                     style={styles.avatarStyle}
                     source={require("../../../assets/image/default_avatar.jpg")}
                   />
                   <Text style={styles.teammateNameStyle}>{item.name}</Text>
-                  <TouchableOpacity
+                  <View
                     // onPress={() => props.navigation.navigate("ViewPlayer", { id: item.id })}
                     style={styles.teammateViewProfileButton}
                   >
                     <Text style={styles.teammateViewProfileText}></Text>
-                    <TouchableOpacity style={{ marginLeft: 8 }}>
+                    <View style={{ marginLeft: 8 }}>
                       <Image
-                        source={require("../../../assets/emptyBox.png")}
+                        source={
+                          invitePlayersList.includes(item?.id)
+                            ? require("../../../assets/checkedGreen.png")
+                            : require("../../../assets/emptyBox.png")
+                        }
                         style={{ width: 21, height: 21, resizeMode: "contain" }}
                       />
-                    </TouchableOpacity>
-                  </TouchableOpacity>
-                </View>
+                    </View>
+                  </View>
+                </TouchableOpacity>
                 <View style={styles.itemSeprator} />
               </>
             );
           }}
           keyExtractor={(item, index) => index}
-          // ListFooterComponent={renderFooter}
+          ListFooterComponent={renderFooter}
           // ListEmptyComponent={renderEmptyList}
-          // onEndReached={handleLoadMore}
+          onEndReached={handleLoadMore}
           showsVerticallScrollIndicator={false}
           onEndReachedThreshold={0.5}
           // onRefresh={onRefresh}

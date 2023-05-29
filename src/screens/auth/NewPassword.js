@@ -7,7 +7,7 @@ import {
   Text,
   ScrollView,
   StatusBar,
-  Dimensions
+  Dimensions,
 } from "react-native";
 import TextInputField from "../../component/molecules/TextInputField";
 import { Button } from "react-native-elements";
@@ -34,7 +34,14 @@ function NewPassword(props) {
             marginRight: 6,
           }}
         />
-        <Text style={{ lineHeight: 19, fontSize: 16, fontWeight: "bold",color:'#ffffff' }}>
+        <Text
+          style={{
+            lineHeight: 19,
+            fontSize: 16,
+            fontWeight: "bold",
+            color: "#ffffff",
+          }}
+        >
           Back
         </Text>
         {/* </View> */}
@@ -43,7 +50,7 @@ function NewPassword(props) {
   };
   return (
     <>
-    <SvgImage
+      <SvgImage
         style={{
           position: "absolute",
           top: 0,
@@ -52,44 +59,74 @@ function NewPassword(props) {
           bottom: 0,
         }}
       />
-    
-        <ScrollView  contentInsetAdjustmentBehavior="automatic" >
-            <SafeAreaView style={{flex:1,height:Dimensions.get("window").height}}>
-  <StatusBar backgroundColor="#1E2646" barStyle= {'light-content'}/>
-      <View
-        style={{
-          flex: 0.12,
-          justifyContent: "flex-end",
-          width: "80%",
-          alignSelf: "center",
-        }}
-      >
-        {renderHeader()}
-      </View>
-      <View
-        style={{
-          flex: 0.49,
-          justifyContent: "flex-end",
-          width: "80%",
-          alignSelf: "center",
-        }}
-      >
-        <Text style={{ fontSize: 35, lineHeight: 45, fontWeight: "bold",color:'#ffffff' }}>
-          New
-        </Text>
-        <Text style={{ fontSize: 35, lineHeight: 45, fontWeight: "bold",color:'#ffffff' }}>
-          Password
-        </Text>
-        <View style={{ marginTop: 20 }}>
-          <TextInputField placeHolder={"Enter New Password"} placeHolderColor={"#ffffff"} inputFieldBackColor= {"#1E2646"} inputColor='#ffffff' borderBottomColor={'#1E2646'}/>
-          <TextInputField placeHolder={"Confirm Password"} placeHolderColor={"#ffffff"} inputFieldBackColor= {"#1E2646"} inputColor='#ffffff' borderBottomColor={'#1E2646'}/>
-          <GreenLinearGradientButton title={"SUBMIT"} onSelect={() => console.log("event")} height={45}
-          color={["#0B8140", "#0A5129"]}
-          />
-          
-        </View>
-      </View>
-      {/* <View style={{ position: "absolute", bottom: 50, left: 0, right: 0 }}>
+
+      <ScrollView contentInsetAdjustmentBehavior="automatic">
+        <SafeAreaView
+          style={{ flex: 1, height: Dimensions.get("window").height }}
+        >
+          <StatusBar backgroundColor="#1E2646" barStyle={"light-content"} />
+          <View
+            style={{
+              flex: 0.12,
+              justifyContent: "flex-end",
+              width: "80%",
+              alignSelf: "center",
+            }}
+          >
+            {renderHeader()}
+          </View>
+          <View
+            style={{
+              flex: 0.49,
+              justifyContent: "flex-end",
+              width: "80%",
+              alignSelf: "center",
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 35,
+                lineHeight: 45,
+                fontWeight: "bold",
+                color: "#ffffff",
+              }}
+            >
+              New
+            </Text>
+            <Text
+              style={{
+                fontSize: 35,
+                lineHeight: 45,
+                fontWeight: "bold",
+                color: "#ffffff",
+              }}
+            >
+              Password
+            </Text>
+            <View style={{ marginTop: 20 }}>
+              <TextInputField
+                placeHolder={"Enter New Password"}
+                placeHolderColor={"#ffffff"}
+                inputFieldBackColor={"#1E2646"}
+                inputColor="#ffffff"
+                borderBottomColor={"#1E2646"}
+              />
+              <TextInputField
+                placeHolder={"Confirm Password"}
+                placeHolderColor={"#ffffff"}
+                inputFieldBackColor={"#1E2646"}
+                inputColor="#ffffff"
+                borderBottomColor={"#1E2646"}
+              />
+              <GreenLinearGradientButton
+                title={"SUBMIT"}
+                onSelect={() => console.log("event")}
+                height={45}
+                color={["#0B8140", "#0A5129"]}
+              />
+            </View>
+          </View>
+          {/* <View style={{ position: "absolute", bottom: 50, left: 0, right: 0 }}>
         <TouchableOpacity
           activeOpacity={0.6}
           style={{
@@ -116,8 +153,8 @@ function NewPassword(props) {
           />
         </TouchableOpacity>
       </View> */}
-    </SafeAreaView>
-    </ScrollView>
+        </SafeAreaView>
+      </ScrollView>
     </>
   );
 }

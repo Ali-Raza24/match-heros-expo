@@ -8,7 +8,6 @@ function TextInputField({
   inputFieldBackColor,
   inputColor,
   borderBottomColor,
-  ref,
   onSubmitEditing,
   value,
   onChangeText,
@@ -24,7 +23,6 @@ function TextInputField({
         {placeHolder}
       </Text>
       <TextInput
-        ref={ref}
         secureTextEntry={secureEntry}
         onSubmitEditing={onSubmitEditing}
         returnKeyType="next"

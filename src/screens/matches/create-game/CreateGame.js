@@ -137,6 +137,7 @@ const CreateMatch = ({ navigation, ...props }) => {
   });
 
   const onSubmit = (values) => {
+    console.log("match submission start#@#@#@");
     let data = {};
     if (isLastStep) {
       data = { ...values };
@@ -150,10 +151,11 @@ const CreateMatch = ({ navigation, ...props }) => {
         .then((response) => {
           console.log("Game Created");
           console.log(response.data);
-          toast.show("Game has been created Successfully!", {
-            type: "success",
-            placement: "top",
-          });
+          // toast.show("Game has been created Successfully!");
+          // toast.show("Game has been created Successfully!", {
+          //   type: "success",
+          //   placement: "top",
+          // });
           // Send Push Notifications
           values.player_ids.forEach(async (playerId) => {
             const response = await playerService.getPlayerDeviceToken(playerId);
@@ -179,16 +181,21 @@ const CreateMatch = ({ navigation, ...props }) => {
           return;
         })
         .catch((err) => {
-          const error = err.response?.data;
-          if ("message" in error) {
-            if (error.message.length > 50) {
+          const error = err?.response?.data;
+          if (error) {
+            if (error?.message?.length > 50) {
               toast.show("Something went wrong. Please try again.", {
                 placement: "top",
               });
               return;
             }
-            toast.show(error.message, {
+            toast.show(error?.message, {
               type: "danger",
+            });
+            return;
+          } else {
+            toast.show("Something went wrong. Please try again.", {
+              placement: "top",
             });
             return;
           }
@@ -358,6 +365,7 @@ const CreateMatch = ({ navigation, ...props }) => {
             players={values.player_ids}
             addPlayer={addPlayer}
             handleSubmit={handleSubmit}
+            onSubmit={onSubmit}
             loading={loading}
           />
         ),
@@ -405,7 +413,7 @@ const CreateMatch = ({ navigation, ...props }) => {
             confirmText="Confirm"
             onCancelPressed={() => {
               handleSubmit();
-              // setShowHowManyWeeks(false)
+              setShowHowManyWeeks(false);
             }}
             onConfirmPressed={() => {
               setLoading(true);

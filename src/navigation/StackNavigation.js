@@ -58,7 +58,9 @@ function MyStack() {
   }
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={user ? "Dashboard" : "Onboarding"}>
+      <Stack.Navigator
+        initialRouteName={isAuthenticated ? "Dashboard" : "Onboarding"}
+      >
         <Stack.Screen
           name="Onboarding"
           component={Onboarding}
@@ -93,7 +95,7 @@ function MyStack() {
           name="Profile"
           component={Profile}
           options={{
-            headerLeft: () => null,
+            // headerLeft: () => null,
             headerTitleAlign: "center",
             headerStyle: { backgroundColor: "#11172D" },
             headerTitleStyle: { color: "#ffffff" },

@@ -11,24 +11,51 @@ import {
 import SvgImage from "../../../assets/signIn.svg";
 import GreenLinearGradientButton from "../../component/molecules/GreenLinearGradientButton";
 function Availability(props) {
-  const [availabilityArray, setAvailabilityArray] = useState({
-    Monday: [{ id: 1, startTime: "", endTime: "" }],
-    Tuesday: [{ id: 1, startTime: "", endTime: "" }],
-    Wednesday: [{ id: 1, startTime: "", endTime: "" }],
-    Thursday: [{ id: 1, startTime: "", endTime: "" }],
-    Friday: [{ id: 1, startTime: "", endTime: "" }],
-    Saturday: [{ id: 1, startTime: "", endTime: "" }],
-    Sunday: [{ id: 1, startTime: "", endTime: "" }],
-  });
-  const days = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ];
+  const [availabilityArray, setAvailabilityArray] = useState([
+    {
+      day: "Friday",
+      endTime: "",
+      id: 1,
+      startTime: "",
+    },
+    {
+      day: "Monday",
+      endTime: "",
+      id: 2,
+      startTime: "",
+    },
+    {
+      day: "Saturday",
+      endTime: "",
+      id: 3,
+      startTime: "",
+    },
+    {
+      day: "Sunday",
+      endTime: "",
+      id: 4,
+      startTime: "",
+    },
+    {
+      day: "Thursday",
+      endTime: "",
+      id: 5,
+      startTime: "",
+    },
+    {
+      day: "Tuesday",
+      endTime: "",
+      id: 6,
+      startTime: "",
+    },
+    {
+      day: "Wednesday",
+      endTime: "",
+      id: 7,
+      startTime: "",
+    },
+  ]);
+  const [checkedDaysList, setCheckedDaysList] = useState([]);
   console.log("availability array is :#@#@#@#@", availabilityArray);
   return (
     <>
@@ -61,8 +88,8 @@ function Availability(props) {
             >
               Please enter your availability
             </Text>
-            {Object.keys(availabilityArray).map((keyName, i) => (
-              <View key={i}>
+            {availabilityArray.map((data, i) => (
+              <View key={data?.id}>
                 <View
                   style={{
                     display: "flex",
@@ -72,7 +99,17 @@ function Availability(props) {
                     justifyContent: "space-between",
                   }}
                 >
-                  <View
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (checkedDaysList.includes(data.day)) {
+                        const newDaysList = checkedDaysList.filter(
+                          (day) => day != data.day
+                        );
+                        setCheckedDaysList(newDaysList);
+                      } else {
+                        setCheckedDaysList([...checkedDaysList, data.day]);
+                      }
+                    }}
                     style={{
                       display: "flex",
                       flexDirection: "row",
@@ -80,7 +117,11 @@ function Availability(props) {
                     }}
                   >
                     <Image
-                      source={require("../../../assets/checkedGreen.png")}
+                      source={
+                        checkedDaysList.includes(data.day)
+                          ? require("../../../assets/checkedGreen.png")
+                          : require("../../../assets/emptyBox.png")
+                      }
                       style={{ resizeMode: "contain", height: 26, width: 26 }}
                     />
                     <Text
@@ -93,39 +134,21 @@ function Availability(props) {
                         marginLeft: 12,
                       }}
                     >
-                      {keyName}
+                      {data?.day}
                     </Text>
-                  </View>
-                  {/* <TouchableOpacity 
-            onPress={() => {
-           setAvailabilityArray((prevState) => {
-            const team = [...prevState[keyName],{id:4,startTime:""}];
-            const newObj = {};
-          const keysObj =  Object.keys(availabilityArray)
-          keysObj.map((x) => {
-            if(x == keyName){ 
-            newObj[x] = team
-            }else{
-              newObj[x] = availabilityArray[x]
-            }
-          })
-            return newObj ;
-          });
-            }}
-            activeOpacity={0.6} style={{height:56,width:56,marginLeft:16}}>
-            <Image source={require("../../../assets/plusGreen.png")} style={{resizeMode:'contain',height:56,width:56}}/>
-            </TouchableOpacity> */}
+                  </TouchableOpacity>
                 </View>
-                {availabilityArray[keyName].map((data, index) => (
-                  <View style={{ display: "flex" }} key={index}>
-                    <View
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                      }}
-                    >
+                {/* {availabilityArray[keyName].map((data, index) => ( */}
+                <View style={{ display: "flex" }}>
+                  <View
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    {checkedDaysList.includes(data.day) && (
                       <View>
                         <View
                           style={{
@@ -190,25 +213,15 @@ function Availability(props) {
                           />
                         </View>
                       </View>
-                      {index != 0 && (
-                        <TouchableOpacity
-                          style={{
-                            height: 10,
-                            width: 30,
-                            backgroundColor: "red",
-                            marginRight: 13,
-                            borderRadius: 4,
-                          }}
-                        ></TouchableOpacity>
-                      )}
-                    </View>
+                    )}
                   </View>
-                ))}
+                </View>
               </View>
             ))}
             <GreenLinearGradientButton
               title={"NEXT"}
-              onSelect={() => props.navigation.navigate("MainProfile")}
+              // onSelect={() => props.navigation.navigate("MainProfile")}
+              onSelect={() => props.navigation.goBack()}
               height={45}
               color={["#0B8140", "#0A5129"]}
             />

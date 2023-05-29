@@ -83,7 +83,7 @@ class Match extends Component {
   getMyGames = () => {
     this.GameService.getUserGames(this.props.user.id)
       .then((games) => {
-        // console.log(games)
+        console.log("user match is:#@#@#@", games);
         this.setState({
           myGames: games.data,
           myGamesRefreshing: false,

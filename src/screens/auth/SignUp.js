@@ -167,9 +167,9 @@ export default class SignUp extends Component {
                       inputFieldBackColor={"#1E2646"}
                       inputColor="#ffffff"
                       borderBottomColor={"#1E2646"}
-                      ref={(input) => {
-                        this.nameInput = input;
-                      }}
+                      // ref={(input) => {
+                      //   this.nameInput = input;
+                      // }}
                       onSubmitEditing={() => {
                         // this.emailTextInput.focus();
                       }}
@@ -184,9 +184,9 @@ export default class SignUp extends Component {
                       inputFieldBackColor={"#1E2646"}
                       inputColor="#ffffff"
                       borderBottomColor={"#1E2646"}
-                      ref={(input) => {
-                        this.emailTextInput = input;
-                      }}
+                      // ref={(input) => {
+                      //   this.emailTextInput = input;
+                      // }}
                       onSubmitEditing={() => {
                         // this.passwordTextInput.focus();
                       }}
@@ -206,9 +206,9 @@ export default class SignUp extends Component {
                         inputFieldBackColor={"#1E2646"}
                         inputColor="#ffffff"
                         borderBottomColor={"#1E2646"}
-                        ref={(input) => {
-                          this.passwordTextInput = input;
-                        }}
+                        // ref={(input) => {
+                        //   this.passwordTextInput = input;
+                        // }}
                         secureEntry={this.state.passHidden}
                         onSubmitEditing={() => {
                           // this.forgotPasswordTextInput.focus();
@@ -247,9 +247,9 @@ export default class SignUp extends Component {
                         inputFieldBackColor={"#1E2646"}
                         inputColor="#ffffff"
                         borderBottomColor={"#1E2646"}
-                        ref={(input) => {
-                          this.forgotPasswordTextInput = input;
-                        }}
+                        // ref={(input) => {
+                        //   this.forgotPasswordTextInput = input;
+                        // }}
                         secureEntry={this.state.repeatPassHidden}
                         onSubmitEditing={() => console.log("first")}
                         value={this.state.confirmPassword}

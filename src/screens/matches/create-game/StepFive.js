@@ -78,13 +78,15 @@ export default function StepFive(props) {
               inputColor="#ffffff"
               borderBottomColor={"#ffffff"}
               borderBottomWidth={1.7}
-              ref={inputRef}
+              // ref={inputRef}
               profile={true}
               onSubmitEditing={() => {
                 // this.passwordTextInput.focus();
               }}
               value={props.values.game_fee}
-              onChangeText={props.handleChange("game_fee")}
+              onChangeText={(text) =>
+                props.setValues({ ...props.values, game_fee: String(text) })
+              }
             />
             <ErrorText
               message={"game_fee" in props.errors && props.errors.game_fee}

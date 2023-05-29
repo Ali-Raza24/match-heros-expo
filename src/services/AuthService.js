@@ -110,10 +110,16 @@ export default class AuthService extends ApiService {
   }
 
   async update(data) {
-    console.log("data in AuthServices API call#@#@#", data);
     let formData = this.makeFormData(data);
+    console.log(
+      "data in AuthServices API call#@#@#",
+      data,
+      data.avatarObject.assets[0].uri,
+      data.avatarObject.assets[0].type,
+      data.avatarObject.fileName
+    );
     return axios
-      .post(this.baseUrl + "profile", formData)
+      .post(`https://match-heroes.shehbazahmed.com/api/` + "profile", formData)
       .then((res) => res.data)
       .then((user) => {
         this.updateSingletonUser(user);
@@ -131,17 +137,15 @@ export default class AuthService extends ApiService {
     formData.append("email", data.email);
     if (data?.avatarObject) {
       formData.append("avatar_image", {
-        uri: data.avatarObject.uri,
+        uri: data.avatarObject.assets[0].uri,
         name: data.avatarObject.fileName,
-        type: data.avatarObject.type,
+        type: data.avatarObject.assets[0].type,
       });
     }
-    // if (data.coverObject) {
-    //   formData.append("cover_image", { uri: data.coverObject.uri, name: data.coverObject.fileName, type: data.coverObject.type });
-    // }
-    formData.append("cover", data?.cover || null);
-    formData.append("dob", "12-12-2022");
-    formData.append("city_id", data?.city_id || "LHR");
+    formData.append("city_id", data?.city_id);
+    formData.append("county_id", data?.county_id);
+    formData.append("minOponentAge", data?.minimumAge);
+    formData.append("maxOponentAge", data?.maximumAge);
     formData.append("_method", "PATCH");
     return formData;
   }

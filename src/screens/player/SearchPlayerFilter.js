@@ -82,7 +82,7 @@ const PlayerSearchScreen = (props) => {
               inputColor="#ffffff"
               borderBottomColor={"#636C92"}
               profile={true}
-              ref={inputRefs}
+              // ref={inputRefs}
               onSubmitEditing={() => console.log("first")}
               value={state.player}
               onChangeText={(text) =>
@@ -96,7 +96,7 @@ const PlayerSearchScreen = (props) => {
               inputColor="#ffffff"
               borderBottomColor={"#636C92"}
               profile={true}
-              ref={inputRefs}
+              // ref={inputRefs}
               onSubmitEditing={() => console.log("first")}
               value={state.player}
               onChangeText={(text) =>

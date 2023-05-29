@@ -174,6 +174,9 @@ class PublicProfile extends Component {
   };
 
   render() {
+    const routes = this.props.navigation.getState()?.routes;
+    const prevRoute = routes[routes?.length - 2];
+    console.log("prevRoutes is:#@#@#@# Heros", prevRoute?.name);
     console.log("country and city is:", this.state.county, this.state.city);
     return (
       <>
@@ -322,15 +325,17 @@ class PublicProfile extends Component {
                   loading={false}
                   color={["#1E2646", "#1E2646"]}
                 />
-                <GreenLinearGradientButton
-                  title={"Add as Teammate".toUpperCase()}
-                  onSelect={() => this.handleAddTeammate(this.state.id)}
-                  // onSelect={() => props.navigation.navigate("InviteHero")}
-                  // onSelect={() => this.props.navigation.navigate("Profile")}
-                  height={45}
-                  loading={false}
-                  color={["#0B8140", "#0A5129"]}
-                />
+                {prevRoute?.name == "Heros" && (
+                  <GreenLinearGradientButton
+                    title={"Add as Teammate".toUpperCase()}
+                    onSelect={() => this.handleAddTeammate(this.state.id)}
+                    // onSelect={() => props.navigation.navigate("InviteHero")}
+                    // onSelect={() => this.props.navigation.navigate("Profile")}
+                    height={45}
+                    loading={false}
+                    color={["#0B8140", "#0A5129"]}
+                  />
+                )}
                 <TouchableOpacity
                   activeOpacity={0.6}
                   style={{ marginTop: 16 }}

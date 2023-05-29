@@ -18,19 +18,22 @@ import countiesList from "../../component/_shared/CountiesList";
 import DropDownPicker from "react-native-dropdown-picker";
 import PhotoUpload from "../../component/_shared/PhotoUpload";
 import AuthService from "../../services/AuthService";
+import { useSelector } from "react-redux";
 function Profile(props) {
   const authService = new AuthService();
+  const user = useSelector((state) => state.user);
   const [toggleDropDown, setToggleDropDown] = useState(false);
   const [openCountryList, setOpenCountryList] = useState(false);
-  const [county_id, setCountryName] = useState("");
+  const [county_id, setCountryName] = useState(user?.location?.county?.name);
   const [countriesList, setCountriesList] = useState(countiesList);
   const [profileImage, setProfileImage] = useState("");
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [city_id, setCity_id] = useState("");
+  const [name, setName] = useState(user?.name);
+  const [email, setEmail] = useState(user?.email);
+  const [city_id, setCity_id] = useState(user?.location?.city?.name);
   const [errors, setValidationErrors] = useState({});
   const [minimumAge, setMinimumAge] = useState("");
   const [maximumAge, setMaximumAge] = useState("");
+  console.log("user county is:#@#@#", county_id, user?.location?.county);
   // const [county_id,setCountryName] = useState("")
   const [profileImageObj, setProfileImageObj] = useState(null);
   const [buttonLoading, setButtonLoading] = useState(false);
@@ -65,24 +68,27 @@ function Profile(props) {
     setMaximumAge(endVal);
   };
   const updateProfile = () => {
-    const dataTwo = {
-      name: "Awais",
-      email: "ranaawais3553@gmail.com",
-      dob: "2010-01-01",
-      city_id: "LHR",
-      city: "LHR",
-      county: "PAK",
-      avatar_image: "",
-    };
+    // const dataTwo = {
+    //   name: "Awais",
+    //   email: "ranaawais3553@gmail.com",
+    //   dob: "2010-01-01",
+    //   city_id: "LHR",
+    //   city: "LHR",
+    //   county: "PAK",
+    //   avatar_image: "",
+    // };
     const data = {
       name: name,
       email: email,
       county_id: county_id,
       city_id: city_id,
+      minimum_age: minimumAge,
+      maximum_age: maximumAge,
+      avatarObject: profileImageObj,
     };
     try {
       authService
-        ?.update(dataTwo)
+        ?.update(data)
         .then(
           (response) => {
             console.log("success response of create profile is:#@#@", response);
@@ -95,7 +101,7 @@ function Profile(props) {
               { cancelable: false }
             );
             // props.navigation.navigate("Availability");
-            // this.props.navigation.goBack();
+            this.props.navigation.goBack();
           },
           (error) => {
             console.log("Api call error", error?.response, error);
@@ -208,7 +214,11 @@ style = {{
               Prefer age for oponents
             </Text>
             <View style={{ marginVertical: 8 }}>
-              <TwoWaySlider callBack={callBack} />
+              <TwoWaySlider
+                minimumAge={minimumAge}
+                maximumAge={maximumAge}
+                callBack={callBack}
+              />
             </View>
             <View style={{}}>
               <Text
@@ -273,8 +283,8 @@ style = {{
               <GreenLinearGradientButton
                 title={"NEXT"}
                 onSelect={() => {
-                  // handleSubmit();
-                  props.navigation.navigate("Availability");
+                  handleSubmit();
+                  // props.navigation.navigate("Availability");
                 }}
                 height={45}
                 color={["#0B8140", "#0A5129"]}

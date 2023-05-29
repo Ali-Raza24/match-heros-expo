@@ -15,10 +15,191 @@ import SvgImage from "../../../assets/signIn.svg";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import TwoWaySlider from "../../component/molecules/TwoWaySlider";
 import { LinearGradient } from "expo-linear-gradient";
-function VenueDetail() {
+import DropDownPicker from "react-native-dropdown-picker";
+import { gameTypes } from "../../utils/game-types";
+import GameCard from "../matches/MatchCard";
+
+const singleGameData = {
+  avg_game_players: null,
+  block_booking_id: null,
+  booking: {
+    block_booking_id: null,
+    created_at: "2022-05-06 08:43:36",
+    description: null,
+    game_id: 3,
+    id: 4201,
+    interval: 1,
+    pitch: {
+      created_at: "2022-05-06 08:43:36",
+      deleted_at: null,
+      details: null,
+      id: 1963,
+      name: "Glebe north",
+      size: null,
+      updated_at: "2022-05-06 08:43:36",
+      venue: {
+        address: "Balbriggan",
+        allow_reservation: 1,
+        area: null,
+        city: {
+          county: {
+            id: 9,
+            name: "Dublin",
+          },
+          county_id: 9,
+          id: 565,
+          name: "Balbriggan",
+        },
+        city_id: 565,
+        coordinates: null,
+        county: null,
+        created_at: "2022-05-06 08:43:36",
+        custom_venue: 1,
+        deleted_at: null,
+        description: null,
+        email: null,
+        id: 1963,
+        image: null,
+        name: "Glebe north",
+        phone: null,
+        surface_type: null,
+        terms: null,
+        updated_at: "2022-05-06 08:43:36",
+        user_id: 36,
+        working_hours: null,
+      },
+      venue_id: 1963,
+    },
+    pitch_id: 1963,
+    starts_at: "2022-05-18 10:00:00",
+    status: 0,
+    updated_at: "2022-05-06 08:43:36",
+    user_id: 36,
+  },
+  booking_id: 4201,
+  conversation: {
+    conversationable_id: 3,
+    conversationable_type: "game",
+    created_at: "2022-05-06 08:43:36",
+    id: 3,
+    messages: [
+      {
+        body: "Excellent",
+        conversation_id: 3,
+        created_at: "2022-05-06 17:47:54",
+        id: 3,
+        updated_at: "2022-05-06 17:47:54",
+        user: {
+          avatar: null,
+          city: null,
+          id: 36,
+          name: "John Doe",
+        },
+        user_id: 36,
+      },
+      {
+        body: "Does thiswork",
+        conversation_id: 3,
+        created_at: "2022-05-06 08:46:07",
+        id: 1,
+        updated_at: "2022-05-06 08:46:07",
+        user: {
+          avatar: null,
+          city: null,
+          id: 36,
+          name: "John Doe",
+        },
+        user_id: 36,
+      },
+    ],
+    name: "Match Lobby",
+    updated_at: "2022-05-06 08:43:36",
+  },
+  created_at: "2022-05-06 08:43:36",
+  creator_id: 36,
+  fee_method: null,
+  fee_type: null,
+  game_fee: "",
+  game_repeat: 0,
+  game_size: "",
+  game_speed: null,
+  game_type: "",
+  id: 3,
+  match_duration: 0,
+  starts_at: "2022-05-18 10:00:00",
+  status: "accepted",
+  teams: [
+    {
+      city_id: null,
+      cover: "cover1.png",
+      email: null,
+      id: 11,
+      is_temp: 1,
+      logo: null,
+      name: "Home",
+      phone: null,
+      pivot: {
+        game_id: 3,
+        home: 1,
+        team_id: 11,
+      },
+      players: [
+        {
+          availability: null,
+          avatar: null,
+          city: null,
+          city_id: null,
+          cover: null,
+          created_at: "2022-04-28 09:49:52",
+          device_token:
+            "fs0QMblURTWdZ-a2nw21Z7:APA91bGCdgIs7Io95_K9PtPZdZfVgpC8d1ysezWm3yApSFiLg0KVW3w5yhrK-ohB1zHWpH7EOWlTBllH5HUZHSju8KQfiOWt_Q-J3F0rDWWsSwG0lkKQoWnKduxKEg4tKFEG5h2WWQ_v",
+          device_type: "android",
+          dob: null,
+          email: "johndoe@gmail.com",
+          email_verified_at: null,
+          id: 36,
+          name: "John Doe",
+          pivot: {
+            is_captain: 0,
+            team_id: 11,
+            user_id: 36,
+          },
+          role_id: 1,
+          tokens: 0,
+          updated_at: "2022-05-16 10:49:49",
+        },
+      ],
+      user_id: null,
+    },
+    {
+      city_id: null,
+      cover: "cover1.png",
+      email: null,
+      id: 12,
+      is_temp: 1,
+      logo: null,
+      name: "Away",
+      phone: null,
+      pivot: {
+        game_id: 3,
+        home: 0,
+        team_id: 12,
+      },
+      players: [],
+      user_id: null,
+    },
+  ],
+  tournament_id: null,
+  type_id: 1,
+  updated_at: "2022-05-06 08:43:36",
+  venue_id: null,
+};
+function VenueDetail(props) {
   const [date, setDate] = useState(new Date(1598051730000));
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
+  const [openGameType, setOpenGameType] = useState(false);
+  const [matchValue, setMatchValue] = useState();
   const [toggleDropDown, setToggleDropDown] = useState(false);
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate;
@@ -42,7 +223,7 @@ function VenueDetail() {
   const showTimepicker = () => {
     showMode("time");
   };
-
+  console.log("venue detail is:##@#@#@", singleGameData?.id);
   return (
     <>
       <SvgImage
@@ -195,13 +376,41 @@ function VenueDetail() {
               alignSelf: "center",
             }}
           >
-            <View style={{}}>
+            <View style={{ marginBottom: 12 }}>
               <Text
                 style={{ fontSize: 16, lineHeight: 19.36, color: "#ffffff" }}
               >
-                Select
+                Type of Match
               </Text>
-              <TouchableOpacity
+              <DropDownPicker
+                open={openGameType}
+                items={gameTypes}
+                setOpen={setOpenGameType}
+                value={matchValue}
+                setValue={setMatchValue}
+                style={{ borderColor: "#1E2646", backgroundColor: "#1E2646" }}
+                textStyle={{ color: "#ffffff" }}
+                containerStyle={[
+                  styles.dropdownPickerContainer,
+                  { borderRadius: 6 },
+                ]}
+                modalContentContainerStyle={{
+                  backgroundColor: "#1E2646",
+                  borderColor: "#1E2646",
+                  borderWidth: 1,
+                  marginVertical: 200,
+                  marginHorizontal: 20,
+                  borderRadius: 15,
+                }}
+                modalProps={{
+                  transparent: true,
+                  presentationStyle: "fullScreen", // for iOS, but raises a warning on android if not present
+                }}
+                placeholder="Select"
+                listMode="MODAL"
+                theme="DARK"
+              />
+              {/* <TouchableOpacity
                 activeOpacity={0.6}
                 onPress={() => setToggleDropDown((p) => !p)}
                 style={{
@@ -237,61 +446,29 @@ function VenueDetail() {
                     style={{ height: 14, width: 14 }}
                   />
                 </View>
-              </TouchableOpacity>
-              {toggleDropDown && (
-                <View
-                  style={{
-                    position: "absolute",
-                    width: "100%",
-                    backgroundColor: "#1E2646",
-                    height: Dimensions.get("window").height / 4,
-                    top: 75,
-                    zIndex: 999,
-                  }}
-                >
-                  <TouchableOpacity
-                    onPress={() => setToggleDropDown((p) => !p)}
-                    style={{
-                      height: 45,
-                      width: "100%",
-                      backgroundColor: "#2C365C",
-                    }}
-                  >
-                    <View
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        height: 45,
-                        marginHorizontal: 13,
-                        flexDirection: "row",
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontSize: 14,
-                          textAlign: "center",
-                          lineHeight: 19.36,
-                          color: "#ffffff",
-                        }}
-                      >
-                        Ireland
-                      </Text>
-                      <Image
-                        source={require("../../../assets/whiteTick.png")}
-                        resizeMode="contain"
-                        style={{ height: 14, width: 14 }}
-                      />
-                    </View>
-                  </TouchableOpacity>
-                </View>
-              )}
+              </TouchableOpacity> */}
             </View>
           </View>
           <View
-            style={{ display: "flex", zIndex: toggleDropDown ? -999 : 999 }}
+            style={{
+              display: "flex",
+              zIndex: toggleDropDown ? -999 : 999,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
           >
-            {["Monday", "Tuesday"].map((data, index) => (
+            <GameCard
+              navigation={props.navigation}
+              cardColor="transparent"
+              dataContainerColor="transparent"
+              locationContainerColor="transparent"
+              showShedow={false}
+              textColor="white"
+              addLine={true}
+              key={singleGameData?.id}
+              game={singleGameData}
+            />
+            {/* {["Monday", "Tuesday"].map((data, index) => (
               <LinearGradient
                 style={{
                   display: "flex",
@@ -380,7 +557,7 @@ function VenueDetail() {
                   </LinearGradient>
                 </View>
               </LinearGradient>
-            ))}
+            ))} */}
           </View>
         </ScrollView>
       </SafeAreaView>

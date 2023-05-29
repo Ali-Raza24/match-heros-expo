@@ -251,8 +251,9 @@ export default function StepSeven(props) {
           isLastStep={props.isLastStep}
           onPress={() => {
             console.log("first");
-            //   props.setShowHowManyWeeks(true);
-            props.navigation.goBack();
+            props?.onSubmit(props.values);
+            // props.setShowHowManyWeeks(true);
+            // props.navigation.goBack();
           }}
         />
       )}

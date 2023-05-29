@@ -129,7 +129,15 @@ const Teams = (props) => {
           renderItem={({ item, index }) => {
             return (
               <>
-                <View style={styles.teammateContainer}>
+                <TouchableOpacity
+                  key={item?.id}
+                  onPress={() =>
+                    props.navigation.navigate("PublicProfile", {
+                      id: item.id,
+                    })
+                  }
+                  style={styles.teammateContainer}
+                >
                   <Image
                     style={styles.avatarStyle}
                     source={require("../../../assets/image/default_avatar.jpg")}
@@ -147,7 +155,7 @@ const Teams = (props) => {
                       color="#0B8140"
                     />
                   </TouchableOpacity>
-                </View>
+                </TouchableOpacity>
                 <View style={styles.itemSeprator} />
               </>
             );
@@ -194,9 +202,7 @@ const Teams = (props) => {
         <View style={{ flex: 1, paddingVertical: 10 }}>
           {selected === 0 && displayTeammates()}
         </View>
-        <FloatingButton
-          onPress={() => props.navigation.navigate("InvitePlayersScreen")}
-        />
+        <FloatingButton onPress={() => props.navigation.navigate("Heros")} />
         {/* {showInvitePlayers && (
           <InvitePlayers wizardRef={() => setShowInvitePlayers(false)} />
         )} */}

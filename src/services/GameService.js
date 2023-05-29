@@ -35,7 +35,7 @@ export default class GameService extends ApiService {
   }
 
   getUserGames(user_id) {
-    return axios.get(this.baseUrl + `users/${user_id}/games`);
+    return axios.get(this.baseUrl + `users/${user_id}/latest-games`);
   }
 
   async getGame(gameId) {

@@ -99,7 +99,7 @@ export default class GameCard extends Component {
   render() {
     console.log(
       "Game data in Match Card Component is:#@#@#@#",
-      this.props.game?.game_type,
+      this.props.game,
       this.props.game?.booking?.pitch?.venue?.name
     );
     return (

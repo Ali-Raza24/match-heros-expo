@@ -147,7 +147,7 @@ export default function Steptwo(props) {
             inputColor="#ffffff"
             borderBottomColor={"#ffffff"}
             borderBottomWidth={1.7}
-            ref={inputRef}
+            // ref={inputRef}
             profile={true}
             onSubmitEditing={() => {
               // this.passwordTextInput.focus();
@@ -169,7 +169,7 @@ export default function Steptwo(props) {
             inputColor="#ffffff"
             borderBottomColor={"#ffffff"}
             borderBottomWidth={1.7}
-            ref={inputRef}
+            // ref={inputRef}
             profile={true}
             onSubmitEditing={() => {
               // this.passwordTextInput.focus();
