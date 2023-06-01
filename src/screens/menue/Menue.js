@@ -11,9 +11,11 @@ import SvgImage from "../../../assets/signIn.svg";
 import EditProfile from "../../../assets/editProfile.svg";
 import { logOutUser } from "../../redux/actions";
 import { useSelector } from "react-redux";
+import AuthService from "../../services/AuthService";
 function Menue(props) {
   const user = useSelector((state) => state.user);
-  // console.log("user data is:#@#@#@", user.name);
+  const authServces = new AuthService();
+  console.log("user data is:#@#@#@", user);
   return (
     <>
       <SvgImage

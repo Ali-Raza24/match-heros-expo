@@ -70,7 +70,7 @@ class PublicProfile extends Component {
     return this.PlayerService.getPlayer(this.state.playerId)
       .then((response) => {
         this.setUser(response);
-        console.log("view players response from api", response.name);
+        console.log("view players response from api", response);
       })
       .catch((error) => {
         console.log("Api call error", error.response);
@@ -176,7 +176,11 @@ class PublicProfile extends Component {
   render() {
     const routes = this.props.navigation.getState()?.routes;
     const prevRoute = routes[routes?.length - 2];
-    console.log("prevRoutes is:#@#@#@# Heros", prevRoute?.name);
+    console.log(
+      "prevRoutes is:#@#@#@# Heros",
+      prevRoute?.name,
+      this?.state?.name
+    );
     console.log("country and city is:", this.state.county, this.state.city);
     return (
       <>
@@ -218,7 +222,7 @@ class PublicProfile extends Component {
                     marginTop: 10,
                   }}
                 >
-                  {this.state.name || "James Haley"}
+                  {this.state?.name}
                 </Text>
               </View>
               <View
@@ -279,7 +283,7 @@ class PublicProfile extends Component {
                       }}
                       colors={["#0B8140", "#0A5129"]}
                     >
-                      <Text style={{ color: "#ffffff" }}>{data.value}</Text>
+                      <Text style={{ color: "#ffffff" }}>{data?.value}</Text>
                     </LinearGradient>
                     {/* <Image source={require('../../../assets/leftArrow.png')} style={{resizeMode:'contain',height:14,width:14}}/> */}
                   </TouchableOpacity>
@@ -294,7 +298,7 @@ class PublicProfile extends Component {
                     }}
                   >
                     Location:{" "}
-                    {this.state.county + " " + this.state.city || "Location"}
+                    {this.state?.county + " " + this.state?.city || "Location"}
                   </Text>
                   <Text
                     style={{
@@ -305,7 +309,7 @@ class PublicProfile extends Component {
                     }}
                   >
                     Prefered Location:{" "}
-                    {this.state.county + " " + this.state.city || "Location"}
+                    {this.state?.county + " " + this.state?.city || "Location"}
                   </Text>
                 </View>
               </View>

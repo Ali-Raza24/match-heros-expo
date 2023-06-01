@@ -35,15 +35,29 @@ import TextInputField from "../../component/molecules/TextInputField";
 import TwoWaySlider from "../../component/molecules/TwoWaySlider";
 import GreenLinearGradientButton from "../../component/molecules/GreenLinearGradientButton";
 import BlueLinearGradientButton from "../../component/molecules/BlueLinearGradientButton";
+import { useRoute } from "@react-navigation/native";
 const PlayerSearchScreen = (props) => {
+  const route = useRoute();
+
   const [countyOpen, setCountyOpen] = useState(false);
   const [ageOfBracketOpen, setAgeBracketOpen] = useState(false);
   const [dayOfGameOpen, setDayOfGameOpen] = useState(false);
   const [timeOfGameOpen, setTimeOfGameOpen] = useState(false);
+  const [minimumAge, setMinimumAge] = useState(0);
+  const [maximumAge, setMaximumAge] = useState(75);
+  const [playerName, setPlayerName] = useState("");
+  const [matchLocation, setMatchLocation] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [days, setDays] = useState([]);
   const inputRefs = useRef(null);
   const state = useSelector((store) => store.playerSearch);
   const dispatch = useDispatch();
-
+  // route.params.onSearch();
+  const callBack = (min, max) => {
+    setMinimumAge(Number(min));
+    setMaximumAge(Number(max));
+  };
   return (
     <>
       <SvgImage
@@ -84,10 +98,8 @@ const PlayerSearchScreen = (props) => {
               profile={true}
               // ref={inputRefs}
               onSubmitEditing={() => console.log("first")}
-              value={state.player}
-              onChangeText={(text) =>
-                dispatch(playerSearchSetUsernameAction(text))
-              }
+              value={playerName}
+              onChangeText={(text) => setPlayerName(text)}
             />
             <TextInputField
               placeHolder={"Match Location"}
@@ -98,16 +110,14 @@ const PlayerSearchScreen = (props) => {
               profile={true}
               // ref={inputRefs}
               onSubmitEditing={() => console.log("first")}
-              value={state.player}
-              onChangeText={(text) =>
-                dispatch(playerSearchSetUsernameAction(text))
-              }
+              value={matchLocation}
+              onChangeText={(text) => setMatchLocation(text)}
             />
             <Text style={{ fontSize: 16, lineHeight: 19.36, color: "#ffffff" }}>
               Prefer age for oponents
             </Text>
             <View style={{ height: 69 }}>
-              <TwoWaySlider callBack={() => console.log("first")} />
+              <TwoWaySlider callBack={callBack} />
             </View>
             <View>
               <Text
@@ -131,7 +141,14 @@ const PlayerSearchScreen = (props) => {
                   "Saturday",
                   "Sunday",
                 ].map((day, index) => (
-                  <View
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (days.includes(day)) {
+                        setDays(days.filter((d) => d != day));
+                      } else {
+                        setDays([...days, day]);
+                      }
+                    }}
                     key={index}
                     style={{
                       display: "flex",
@@ -142,7 +159,11 @@ const PlayerSearchScreen = (props) => {
                     }}
                   >
                     <Image
-                      source={require("../../../assets/checkedGreen.png")}
+                      source={
+                        days.includes(day)
+                          ? require("../../../assets/checkedGreen.png")
+                          : require("../../../assets/emptyBox.png")
+                      }
                       style={{ resizeMode: "contain", height: 26, width: 26 }}
                     />
                     <Text
@@ -157,7 +178,7 @@ const PlayerSearchScreen = (props) => {
                     >
                       {day}
                     </Text>
-                  </View>
+                  </TouchableOpacity>
                 ))}
               </View>
             </View>
@@ -210,6 +231,7 @@ const PlayerSearchScreen = (props) => {
                     color: "#ffffff",
                     textAlign: "center",
                   }}
+                  onChangeText={(text) => setStartTime(text)}
                 />
                 <TextInput
                   style={{
@@ -222,6 +244,7 @@ const PlayerSearchScreen = (props) => {
                     color: "#ffffff",
                     textAlign: "center",
                   }}
+                  onChangeText={(text) => setEndTime(text)}
                 />
                 {/* <TouchableOpacity activeOpacity={0.6} style={{height:56,width:56,marginLeft:16}}>
             <Image source={require("../../../assets/plusGreen.png")} style={{resizeMode:'contain',height:56,width:56}}/>
@@ -232,12 +255,14 @@ const PlayerSearchScreen = (props) => {
               <GreenLinearGradientButton
                 title={"Search"}
                 // onSelect={this.handleSubmit}
-                onSelect={() => props.navigation.navigate("Players")}
+                onSelect={() => props.navigation.goBack()}
                 height={45}
                 loading={false}
-                disabled={Object.values(state).every(
-                  (value) => value === null || value === ""
-                )}
+                disabled={
+                  playerName.length == 0 ||
+                  matchLocation.length == 0 ||
+                  days?.length == 0
+                }
                 color={["#0B8140", "#0A5129"]}
               />
               <BlueLinearGradientButton

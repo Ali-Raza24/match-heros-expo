@@ -1,146 +1,420 @@
-import React, { useState } from "react";
+import React, { Component } from "react";
 import {
   View,
-  Text,
-  TouchableOpacity,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  Dimensions,
-  Image,
+  RefreshControl,
   StyleSheet,
+  ScrollView,
+  Alert,
+  ActivityIndicator,
+  Image,
+  StatusBar,
+  SafeAreaView,
+  TouchableOpacity,
+  Text,
+  Dimensions,
 } from "react-native";
 import SvgImage from "../../../assets/signIn.svg";
 import { LinearGradient } from "expo-linear-gradient";
 import GreenLinearGradientButton from "../../component/molecules/GreenLinearGradientButton";
 import ReportMatchModal from "../../component/molecules/ReportMatchModal";
-function MatchDetail(props) {
-  const [isModal, setIsModal] = useState(false);
-  return (
-    <>
-      <SvgImage
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 16,
-          bottom: 0,
-        }}
-      />
-      <SafeAreaView
-        style={{ flex: 1, height: Dimensions.get("window").height }}
-      >
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={{}}
-          contentContainerStyle={{ flex: 1 }}
+
+import GameService from "../../services/GameService";
+import AuthService from "../../services/AuthService";
+import ImageService from "../../services/ImageService";
+import { connect } from "react-redux";
+import { ViewGameButton } from "../matches/view-game/button";
+
+class MatchDetail extends Component {
+  constructor() {
+    super();
+    this.GameService = new GameService();
+    this.AuthService = new AuthService();
+    this.ImageService = new ImageService();
+    this.state = {
+      game: null,
+      loggedUserId: "",
+      isModal: false,
+      stats: [],
+      loading: false,
+      refreshing: false,
+      statLoading: false,
+      gameId: null,
+    };
+  }
+
+  componentDidMount() {
+    this.getGame();
+  }
+  setModal = (val) => {
+    this.setState({ isModal: val });
+  };
+  getGame() {
+    this.setState({ refreshing: true, statLoading: true, loading: true });
+    const gameId = this.props.route.params.id;
+    console.log("game id in getGame Function", gameId);
+    this.GameService.getGame(gameId)
+      .then((game) =>
+        this.setState({ game: game, loading: false, refreshing: false })
+      )
+      .catch((error) =>
+        console.log(
+          "error in getGame in view-game coomponent index file",
+          error
+        )
+      );
+    this.AuthService.getUserId()
+      .then((id) => this.setState({ loggedUserId: id }))
+      .catch((error) =>
+        console.log("error in getGame function view-game Component", error)
+      );
+  }
+
+  onRefresh = () => {
+    this.getGame();
+  };
+
+  sendGameJoinRequest() {
+    this.GameService.playerJoinToGame(this.state.game.id)
+      .then(() => {
+        Alert.alert(
+          "Join request successfully sent.",
+          "",
+          [{ text: "OK", onPress: () => console.log("Cancel Pressed") }],
+          { cancelable: false }
+        );
+      })
+      .catch((err) => {
+        console.log("error in view-game index component", err);
+      });
+  }
+
+  isCreator() {
+    return this.props.user.id === this.state.game.creator_id;
+  }
+
+  canSendJoinRequest() {
+    return !this.isLoggedUserInGame() && this.state.game.type_id === 1;
+  }
+
+  isLoggedUserInGame = () => {
+    const homeTeam =
+      this.state.game.teams.length > 0
+        ? [...this.state.game.teams[0].players]
+        : [];
+    const awayTeam =
+      this.state.game.teams.length > 1
+        ? [...this.state.game.teams[1].players]
+        : [];
+    if (homeTeam && homeTeam.length > 0) {
+      return homeTeam.find((player) => player.id === this.state.loggedUserId);
+    }
+    if (awayTeam && awayTeam.length > 0) {
+      return awayTeam.find((player) => player.id === this.state.loggedUserId);
+    }
+    return false;
+  };
+
+  handleGameDelete = async (gameId) => {
+    try {
+      const response = await this.GameService.deleteGame(gameId);
+      console.log("Game Cancel Response", response.data);
+
+      this.props.navigation.navigate("Matches");
+      Alert.alert("Game", "Game has been deleted Successfully!");
+      // send push notifications -> response.data.deviceTokens
+      return;
+    } catch (error) {
+      console.log("Game Cancel Error ", error?.response?.data);
+    }
+  };
+  acceptGameJoinReq() {
+    this.GameService.confirmedInvitedPlayers(this.state.game.id)
+      .then((res) => {
+        Alert.alert(
+          "Game Join Successfully!",
+          "",
+          [{ text: "OK", onPress: () => console.log("Cancel Pressed") }],
+          { cancelable: false }
+        );
+        console.log("response of join Game is:#@#@#@", res);
+      })
+      .catch((err) => {
+        console.log("error in view-game index component", err);
+      });
+  }
+  renderButtons = (gameId) => {
+    if (this.isCreator()) {
+      return (
+        <>
+          <ViewGameButton
+            onPress={() =>
+              this.props.navigation.navigate("EditGame", { gameId: gameId })
+            }
+            textColor={"#2A3D68"}
+            buttonBackground={"white"}
+            text={"Edit Match"}
+          />
+
+          <ViewGameButton
+            onPress={() =>
+              this.props.navigation.navigate("GameLobby", {
+                gameId: gameId,
+                gameCreator: this.state.game.creator_id,
+              })
+            }
+            textColor={"white"}
+            buttonBackground={"#56C1FF"}
+            text={"Enter Match Lobby"}
+          />
+
+          <ViewGameButton
+            onPress={() =>
+              this.props.navigation.navigate("Chat", { gameId: gameId })
+            }
+            textColor={"white"}
+            buttonBackground={"#00AB8E"}
+            text={"Match Chat"}
+          />
+
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "flex-end",
+              marginBottom: 50,
+              width: "80%",
+            }}
+          >
+            <ViewGameButton
+              onPress={() => this.handleGameDelete(gameId)}
+              customStyles={{ width: "100%" }}
+              textColor={"#EE220C"}
+              buttonBackground={"#000"}
+              text={"Delete Game"}
+            />
+          </View>
+        </>
+      );
+    } else if (this.isLoggedUserInGame()) {
+      return (
+        <View style={{ marginTop: 60, width: "80%" }}>
+          <ViewGameButton
+            onPress={() =>
+              this.props.navigation.navigate("GameLobby", {
+                gameId: gameId,
+                gameCreator: this.state.game.creator_id,
+              })
+            }
+            customStyles={{ width: "100%" }}
+            textColor={"white"}
+            buttonBackground={"#56C1FF"}
+            text={"Enter Match Lobby"}
+          />
+
+          <ViewGameButton
+            onPress={() =>
+              this.props.navigation.navigate("Chat", { gameId: gameId })
+            }
+            customStyles={{ width: "100%" }}
+            textColor={"white"}
+            buttonBackground={"#00AB8E"}
+            text={"Match Chat"}
+          />
+        </View>
+      );
+    } else {
+      return (
+        <View style={{ marginTop: 60, width: "80%" }}>
+          <ViewGameButton
+            onPress={() =>
+              this.props.navigation.navigate("GameLobby", {
+                gameId: gameId,
+                gameCreator: this.state.game.creator_id,
+              })
+            }
+            customStyles={{ width: "100%" }}
+            textColor={"white"}
+            buttonBackground={"#56C1FF"}
+            text={"Enter Match Lobby"}
+          />
+        </View>
+      );
+    }
+  };
+  render() {
+    const showSpinner = this.state.loading;
+    console.log(
+      "View GAME Screen",
+      this.state?.game?.id,
+      this.state?.game?.numOfReqPlayers,
+      this.state?.game?.starts_at.split(" ")[1],
+      this.state?.game?.game_fee
+    );
+    if (showSpinner) {
+      return (
+        <View
+          style={{
+            flex: 1,
+            width: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
         >
-          <StatusBar backgroundColor="#5E89E2" />
-          <View style={{ display: "flex", width: "80%", alignSelf: "center" }}>
-            <LinearGradient
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                height: 196,
-                marginBottom: 5,
-                marginTop: 5,
-                borderRadius: 10,
-                width: "100%",
-                alignSelf: "center",
-              }}
-              start={{ x: 0, y: 1 }}
-              end={{ x: 1, y: 1 }}
-              //   key={index}
-              colors={[
-                "#BF9941",
-                "#E3B343",
-                "#E1AC38",
-                "#EBCA69",
-                "#F2DD86",
-                "#F7EA9C",
-                "#FAF2A8",
-                "#FBF5AD",
-                "#F9F0A6",
-                "#F5E592",
-                "#EFD373",
-                "#E9C155",
-              ].reverse()}
+          <SvgImage
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 16,
+              bottom: 0,
+            }}
+          />
+          <View
+            style={{
+              flex: 1,
+              width: "100%",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <ActivityIndicator
+              size={50}
+              color="#2b87ff"
+              animating={this.state.loading}
+            />
+          </View>
+        </View>
+      );
+    }
+    if (!this.state.game && !this.state.loading) {
+      console.log("view game in if block", this.state.game, this.state.loading);
+      return (
+        <View
+          style={{ justifyContent: "center", alignItems: "center", flex: 1 }}
+        >
+          <Text>Game Not Found</Text>
+        </View>
+      );
+    }
+    return (
+      <>
+        <SvgImage
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 16,
+            bottom: 0,
+          }}
+        />
+        <SafeAreaView
+          style={{ flex: 1, height: Dimensions.get("window").height }}
+        >
+          <ScrollView
+            contentInsetAdjustmentBehavior="automatic"
+            style={{}}
+            contentContainerStyle={{ flex: 1 }}
+          >
+            <StatusBar backgroundColor="#5E89E2" />
+            <View
+              style={{ display: "flex", width: "80%", alignSelf: "center" }}
             >
-              <View style={{ ...styles.cardStyle }}>
-                <View style={{}}>
-                  <View
-                    style={{
-                      display: "flex",
-                      borderBottomWidth: 0.8,
-                      borderBottomColor: "#A7852A",
-                      paddingBottom: 22,
-                      flexDirection: "row",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <View style={{ height: 77, width: 77, zIndex: 999 }}>
-                      <Image
-                        source={require("../../../assets/cardLogo.png")}
-                        style={{ height: 77, width: 77, resizeMode: "contain" }}
-                      />
-                    </View>
-                    <View style={{ display: "flex" }}>
-                      {/* <Text style={styles.dateTextStyle}>Social Game</Text> */}
-                      <Text
-                        style={{
-                          ...styles.dateTextStyle,
-                          fontSize: 20,
-                          lineHeight: 24,
-                        }}
-                      >
-                        Glebe North Astro
-                      </Text>
-                      {/* <View style={{marginTop:6}}>
-              <Text style={{...styles.dateTextStyle,color:'#111931'}}>2 Players Required</Text>  
-              </View> */}
-                    </View>
-                  </View>
-                  <View style={{ paddingTop: 12, paddingHorizontal: 12 }}>
-                    <Text
-                      style={{
-                        fontSize: 24,
-                        lineHeight: 28,
-                        fontWeight: "bold",
-                      }}
-                    >
-                      Social Match
-                    </Text>
+              <LinearGradient
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  height: 196,
+                  marginBottom: 5,
+                  marginTop: 5,
+                  borderRadius: 10,
+                  width: "100%",
+                  alignSelf: "center",
+                }}
+                start={{ x: 0, y: 1 }}
+                end={{ x: 1, y: 1 }}
+                //   key={index}
+                colors={[
+                  "#BF9941",
+                  "#E3B343",
+                  "#E1AC38",
+                  "#EBCA69",
+                  "#F2DD86",
+                  "#F7EA9C",
+                  "#FAF2A8",
+                  "#FBF5AD",
+                  "#F9F0A6",
+                  "#F5E592",
+                  "#EFD373",
+                  "#E9C155",
+                ].reverse()}
+              >
+                <View style={{ ...styles.cardStyle }}>
+                  <View style={{}}>
                     <View
                       style={{
                         display: "flex",
+                        borderBottomWidth: 0.8,
+                        borderBottomColor: "#A7852A",
+                        paddingBottom: 22,
                         flexDirection: "row",
+                        justifyContent: "center",
                         alignItems: "center",
-                        justifyContent: "space-between",
                       }}
                     >
+                      <View style={{ height: 77, width: 77, zIndex: 999 }}>
+                        <Image
+                          source={require("../../../assets/cardLogo.png")}
+                          style={{
+                            height: 77,
+                            width: 77,
+                            resizeMode: "contain",
+                          }}
+                        />
+                      </View>
+                      <View style={{ display: "flex" }}>
+                        {/* <Text style={styles.dateTextStyle}>Social Game</Text> */}
+                        <Text
+                          style={{
+                            ...styles.dateTextStyle,
+                            fontSize: 20,
+                            lineHeight: 24,
+                          }}
+                        >
+                          Glebe North Astro
+                        </Text>
+                        {/* <View style={{marginTop:6}}>
+              <Text style={{...styles.dateTextStyle,color:'#111931'}}>2 Players Required</Text>  
+              </View> */}
+                      </View>
+                    </View>
+                    <View style={{ paddingTop: 12, paddingHorizontal: 12 }}>
                       <Text
                         style={{
-                          fontSize: 14,
-                          color: "#111931",
+                          fontSize: 24,
+                          lineHeight: 28,
                           fontWeight: "bold",
                         }}
                       >
-                        Wednesday | 10-07-2023
+                        Social Match
                       </Text>
-                      <LinearGradient
+                      <View
                         style={{
-                          height: 30,
-                          width: 81,
-                          borderRadius: 6,
-                          justifyContent: "center",
+                          display: "flex",
+                          flexDirection: "row",
                           alignItems: "center",
+                          justifyContent: "space-between",
                         }}
-                        start={{ x: 0, y: 1 }}
-                        end={{ x: 1, y: 1 }}
-                        colors={["#A37817", "#A37817"]}
                       >
-                        <TouchableOpacity
+                        <Text
+                          style={{
+                            fontSize: 14,
+                            color: "#111931",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          Wednesday |{" "}
+                          {this.state?.game?.starts_at?.split(" ")[0]}
+                        </Text>
+                        <LinearGradient
                           style={{
                             height: 30,
                             width: 81,
@@ -148,85 +422,129 @@ function MatchDetail(props) {
                             justifyContent: "center",
                             alignItems: "center",
                           }}
-                          onPress={() => setIsModal(true)}
+                          start={{ x: 0, y: 1 }}
+                          end={{ x: 1, y: 1 }}
+                          colors={["#A37817", "#A37817"]}
                         >
-                          <Text
+                          <TouchableOpacity
                             style={{
-                              fontSize: 14,
-                              fontWeight: "bold",
-                              color: "#ffffff",
+                              height: 30,
+                              width: 81,
+                              borderRadius: 6,
+                              justifyContent: "center",
+                              alignItems: "center",
                             }}
+                            onPress={() => this.setState({ isModal: true })}
                           >
-                            Report
-                          </Text>
-                        </TouchableOpacity>
-                      </LinearGradient>
+                            <Text
+                              style={{
+                                fontSize: 14,
+                                fontWeight: "bold",
+                                color: "#ffffff",
+                              }}
+                            >
+                              Report
+                            </Text>
+                          </TouchableOpacity>
+                        </LinearGradient>
+                      </View>
                     </View>
                   </View>
                 </View>
-              </View>
-            </LinearGradient>
-            <View style={{ display: "flex", marginTop: 30 }}>
-              <View
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
-                <Image
-                  source={require("../../../assets/dollarFive.png")}
-                  style={{ height: 83, width: 83, resizeMode: "contain" }}
-                />
-                <View style={{ marginLeft: 12 }}>
-                  <Text
+              </LinearGradient>
+              <View style={{ display: "flex", marginTop: 30 }}>
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <View
                     style={{
-                      fontSize: 18,
-                      lineHeight: 21,
-                      color: "#ffffff",
-                      textAlign: "left",
+                      width: 83,
+                      height: 83,
+                      borderRadius: 50,
+                      borderColor: "#E4B345",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      borderWidth: 2,
                     }}
                   >
-                    19:00 Kick Off
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 18,
-                      lineHeight: 21,
-                      fontWeight: "bold",
-                      color: "#ffffff",
-                      textAlign: "left",
-                    }}
-                  >
-                    4 Players Required
-                  </Text>
+                    <Text
+                      style={{
+                        color: "#fff",
+                        fontSize: 22,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      ${this.state?.game?.game_fee}
+                    </Text>
+                  </View>
+                  {/* <Image
+                    source={require("../../../assets/dollarFive.png")}
+                    style={{ height: 83, width: 83, resizeMode: "contain" }}
+                  /> */}
+                  <View style={{ marginLeft: 12 }}>
+                    <Text
+                      style={{
+                        fontSize: 18,
+                        lineHeight: 21,
+                        color: "#ffffff",
+                        textAlign: "left",
+                      }}
+                    >
+                      {this.state?.game?.starts_at?.split(" ")[1]} Kick Off
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 18,
+                        lineHeight: 21,
+                        fontWeight: "bold",
+                        color: "#ffffff",
+                        textAlign: "left",
+                      }}
+                    >
+                      {this.state?.game?.numOfReqPlayers} Players Required
+                    </Text>
+                  </View>
                 </View>
               </View>
+              <View style={{ display: "flex", marginTop: 30 }}>
+                <GreenLinearGradientButton
+                  title={"Join Match".toUpperCase()}
+                  onSelect={() => this.acceptGameJoinReq()}
+                  height={45}
+                  loading={false}
+                  color={["#0B8140", "#0A5129"]}
+                />
+                <GreenLinearGradientButton
+                  title={"View Match Organiser".toUpperCase()}
+                  onSelect={() =>
+                    this.props.navigation.navigate("GameLobby", {
+                      gameId: this.state?.game?.id,
+                      gameCreator: this.state?.game?.player_ids,
+                      game: this.state.game,
+                    })
+                  }
+                  height={45}
+                  loading={false}
+                  color={["#1F436E", "#4272B8"]}
+                />
+              </View>
+              {this.state.isModal && (
+                <ReportMatchModal
+                  isModal={this.state.isModal}
+                  setIsModal={this.setModal}
+                  gameId={this.state?.game?.id}
+                />
+              )}
             </View>
-            <View style={{ display: "flex", marginTop: 30 }}>
-              <GreenLinearGradientButton
-                title={"Join Match".toUpperCase()}
-                // onSelect={() => props.navigation.navigate("VenueDetail")}
-                height={45}
-                loading={false}
-                color={["#0B8140", "#0A5129"]}
-              />
-              <GreenLinearGradientButton
-                title={"View Match Organiser".toUpperCase()}
-                onSelect={() => props.navigation.navigate("MatchLobby")}
-                height={45}
-                loading={false}
-                color={["#1F436E", "#4272B8"]}
-              />
-            </View>
-            {isModal && (
-              <ReportMatchModal isModal={isModal} setIsModal={setIsModal} />
-            )}
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </>
-  );
+          </ScrollView>
+        </SafeAreaView>
+      </>
+    );
+  }
 }
 const styles = StyleSheet.create({
   cardStyle: {
@@ -323,4 +641,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MatchDetail;
+function mapStateToProps(state) {
+  return {
+    user: state.user,
+  };
+}
+
+export default connect(mapStateToProps, null)(MatchDetail);

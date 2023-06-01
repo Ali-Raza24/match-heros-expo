@@ -57,7 +57,9 @@ class Players extends Component {
       this.getPlayers
     );
   }
-
+  onPlayerSearch = (playersList) => {
+    this.setState({ players: playersList });
+  };
   componentWillUnmount() {
     this.navigationSubscription();
   }
@@ -270,7 +272,9 @@ class Players extends Component {
               {/* Navigate to Player Search Filter Screen */}
               <TouchableOpacity
                 onPress={() =>
-                  this.props.navigation.navigate("SearchPlayerFilter")
+                  this.props.navigation.navigate("SearchPlayerFilter", {
+                    onSearch: this.onPlayerSearch,
+                  })
                 }
               >
                 <View

@@ -16,7 +16,7 @@ import GreenLinearGradientButton from "../../component/molecules/GreenLinearGrad
 import { Avatar } from "react-native-elements";
 import FloatingButton from "../../component/_shared/FloatingButton";
 
-function MatchLobby() {
+function MatchLobby(props) {
   return (
     <>
       <SvgImage

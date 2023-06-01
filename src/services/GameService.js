@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import ApiService from "./ApiService";
 import axios from "axios";
 
@@ -43,7 +44,20 @@ export default class GameService extends ApiService {
       .get(this.baseUrl + `games/${gameId}`)
       .then((response) => response.data);
   }
-
+  async gameReport(data) {
+    const token = await AsyncStorage.getItem("userToken");
+    return axios
+      .post(`https://match-heros.isoft-tech.com/api/report-game`, data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        console.log("response report game api is:#@#@#", res?.data);
+        return res?.data;
+      });
+  }
   async getGameInvitedPlayers(gameId) {
     const response = await axios.get(
       this.baseUrl + `games/${gameId}/invited-players`

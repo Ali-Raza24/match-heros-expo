@@ -1,6 +1,6 @@
 import ApiService from "./ApiService";
 import axios from "axios";
-import { AsyncStorage } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Subject } from "rxjs";
 // import { LoginManager } from "react-native-fbsdk";
 // import moment from "moment";
@@ -45,7 +45,9 @@ export default class AuthService extends ApiService {
   }
 
   async isLogged() {
-    return !!(await this._getToken());
+    const token = await AsyncStorage.getItem("userToken");
+    console.log("token is is loggedIn function#@#@", token);
+    return token?.length > 5;
   }
 
   async clearStorage() {
@@ -111,23 +113,40 @@ export default class AuthService extends ApiService {
 
   async update(data) {
     let formData = this.makeFormData(data);
-    console.log(
-      "data in AuthServices API call#@#@#",
-      data,
-      data.avatarObject.assets[0].uri,
-      data.avatarObject.assets[0].type,
-      data.avatarObject.fileName
-    );
+
+    const token = await AsyncStorage.getItem("userToken");
     return axios
-      .post(`https://match-heroes.shehbazahmed.com/api/` + "profile", formData)
-      .then((res) => res.data)
-      .then((user) => {
-        this.updateSingletonUser(user);
-        // AuthService.discardUser();
-        return user;
+      .post(`https://match-heroes.shehbazahmed.com/api/profile`, formData, {
+        headers: {
+          "content-type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        this.updateSingletonUser(res?.data);
+        return res?.data;
+      });
+    // .then((user) => {
+
+    //   // AuthService.discardUser();
+    //   console.log("user in response is:#@#@#@#", user);
+    //   return user;
+    // });
+  }
+  async postAvailability(data) {
+    const token = await AsyncStorage.getItem("userToken");
+    return axios
+      .post(`https://match-heros.isoft-tech.com/api/avalibility`, data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        console.log("response availability api is:#@#@#", res?.data);
+        return res?.data;
       });
   }
-
   makeFormData(data) {
     const formData = new FormData();
     // let myDate = data.dob.split("/");
@@ -135,23 +154,23 @@ export default class AuthService extends ApiService {
     console.log("12-12-2022");
     formData.append("name", data.name);
     formData.append("email", data.email);
-    if (data?.avatarObject) {
-      formData.append("avatar_image", {
-        uri: data.avatarObject.assets[0].uri,
-        name: data.avatarObject.fileName,
-        type: data.avatarObject.assets[0].type,
-      });
-    }
-    formData.append("city_id", data?.city_id);
-    formData.append("county_id", data?.county_id);
-    formData.append("minOponentAge", data?.minimumAge);
-    formData.append("maxOponentAge", data?.maximumAge);
+    // if (data?.avatarObject) {
+    //   formData.append("avatar_image", {
+    //     uri: data.avatarObject.assets[0].uri,
+    //     name: data.avatarObject.fileName,
+    //     type: "image/jpeg",
+    //   });
+    // }
+    formData.append("city", data?.city_id);
+    formData.append("county", data?.county_id);
+    formData.append("minOponentAge", Number(data?.minimum_age));
+    formData.append("maxOponentAge", Number(data?.maximum_age));
     formData.append("_method", "PATCH");
     return formData;
   }
 
   updateSingletonUser(user) {
-    AuthService.authData.user = user;
+    AuthService.user = user;
     AuthService.user$.next(user);
   }
 

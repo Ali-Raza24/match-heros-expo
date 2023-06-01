@@ -8,6 +8,7 @@ import {
   Dimensions,
   SafeAreaView,
   ScrollView,
+  Alert,
 } from "react-native";
 import SvgImage from "../../../assets/signIn.svg";
 import EditProfile from "../../../assets/editProfile.svg";
@@ -97,11 +98,10 @@ function Profile(props) {
             Alert.alert(
               "You successfully edit profile.",
               "",
-              [{ text: "OK", onPress: () => console.log("Cancel Pressed") }],
+              [{ text: "OK", onPress: () => props.navigation.goBack() }],
               { cancelable: false }
             );
             // props.navigation.navigate("Availability");
-            this.props.navigation.goBack();
           },
           (error) => {
             console.log("Api call error", error?.response, error);

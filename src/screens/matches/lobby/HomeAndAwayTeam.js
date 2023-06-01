@@ -67,7 +67,7 @@ export const HomeAndAwayTeamList = ({
       console.log("getJoinRequestsInvitedPlayers(gameId)", creatorId);
       const invitedTeam = response.invitedTeam;
       const organizerResponse = await playerService.getPlayer(creatorId);
-      console.log("playerService.getPlayer(creatorId)");
+      console.log("playerService.getPlayer(creatorId)", organizerResponse);
       const gameOrganizer = {
         player_id: response.creatorId,
         player_name: organizerResponse.name,
@@ -245,7 +245,7 @@ export const HomeAndAwayTeamList = ({
   console.log("Home Players is:!...", hometeam, awayTeam);
   return (
     <View style={styles.container}>
-      {selectedIndex === 0 && <MatchLobbyPlayerCard data={hometeam} />}
+      {selectedIndex === 0 && <MatchLobbyPlayerCard data={creatorId} />}
     </View>
   );
 };

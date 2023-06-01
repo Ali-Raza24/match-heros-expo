@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   StatusBar,
   Alert,
-  AsyncStorage,
 } from "react-native";
 import { FormInput, Text } from "react-native-elements";
 import AuthService from "../../services/AuthService";
@@ -27,6 +26,7 @@ import GreenLinearGradientButton from "../../component/molecules/GreenLinearGrad
 import TextInputField from "../../component/molecules/TextInputField";
 import SvgImage from "../../../assets/signIn.svg";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 // import firebase from "react-native-firebase"
 
 class SignIn extends Component {
@@ -73,11 +73,23 @@ class SignIn extends Component {
       password: this.state.password,
     };
     try {
-      this.props.loginUser(user);
-      this.props.navigation.reset({
-        index: 0,
-        routes: [{ name: "Dashboard" }],
-      });
+      await this.props.loginUser(user);
+      const token = await AsyncStorage.getItem("userToken");
+      console.log("response is:#@#@#@#", token);
+      if (token) {
+        this.props.navigation.reset({
+          index: 0,
+          routes: [{ name: "Dashboard" }],
+        });
+      } else {
+        this.setState({ buttonLoading: false });
+        alert("Invalid User");
+      }
+      // this.props.navigation.reset({
+      //   index: 0,
+      //   routes: [{ name: "Dashboard" }],
+      // });
+
       // this.props.navigation.navigate("Profile")
     } catch (error) {
       this.setState({ buttonLoading: false });

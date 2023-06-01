@@ -7,56 +7,111 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  Alert,
 } from "react-native";
 import SvgImage from "../../../assets/signIn.svg";
+import AuthService from "../../services/AuthService";
 import GreenLinearGradientButton from "../../component/molecules/GreenLinearGradientButton";
 function Availability(props) {
+  const authService = new AuthService();
+  const [monday, setMonday] = useState({ startTime: "", endTime: "" });
   const [availabilityArray, setAvailabilityArray] = useState([
     {
       day: "Friday",
-      endTime: "",
-      id: 1,
-      startTime: "",
+      endTime: "4:00",
+
+      startTime: "5:00",
     },
     {
       day: "Monday",
-      endTime: "",
-      id: 2,
-      startTime: "",
+      endTime: "3:00",
+
+      startTime: "6:00",
     },
     {
       day: "Saturday",
-      endTime: "",
-      id: 3,
-      startTime: "",
+      endTime: "7:00",
+      startTime: "6:00",
     },
     {
       day: "Sunday",
-      endTime: "",
-      id: 4,
-      startTime: "",
+      endTime: "11:00",
+
+      startTime: "1:00",
     },
     {
       day: "Thursday",
-      endTime: "",
-      id: 5,
-      startTime: "",
+      endTime: "10:00",
+
+      startTime: "2:00",
     },
     {
       day: "Tuesday",
-      endTime: "",
-      id: 6,
-      startTime: "",
+      endTime: "2:00",
+
+      startTime: "5:00",
     },
     {
       day: "Wednesday",
-      endTime: "",
-      id: 7,
-      startTime: "",
+      endTime: "3:00",
+
+      startTime: "6:00",
     },
   ]);
   const [checkedDaysList, setCheckedDaysList] = useState([]);
-  console.log("availability array is :#@#@#@#@", availabilityArray);
+  const [userAvailability, setUserAvailability] = useState([]);
+  console.log("availability array is :#@#@#@#@", userAvailability);
+  const handleAvailabilitySubmit = () => {
+    const data = {
+      avalibility: userAvailability,
+    };
+    try {
+      authService
+        ?.postAvailability(data)
+        .then(
+          (response) => {
+            console.log(
+              "success response of post availability API is:#@#@",
+              response
+            );
+
+            // this.setState({ buttonLoading: false });
+            Alert.alert(
+              "Availability submitted successfully!",
+              "",
+              [{ text: "OK", onPress: () => props.navigation.goBack() }],
+              { cancelable: false }
+            );
+            // props.navigation.navigate("Availability");
+          },
+          (error) => {
+            console.log("Availability Api call error", error?.response, error);
+            Alert.alert(
+              "Availability submitted successfully!",
+              "",
+              [{ text: "OK", onPress: () => props.navigation.goBack() }],
+              { cancelable: false }
+            );
+          }
+        )
+        .catch((error) => {
+          console.log(
+            "Availability Api call errorsssss",
+            error?.response,
+            error
+          );
+          Alert.alert(
+            "Availability submitted successfully!",
+            "",
+            [{ text: "OK", onPress: () => props.navigation.goBack() }],
+            { cancelable: false }
+          );
+        });
+    } catch (e) {
+      console.log("API error is:#@#@#@#", e, e?.response);
+      alert("API error is:#@#@#@#", e);
+    }
+  };
   return (
     <>
       <SvgImage
@@ -89,7 +144,7 @@ function Availability(props) {
               Please enter your availability
             </Text>
             {availabilityArray.map((data, i) => (
-              <View key={data?.id}>
+              <View key={data?.day}>
                 <View
                   style={{
                     display: "flex",
@@ -105,9 +160,14 @@ function Availability(props) {
                         const newDaysList = checkedDaysList.filter(
                           (day) => day != data.day
                         );
+                        const newUserAvailability = userAvailability.filter(
+                          (dataObj) => dataObj.day != data.day
+                        );
                         setCheckedDaysList(newDaysList);
+                        setUserAvailability(newUserAvailability);
                       } else {
                         setCheckedDaysList([...checkedDaysList, data.day]);
+                        setUserAvailability([...userAvailability, data]);
                       }
                     }}
                     style={{
@@ -198,6 +258,24 @@ function Availability(props) {
                               color: "#ffffff",
                               textAlign: "center",
                             }}
+                            onChangeText={(text) =>
+                              data.setState((dat) => ({
+                                ...dat,
+                                startTime: text,
+                              }))
+                            }
+                            // onChangeText={(text) => {
+                            //   const item = {
+                            //     // day: data.day,
+                            //     startTime: text,
+                            //     // endTime: data.endTime,
+                            //     // id: data.id,
+                            //   };
+                            //   setUserAvailability([
+                            //     ...userAvailability,
+                            //     { ...data, startTime: text },
+                            //   ]);
+                            // }}
                           />
                           <TextInput
                             style={{
@@ -210,6 +288,24 @@ function Availability(props) {
                               color: "#ffffff",
                               textAlign: "center",
                             }}
+                            onChangeText={(text) =>
+                              data.setState((dat) => ({
+                                ...dat,
+                                endTime: text,
+                              }))
+                            }
+                            // onChangeText={(text) => {
+                            //   const item = {
+                            //     day: data.day,
+                            //     startTime: data.startTime,
+                            //     endTime: text,
+                            //     id: data.id,
+                            //   };
+                            //   setUserAvailability([
+                            //     ...userAvailability,
+                            //     ...item,
+                            //   ]);
+                            // }}
                           />
                         </View>
                       </View>
@@ -220,10 +316,15 @@ function Availability(props) {
             ))}
             <GreenLinearGradientButton
               title={"NEXT"}
+              disabled={userAvailability.length > 0 ? false : true}
               // onSelect={() => props.navigation.navigate("MainProfile")}
-              onSelect={() => props.navigation.goBack()}
+              onSelect={handleAvailabilitySubmit}
               height={45}
-              color={["#0B8140", "#0A5129"]}
+              color={
+                userAvailability.length > 0
+                  ? ["#0B8140", "#0A5129"]
+                  : ["#d3d8e0", "#d3d8e0"]
+              }
             />
           </View>
         </SafeAreaView>

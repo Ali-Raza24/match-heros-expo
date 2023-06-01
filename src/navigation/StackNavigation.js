@@ -48,6 +48,7 @@ const Stack = createStackNavigator();
 
 function MyStack() {
   const { isAuthenticated, loading } = useAuth();
+  console.log("isAuthenticated value is:#@#@#", isAuthenticated);
   const user = useSelector((state) => state.user);
   if (loading) {
     return (

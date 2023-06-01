@@ -29,6 +29,7 @@ export const GameLobbyScreen = () => {
   const navigation = useNavigation();
   const gameId = route.params.gameId;
   const gameCreator = route.params.gameCreator;
+  const gameObj = route.params.game;
   const [game, setGame, refGame] = useState(null);
   const [loading, setLoading] = useState();
   const [mounted, setMounted, refMounted] = useState(false);
@@ -109,7 +110,7 @@ export const GameLobbyScreen = () => {
                       textAlign: "center",
                     }}
                   >
-                    4 Heroes Required
+                    {gameObj?.numOfReqPlayers} Heroes Required
                   </Text>
                 </View>
 

@@ -133,7 +133,7 @@ export default class GameCard extends Component {
           style={{ ...this.styles.cardStyle }}
           disabled={this.props?.noPress}
           onPress={() =>
-            this.props.navigation.navigate("ViewGame", {
+            this.props.navigation.navigate("MatchDetail", {
               id: this.props.game.id,
               gameCreator: this.props.game.creator_id,
               canSee: this.isPlayerInGame(),
@@ -175,7 +175,7 @@ export default class GameCard extends Component {
                   <Text
                     style={{ ...this.styles.dateTextStyle, color: "#ffffff" }}
                   >
-                    2 Players Required
+                    {this.props?.game?.numOfReqPlayers} Players Required
                   </Text>
                 </LinearGradient>
                 {/* <Text style={this.styles.dateTextStyle}>2 Players Required</Text> */}
