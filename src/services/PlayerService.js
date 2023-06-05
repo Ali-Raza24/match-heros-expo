@@ -9,7 +9,10 @@ export default class PlayerService extends ApiService {
   getAllPlayers(params = null) {
     return axios.get(this.baseUrl + "players/", { params });
   }
-
+  async searchPlayers(data) {
+    console.log("data for search players", data);
+    return axios.post(this.baseUrl + `hero-search`, data);
+  }
   async getNearbyPlayers() {
     return axios.get(this.baseUrl + `players/nearby`);
   }
@@ -79,6 +82,6 @@ export default class PlayerService extends ApiService {
     );
   }
   async getAllTeammates() {
-    return axios.get(this.baseUrl + `all/team-player`);
+    return axios.get(this.baseUrl + `temp-players`);
   }
 }

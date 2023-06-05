@@ -36,6 +36,7 @@ export default class GameService extends ApiService {
   }
 
   getUserGames(user_id) {
+    console.log("user id is:#@#@", user_id);
     return axios.get(this.baseUrl + `users/${user_id}/latest-games`);
   }
 
@@ -134,7 +135,10 @@ export default class GameService extends ApiService {
       this.baseUrl + `games/${gameId}/confirmed-invited-players`
     );
   }
-
+  async searchGame(data) {
+    console.log("data for search players", data);
+    return axios.post(this.baseUrl + `game-search`, data);
+  }
   async gameOn(gameId) {
     return axios.post(this.baseUrl + `games/confirmGame/${gameId}`);
   }

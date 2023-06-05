@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { ListItem, Avatar } from "react-native-elements";
 import { FlatList } from "react-native";
 import ImageService from "../../services/ImageService";
+import Colors from "../../../assets/Colors";
 
 export default class PlayerList extends Component {
   constructor(props) {
@@ -49,21 +50,25 @@ export default class PlayerList extends Component {
             }}
             key={item.id}
             // title={item.name}
-            onPress={() => this.props.onPress({ id: item.id })}
+            onPress={() =>
+              this.props.navigation.navigate("PublicProfile", {
+                id: item.id,
+              })
+            }
           >
             <Avatar
               containerStyle={{
                 borderRadius: 30,
-                borderColor: Colors.blue,
-                borderWidth: 1,
+                // borderColor: Colors.blue,
+                // borderWidth: 1,
                 width: 60,
                 height: 60,
                 //  resizeMode: "contain",
               }}
               avatarStyle={{
                 borderRadius: 30,
-                borderColor: Colors.blue,
-                borderWidth: 1,
+                // borderColor: Colors.blue,
+                // borderWidth: 1,
                 width: 60,
                 height: 60,
                 resizeMode: "contain",

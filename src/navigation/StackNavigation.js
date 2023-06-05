@@ -44,10 +44,15 @@ import ViewPlayer from "../screens/player/ViewPlayer";
 import Chat from "../screens/chat/Chat";
 import { GameLobbyScreen } from "../screens/matches/lobby";
 import InvitePlayersScreen from "../screens/invitePlayers/InvitePlayersScreen";
+import SearchPlayersList from "../screens/player/SearchPlayersList";
+import SearchGameList from "../screens/matches/SearchGameList";
+import CancellationPolicy from "../screens/token/CancellationPolicy";
+import TacPage from "../../termsAndConditions/TACPage";
+import PrivacyPolicy from "../screens/privacypolicy/PrivacyPolicy";
 const Stack = createStackNavigator();
 
 function MyStack() {
-  const { isAuthenticated, loading } = useAuth();
+  const { loading, isAuthenticated } = useAuth();
   console.log("isAuthenticated value is:#@#@#", isAuthenticated);
   const user = useSelector((state) => state.user);
   if (loading) {
@@ -496,6 +501,66 @@ function MyStack() {
           component={InvitePlayersScreen}
           options={{
             headerTitle: "Invite Players",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#11172D" },
+            headerTitleStyle: { color: "#ffffff" },
+            headerTintColor: "#ffffff",
+            headerTintColor: "green",
+          }}
+        />
+        <Stack.Screen
+          name="SearchPlayersList"
+          component={SearchPlayersList}
+          options={{
+            headerTitle: "Hero List",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#11172D" },
+            headerTitleStyle: { color: "#ffffff" },
+            headerTintColor: "#ffffff",
+            headerTintColor: "green",
+          }}
+        />
+        <Stack.Screen
+          name="SearchGameList"
+          component={SearchGameList}
+          options={{
+            headerTitle: "Match List",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#11172D" },
+            headerTitleStyle: { color: "#ffffff" },
+            headerTintColor: "#ffffff",
+            headerTintColor: "green",
+          }}
+        />
+        <Stack.Screen
+          name="CancellationPolicy"
+          component={CancellationPolicy}
+          options={{
+            headerTitle: "Cancelation Policy",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#11172D" },
+            headerTitleStyle: { color: "#ffffff" },
+            headerTintColor: "#ffffff",
+            headerTintColor: "green",
+          }}
+        />
+        <Stack.Screen
+          name="TacPage"
+          component={TacPage}
+          options={{
+            headerTitle: "Term and Condition",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#11172D" },
+            headerTitleStyle: { color: "#ffffff" },
+            headerTintColor: "#ffffff",
+            headerTintColor: "green",
+          }}
+        />
+        <Stack.Screen
+          name="PrivacyPolicy"
+          component={PrivacyPolicy}
+          options={{
+            headerTitle: "Privacy Policy",
             headerTitleAlign: "center",
             headerStyle: { backgroundColor: "#11172D" },
             headerTitleStyle: { color: "#ffffff" },

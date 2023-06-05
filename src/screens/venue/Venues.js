@@ -44,6 +44,7 @@ export default class Venues extends Component {
       showFilter: false,
       nextLink: "",
       loading: true,
+      searchVenue: "",
     };
   }
 
@@ -67,6 +68,7 @@ export default class Venues extends Component {
   }
 
   onChange = (searchTearm) => {
+    this.setState({ searchVenue: searchTearm });
     let params = { venue: searchTearm };
     if (this.state.city_id != "") {
       params.city_id = this.state.city_id;
@@ -207,10 +209,11 @@ export default class Venues extends Component {
                 inputStyle={{
                   backgroundColor: "#ffffff",
                   paddingBottom: 0,
-                  color: "white",
+                  color: "#121212",
                 }}
                 lightTheme={true}
                 onChangeText={this.onChange}
+                value={this.state.searchVenue}
                 placeholder={"Search Venues"}
                 placeholderTextColor="#ADB1B2"
               />

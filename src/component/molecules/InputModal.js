@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import TextInputField from "./TextInputField";
 function InputModal(props) {
+  const [dob, setDob] = useState("");
   // const [modaVisible,setModalVisible] = useState(props.isModal)
   return (
     <View style={StyleSheet.centeredView}>
@@ -61,6 +62,9 @@ function InputModal(props) {
                 inputFieldBackColor={"#E3E6EA"}
                 inputColor="#11172D"
                 borderBottomColor={"#E3E6EA"}
+                keyboardType={"default"}
+                value={dob}
+                onChangeText={(text) => setDob(text)}
               />
             </View>
             <TouchableOpacity

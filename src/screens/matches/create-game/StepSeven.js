@@ -123,7 +123,8 @@ export default function StepSeven(props) {
               fontWeight: "bold",
               textAlign: "center",
             }}
-            placeholder="18"
+            keyboardType="number-pad"
+            placeholder="0"
             onChangeText={(val) =>
               props.setValues({ ...props.values, numOfReqPlayers: val })
             }
@@ -150,7 +151,9 @@ export default function StepSeven(props) {
               borderBottomWidth: 0.5,
             }}
             onPress={() => {
-              setPublicToggle((p) => !p);
+              !keepPrivate
+                ? setPublicToggle((p) => !p)
+                : (setPublicToggle(true), setKeepPrivate(false));
               props.setValues({
                 ...props.values,
                 makePublic: !publicToggle,
@@ -202,7 +205,9 @@ export default function StepSeven(props) {
               borderBottomWidth: 0.5,
             }}
             onPress={() => {
-              setKeepPrivate((p) => !p);
+              !publicToggle
+                ? setKeepPrivate((p) => !p)
+                : (setPublicToggle(false), setKeepPrivate(true));
               props.setValues({
                 ...props.values,
                 keepPrivate: !keepPrivate,

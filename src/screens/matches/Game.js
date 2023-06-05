@@ -52,6 +52,7 @@ class Match extends Component {
       isVisibleEndPicker: false,
       gameType: "",
       isCalenderOpen: false,
+      searchGame: "",
       selected: 0,
       test: 1,
       date: "",
@@ -67,7 +68,7 @@ class Match extends Component {
   }
 
   onChange = (searchGame) => {
-    this.setState({ searchGame: searchGame });
+    this.setState({ searchGame: searchGame }), () => this.getGames();
   };
 
   onRefresh = () => {
@@ -108,8 +109,8 @@ class Match extends Component {
     if (county_id) {
       params.county_id = county_id;
     }
-    if (game_type) {
-      params.game_type = this.state.city_id;
+    if (game_type || this.state.searchGame) {
+      params.game_type = this.state.searchGame;
     }
     if (this.state.selected === 0) {
       params.ends_at = moment().format("YYYY-MM-DD");
@@ -372,10 +373,11 @@ class Match extends Component {
                 inputStyle={{
                   backgroundColor: "#ffffff",
                   paddingBottom: 0,
-                  color: "white",
+                  color: "#121212",
                 }}
                 lightTheme={true}
                 onChangeText={this.onChange}
+                value={this.state.searchGame}
                 placeholder={"Search Match"}
                 placeholderTextColor="#ADB1B2"
               />

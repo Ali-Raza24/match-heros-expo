@@ -95,7 +95,7 @@ const initialValues = {
   game_size: "",
   starts_at: "",
   match_duration: "",
-  avg_game_players: "",
+  avg_game_players: "18",
   game_speed: "",
   game_fee: "",
   fee_type: [],
@@ -137,13 +137,16 @@ const CreateMatch = ({ navigation, ...props }) => {
   });
 
   const onSubmit = (values) => {
+    setLoading(true);
     console.log("match submission start#@#@#@");
     let data = {};
     if (isLastStep) {
-      data = { ...values };
-      if (values.venue_name) {
-        data["custom_venue"] = true;
-      }
+      data = {
+        ...values,
+      };
+      // if (values.venue_name) {
+      //   data["custom_venue"] = true;
+      // }
       console.log(values);
       setShowHowManyWeeks(false);
       gameService
@@ -172,6 +175,7 @@ const CreateMatch = ({ navigation, ...props }) => {
             }
           });
           // navigation.navigate("Matches");
+          setLoading(false);
           navigation.reset({
             index: 0,
             routes: [
@@ -181,24 +185,52 @@ const CreateMatch = ({ navigation, ...props }) => {
           return;
         })
         .catch((err) => {
-          const error = err?.response?.data;
-          if (error) {
-            if (error?.message?.length > 50) {
-              toast.show("Something went wrong. Please try again.", {
-                placement: "top",
-              });
-              return;
+          setLoading(false);
+          Alert.alert(
+            "Something went wrong!.",
+            "",
+            [
+              {
+                text: "OK",
+                onPress: () => {
+                  navigation.reset({
+                    index: 0,
+                    routes: [
+                      {
+                        name: "Dashboard",
+                        state: { routes: [{ name: "Matches" }] },
+                      },
+                    ],
+                  });
+                },
+              },
+            ],
+            {
+              cancelable: false,
             }
-            toast.show(error?.message, {
-              type: "danger",
-            });
-            return;
-          } else {
-            toast.show("Something went wrong. Please try again.", {
-              placement: "top",
-            });
-            return;
-          }
+          );
+          // const error = err?.response?.data;
+          // console.log("error is", error, err);
+          // // alert("error");
+          // if (error) {
+          //   if (error?.message?.length > 50) {
+          //     // toast.show("Something went wrong. Please try again.", {
+          //     //   placement: "top",
+          //     // });
+          //     // alert("error");
+          //     return;
+          //   }
+          //   // toast.show(error?.message, {
+          //   //   type: "danger",
+          //   // });
+          //   return;
+          // } else {
+          //   // alert("error");
+          //   // toast.show("Something went wrong. Please try again.", {
+          //   //   placement: "top",
+          //   // });
+          //   return;
+          // }
         });
     }
   };

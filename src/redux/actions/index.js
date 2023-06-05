@@ -33,11 +33,11 @@ export const authUser = () => {
     //  Check if there is user in store, and return it
     const token = await AsyncStorage.getItem("userToken");
     const userData = await AsyncStorage.getItem("userData");
-    const parsUserData = JSON.parse(userData);
-    console.log("user data is:#@#@#@#", parsUserData?.user);
+    const parsUserData = await JSON.parse(userData);
+    console.log("user data is:#@#@#@#", parsUserData?.user, parsUserData?.user);
     await apiService.setDefaultHeaders(token);
     if (token) {
-      if (parsUserData?.user) {
+      if (token) {
         dispatch({
           type: UPDATE_USER_TOKENS,
           payload: parsUserData,
@@ -88,46 +88,47 @@ export const authUser = () => {
       //     payload: res.data.user,
       //   });
       // });
-    } else {
-      //  Get user based on token
-      authService
-        .get()
-        .then((response) => {
-          ApiService.setDefaultHeaders(
-            response.data.authorization.access_token
-          );
-          //  Get user tokens
-          authService.getUserTokens(response.data.user.id).then((res) => {
-            //  Set tokens actions
-
-            dispatch({
-              type: UPDATE_USER_TOKENS,
-              payload: res.data,
-            });
-          });
-          //  Set user action
-          dispatch({
-            type: AUTH_USER,
-            payload: response.data.user,
-          });
-          //  Set notification action
-          dispatch({
-            type: SET_NOTIFICATIONS,
-            payload: response.data.notifications,
-          });
-        })
-        .catch((response) => {
-          //  Remove token from async storage
-          AsyncStorage.removeItem("userToken");
-        })
-        .finally(() => {
-          //  Set login request action
-          dispatch({
-            type: LOGIN_REQUEST,
-            payload: false,
-          });
-        });
     }
+    // else {
+    //   //  Get user based on token
+    //   authService
+    //     .get()
+    //     .then((response) => {
+    //       ApiService.setDefaultHeaders(
+    //         response.data.authorization.access_token
+    //       );
+    //       //  Get user tokens
+    //       authService.getUserTokens(response.data.user.id).then((res) => {
+    //         //  Set tokens actions
+
+    //         dispatch({
+    //           type: UPDATE_USER_TOKENS,
+    //           payload: res.data,
+    //         });
+    //       });
+    //       //  Set user action
+    //       dispatch({
+    //         type: AUTH_USER,
+    //         payload: response.data.user,
+    //       });
+    //       //  Set notification action
+    //       dispatch({
+    //         type: SET_NOTIFICATIONS,
+    //         payload: response.data.notifications,
+    //       });
+    //     })
+    //     .catch((response) => {
+    //       //  Remove token from async storage
+    //       AsyncStorage.removeItem("userToken");
+    //     })
+    //     .finally(() => {
+    //       //  Set login request action
+    //       dispatch({
+    //         type: LOGIN_REQUEST,
+    //         payload: false,
+    //       });
+    //     });
+    // }
   };
 };
 
@@ -189,47 +190,57 @@ export const loginUser = (values) => {
     const loginResponse = await authService
       .login(values)
       .then(async (response) => {
-        console.log("respnse data is:#@#@#@#@", response?.data);
-        // Set token in memory
-        await apiService.setDefaultHeaders(
-          response.data.authorization.access_token
-        );
-        await AsyncStorage.setItem("userData", JSON.stringify(response?.data));
-        //  Set token in storage
+        if (response?.data?.authorization?.access_token) {
+          console.log("respnse data is:#@#@#@#@", response?.data);
+          // Set token in memory
+          await apiService.setDefaultHeaders(
+            response.data.authorization.access_token
+          );
+          await AsyncStorage.setItem(
+            "userData",
+            JSON.stringify(response?.data)
+          );
+          //  Set token in storage
 
-        await AsyncStorage.setItem(
-          "userToken",
-          response.data.authorization.access_token
-        );
+          await AsyncStorage.setItem(
+            "userToken",
+            response.data.authorization.access_token
+          );
 
-        //  Get user tokens
-        // await authService.setDeviceToken(platform, fcmToken);
-        authService
-          .getUserTokens(response.data.user.id)
-          .then((res) => {
-            //  Set tokens actions
-            dispatch({
-              type: UPDATE_USER_TOKENS,
-              payload: res.data,
+          //  Get user tokens
+          // await authService.setDeviceToken(platform, fcmToken);
+          authService
+            .getUserTokens(response.data.user.id)
+            .then((res) => {
+              //  Set tokens actions
+              dispatch({
+                type: UPDATE_USER_TOKENS,
+                payload: res.data,
+              });
+            })
+            .catch((err) => {
+              console.log("user token", { ...err });
+              dispatch({
+                type: UPDATE_USER_TOKENS,
+                payload: 0,
+              });
             });
-          })
-          .catch((err) => {
-            console.log("user token", { ...err });
-            dispatch({
-              type: UPDATE_USER_TOKENS,
-              payload: 0,
-            });
+          //  Set notification action
+          dispatch({
+            type: SET_NOTIFICATIONS,
+            payload: response.data.notifications,
           });
-        //  Set notification action
-        dispatch({
-          type: SET_NOTIFICATIONS,
-          payload: response.data.notifications,
-        });
-        //  Set user action
-        dispatch({
-          type: AUTH_USER,
-          payload: response.data.user,
-        });
+          //  Set user action
+          dispatch({
+            type: AUTH_USER,
+            payload: response.data.user,
+          });
+        } else {
+          dispatch({
+            type: LOGIN_FAIL,
+            payload: "Login failed. Please check your email and password.",
+          });
+        }
       })
       .catch((errors) => {
         // console.log('glavni', { ...errors })
@@ -293,11 +304,15 @@ export const editUser = (user) => {
 
 export const logOutUser = () => {
   return async (dispatch) => {
+    // alert("first");
+    await AsyncStorage.removeItem("userToken");
     await apiService.setDefaultHeaders(null);
     //  Remove auth token from storage
     await authService._removeToken();
     await authService.clearStorage();
-    await AsyncStorage.removeItem("userToken");
+
+    // await AsyncStorage.removeItem("userData");
+    // alert("second");
     // //  remove user Facebook login manager????
     // LoginManager.logOut();
     //  Remove user from store
@@ -318,14 +333,17 @@ export const logOutUser = () => {
     //  Remove user tokens
     dispatch({
       type: UPDATE_USER_TOKENS,
-      payload: 0,
+      payload: null,
     });
     //  Remove notifications
     dispatch({
       type: SET_NOTIFICATIONS,
       payload: [],
     });
-    await authService.logOut();
+    // alert("userLogout successfully@!@!#@#@");
+    await authService.logOut().catch((error) => {
+      console.log("error is in logOut function:#@#@#", error);
+    });
   };
 };
 

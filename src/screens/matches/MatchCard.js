@@ -33,8 +33,8 @@ export default class GameCard extends Component {
 
   componentDidMount() {
     this.setState({
-      game: { ...this.props.game },
-      gameTeams: [...this.props.game.teams],
+      game: { ...this.props?.game },
+      gameTeams: [...this.props?.game?.teams],
     });
 
     this.AuthService.getUser().then((response) => {
@@ -99,7 +99,7 @@ export default class GameCard extends Component {
   render() {
     console.log(
       "Game data in Match Card Component is:#@#@#@#",
-      this.props.game,
+      this.props?.game,
       this.props.game?.booking?.pitch?.venue?.name
     );
     return (

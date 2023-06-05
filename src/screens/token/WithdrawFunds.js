@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -14,6 +14,10 @@ import SvgImage from "../../../assets/signIn.svg";
 import TextInputField from "../../component/molecules/TextInputField";
 import GreenLinearGradientButton from "../../component/molecules/GreenLinearGradientButton";
 function WithdrawFunds() {
+  const [withdrawFunds, setWithdrawFunds] = useState("");
+  const [fullname, setFullName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [ibn, setIbn] = useState("");
   const inputRefs = useRef(null);
   return (
     <>
@@ -72,7 +76,9 @@ function WithdrawFunds() {
               <View style={{ width: "80%" }}>
                 <TextInput
                   returnKeyType="next"
-                  value={"0"}
+                  keyboardType="number-pad"
+                  value={withdrawFunds}
+                  onChangeText={(text) => setWithdrawFunds(text)}
                   textAlign="center"
                   //   onChangeText={onChangeText}
                   style={{
@@ -114,36 +120,39 @@ function WithdrawFunds() {
             <View style={{ marginTop: 32 }}>
               <TextInputField
                 placeHolder={"Full Name"}
+                keyboardType={"default"}
                 placeHolderColor={"#ffffff"}
                 inputFieldBackColor={"transparent"}
                 inputColor="#ffffff"
                 borderBottomColor={"#636C92"}
                 profile={true}
                 onSubmitEditing={() => console.log("first")}
-                value={""}
-                onChangeText={(text) => console.log("first")}
+                value={fullname}
+                onChangeText={(text) => setFullName(text)}
               />
               <TextInputField
                 placeHolder={"Phone Number"}
+                keyboardType={"phone-pad"}
                 placeHolderColor={"#ffffff"}
                 inputFieldBackColor={"transparent"}
                 inputColor="#ffffff"
                 borderBottomColor={"#636C92"}
                 profile={true}
                 onSubmitEditing={() => console.log("first")}
-                value={""}
-                onChangeText={(text) => console.log("first")}
+                value={phoneNumber}
+                onChangeText={(text) => setPhoneNumber(text)}
               />
               <TextInputField
                 placeHolder={"Ibn"}
+                keyboardType={"default"}
                 placeHolderColor={"#ffffff"}
                 inputFieldBackColor={"transparent"}
                 inputColor="#ffffff"
                 borderBottomColor={"#636C92"}
                 profile={true}
                 onSubmitEditing={() => console.log("first")}
-                value={""}
-                onChangeText={(text) => console.log("first")}
+                value={ibn}
+                onChangeText={(text) => setIbn(text)}
               />
             </View>
             <View style={{ marginVertical: 32 }}>

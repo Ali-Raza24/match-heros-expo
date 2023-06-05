@@ -182,6 +182,7 @@ style = {{
           >
             <TextInputField
               placeHolder={"Name"}
+              keyboardType={"default"}
               placeHolderColor={"#ffffff"}
               inputFieldBackColor={"transparent"}
               inputColor="#ffffff"
@@ -197,6 +198,7 @@ style = {{
             )}
             <TextInputField
               placeHolder={"Email"}
+              keyboardType={"email-address"}
               placeHolderColor={"#ffffff"}
               inputFieldBackColor={"transparent"}
               inputColor="#ffffff"
@@ -263,6 +265,7 @@ style = {{
             <View style={{ marginTop: 15, zIndex: toggleDropDown ? -1 : 999 }}>
               <TextInputField
                 placeHolder={"Prefer location of matches"}
+                keyboardType={"default"}
                 placeHolderColor={"#ffffff"}
                 inputFieldBackColor={"transparent"}
                 inputColor="#ffffff"

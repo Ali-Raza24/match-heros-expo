@@ -457,7 +457,7 @@ function VenueDetail(props) {
               alignItems: "center",
             }}
           >
-            <GameCard
+            {/* <GameCard
               navigation={props.navigation}
               cardColor="transparent"
               dataContainerColor="transparent"
@@ -467,8 +467,8 @@ function VenueDetail(props) {
               addLine={true}
               key={singleGameData?.id}
               game={singleGameData}
-            />
-            {/* {["Monday", "Tuesday"].map((data, index) => (
+            /> */}
+            {["Monday", "Tuesday"].map((data, index) => (
               <LinearGradient
                 style={{
                   display: "flex",
@@ -557,7 +557,7 @@ function VenueDetail(props) {
                   </LinearGradient>
                 </View>
               </LinearGradient>
-            ))} */}
+            ))}
           </View>
         </ScrollView>
       </SafeAreaView>

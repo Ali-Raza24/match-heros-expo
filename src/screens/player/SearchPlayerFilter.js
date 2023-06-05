@@ -10,6 +10,7 @@ import {
   StatusBar,
   TouchableOpacity,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Input } from "react-native-elements";
@@ -36,7 +37,9 @@ import TwoWaySlider from "../../component/molecules/TwoWaySlider";
 import GreenLinearGradientButton from "../../component/molecules/GreenLinearGradientButton";
 import BlueLinearGradientButton from "../../component/molecules/BlueLinearGradientButton";
 import { useRoute } from "@react-navigation/native";
+import PlayerService from "../../services/PlayerService";
 const PlayerSearchScreen = (props) => {
+  const playerService = new PlayerService();
   const route = useRoute();
 
   const [countyOpen, setCountyOpen] = useState(false);
@@ -47,12 +50,45 @@ const PlayerSearchScreen = (props) => {
   const [maximumAge, setMaximumAge] = useState(75);
   const [playerName, setPlayerName] = useState("");
   const [matchLocation, setMatchLocation] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
+  const [startTime, setStartTime] = useState("00:00");
+  const [endTime, setEndTime] = useState("00:00");
   const [days, setDays] = useState([]);
+  const [loading, setLoading] = useState(false);
   const inputRefs = useRef(null);
   const state = useSelector((store) => store.playerSearch);
   const dispatch = useDispatch();
+  const handleSubmit = () => {
+    setLoading(true);
+    const data = {
+      name: playerName,
+      location: matchLocation,
+      min_age: minimumAge,
+      max_age: maximumAge,
+      day_of_match: days,
+      startTime: "00:00",
+      endTime: "00:00",
+    };
+    try {
+      playerService
+        .searchPlayers(data)
+        .then((res) => {
+          console.log(
+            "search player response is:#@#@#@",
+            res?.data?.data?.data
+          );
+          setLoading(false);
+          props.navigation.navigate("SearchPlayersList", {
+            players: res?.data?.data?.data,
+          });
+        })
+        .catch((error) => {
+          console.log("eror is:#@#@#@#@", error);
+          setLoading(false);
+        });
+    } catch (error) {
+      setLoading(false);
+    }
+  };
   // route.params.onSearch();
   const callBack = (min, max) => {
     setMinimumAge(Number(min));
@@ -91,6 +127,7 @@ const PlayerSearchScreen = (props) => {
           >
             <TextInputField
               placeHolder={"Name"}
+              keyboardType={"default"}
               placeHolderColor={"#ffffff"}
               inputFieldBackColor={"transparent"}
               inputColor="#ffffff"
@@ -103,6 +140,7 @@ const PlayerSearchScreen = (props) => {
             />
             <TextInputField
               placeHolder={"Match Location"}
+              keyboardType={"default"}
               placeHolderColor={"#ffffff"}
               inputFieldBackColor={"transparent"}
               inputColor="#ffffff"
@@ -252,19 +290,18 @@ const PlayerSearchScreen = (props) => {
               </View>
             </View>
             <View style={{ marginTop: 32 }}>
-              <GreenLinearGradientButton
-                title={"Search"}
-                // onSelect={this.handleSubmit}
-                onSelect={() => props.navigation.goBack()}
-                height={45}
-                loading={false}
-                disabled={
-                  playerName.length == 0 ||
-                  matchLocation.length == 0 ||
-                  days?.length == 0
-                }
-                color={["#0B8140", "#0A5129"]}
-              />
+              {loading ? (
+                <ActivityIndicator size={"small"} />
+              ) : (
+                <GreenLinearGradientButton
+                  title={"Search"}
+                  onSelect={handleSubmit}
+                  // onSelect={() => props.navigation.goBack()}
+                  height={45}
+                  loading={false}
+                  color={["#0B8140", "#0A5129"]}
+                />
+              )}
               <BlueLinearGradientButton
                 title={"Clear"}
                 onSelect={() => dispatch(playerSearchClearAction())}

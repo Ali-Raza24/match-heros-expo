@@ -148,6 +148,7 @@ class ForgotPasswordEmail extends Component {
               <View style={{ marginTop: 20 }}>
                 <TextInputField
                   placeHolder={"Enter email address"}
+                  keyboardType={"email-address"}
                   placeHolderColor={"#ffffff"}
                   inputFieldBackColor={"#1E2646"}
                   inputColor="#ffffff"

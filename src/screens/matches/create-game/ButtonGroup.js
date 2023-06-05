@@ -23,7 +23,10 @@ export default function Buttons(props) {
         onPress={
           props.onPress ? props.onPress : () => props.wizardRef.current.next()
         }
-        disabled={props.wizardRef.current.isLastStep}
+        disabled={
+          props.wizardRef.current.isLastStep ||
+          (props.isLastStep && !props.values.numOfReqPlayers)
+        }
       />
     </View>
   );

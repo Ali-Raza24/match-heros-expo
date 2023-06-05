@@ -260,7 +260,10 @@ export default function StepThree(props) {
       {props.values.match_duration && props.values.starts_at ? (
         <Buttons {...props} />
       ) : (
-        <Buttons {...props} />
+        <DisableButtonGroup
+          customStyleContainer={{ marginTop: 30 }}
+          {...props}
+        />
         // <DisableButtonGroup {...props} />
       )}
     </ScrollView>

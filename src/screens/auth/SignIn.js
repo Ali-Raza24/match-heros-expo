@@ -178,6 +178,7 @@ class SignIn extends Component {
                     placeHolder={"Email"}
                     placeHolderColor={"#ffffff"}
                     inputFieldBackColor={"#1E2646"}
+                    keyboardType={"email-address"}
                     inputColor="#ffffff"
                     borderBottomColor={"#1E2646"}
                     // ref={input => {
@@ -199,6 +200,7 @@ class SignIn extends Component {
                     <TextInputField
                       secureEntry={this.state.passHidden}
                       placeHolder={"Password"}
+                      keyboardType={"default"}
                       placeHolderColor={"#ffffff"}
                       inputFieldBackColor={"#1E2646"}
                       inputColor="#ffffff"

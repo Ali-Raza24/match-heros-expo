@@ -76,7 +76,8 @@ class Players extends Component {
     let params = { start_game: 9 };
     if (county_id) params.county_id = county_id;
 
-    if (player) params.player = player;
+    if (player || this.state.searchTerm)
+      params.player = player || this.state.searchTerm;
 
     if (avg_game_players) params.avg_game_players = avg_game_players;
 
@@ -262,9 +263,10 @@ class Players extends Component {
                 inputStyle={{
                   backgroundColor: "#ffffff",
                   paddingBottom: 0,
-                  color: "white",
+                  color: "#121212",
                 }}
                 lightTheme={true}
+                value={this.state.searchTerm}
                 onChangeText={this.onChange}
                 placeholder={"Search Players"}
                 placeholderTextColor="#ADB1B2"

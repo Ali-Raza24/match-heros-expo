@@ -73,6 +73,7 @@ export default function StepFive(props) {
           <View style={{ width: "100%", marginTop: 25 }}>
             <TextInputField
               placeHolder={"Enter Match Fee"}
+              keyboardType={"number-pad"}
               placeHolderColor={"#ffffff"}
               inputFieldBackColor={"transparent"}
               inputColor="#ffffff"
@@ -83,9 +84,9 @@ export default function StepFive(props) {
               onSubmitEditing={() => {
                 // this.passwordTextInput.focus();
               }}
-              value={props.values.game_fee}
+              // value={props.values.game_fee}
               onChangeText={(text) =>
-                props.setValues({ ...props.values, game_fee: String(text) })
+                props.setValues({ ...props.values, game_fee: Number(text) })
               }
             />
             <ErrorText
@@ -102,10 +103,13 @@ export default function StepFive(props) {
         </View>
       </View>
 
-      {props.values.game_fee != 0 && props.values.fee_type.length > 0 ? (
+      {props.values.game_fee != 0 ? (
         <Buttons {...props} />
       ) : (
-        <Buttons {...props} />
+        <DisableButtonGroup
+          customStyleContainer={{ marginTop: 30 }}
+          {...props}
+        />
         // <DisableButtonGroup {...props} />
       )}
     </ScrollView>

@@ -154,7 +154,9 @@ class Tokens extends Component {
                 marginVertical: 42,
                 justifyContent: "center",
               }}
-              // onPress={() => this.props.navigation.navigate("SignUp")}
+              onPress={() =>
+                this.props.navigation.navigate("CancellationPolicy")
+              }
             >
               <Text
                 style={{

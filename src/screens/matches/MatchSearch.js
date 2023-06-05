@@ -10,6 +10,7 @@ import {
   StatusBar,
   TouchableOpacity,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Input } from "react-native-elements";
@@ -36,11 +37,21 @@ import TwoWaySlider from "../../component/molecules/TwoWaySlider";
 import GreenLinearGradientButton from "../../component/molecules/GreenLinearGradientButton";
 import BlueLinearGradientButton from "../../component/molecules/BlueLinearGradientButton";
 import DropDownPicker from "react-native-dropdown-picker";
+import GameService from "../../services/GameService";
 const MatchSearch = (props) => {
+  const gameService = new GameService();
   const [countyOpen, setCountyOpen] = useState(false);
   const [ageOfBracketOpen, setAgeBracketOpen] = useState(false);
   const [dayOfGameOpen, setDayOfGameOpen] = useState(false);
   const [timeOfGameOpen, setTimeOfGameOpen] = useState(false);
+  const [dateFrom, setDateFrom] = useState();
+  const [dateTo, setDateTo] = useState();
+  const [timeFrom, setTimeFrom] = useState();
+  const [timeTo, setTimeTo] = useState();
+  const [location, setLocation] = useState("");
+  const [minimumAge, setMinimumAge] = useState(0);
+  const [maximumAge, setMaximumAge] = useState(75);
+  const [loading, setLoading] = useState(false);
   const inputRefs = useRef(null);
   const state = useSelector((store) => store.playerSearch);
   const dispatch = useDispatch();
@@ -59,6 +70,46 @@ const MatchSearch = (props) => {
     { label: "Moderate", value: "Moderate" },
     { label: "Fast", value: "Fast" },
   ]);
+
+  const handleSubmit = () => {
+    setLoading(true);
+    const data = {
+      dateFrom: "12-12-2018",
+      dateTo: "12-12-2018",
+      timeFrom: "09:00",
+      timeTo: "08:00",
+      location: 1,
+      minAgeOfOponent: 10,
+      maxAgeOfOponent: 100,
+      matchType: "Ahmad",
+      matchSpeed: "",
+    };
+    try {
+      gameService
+        .searchGame(data)
+        .then((res) => {
+          console.log(
+            "search player response is:#@#@#@",
+            res?.data?.data?.data
+          );
+          setLoading(false);
+          props.navigation.navigate("SearchGameList", {
+            games: res?.data?.data?.data,
+          });
+        })
+        .catch((error) => {
+          console.log("eror is:#@#@#@#@", error);
+          setLoading(false);
+        });
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
+  const callBack = (min, max) => {
+    setMinimumAge(Number(min));
+    setMaximumAge(Number(max));
+  };
 
   return (
     <>
@@ -276,6 +327,7 @@ const MatchSearch = (props) => {
           <View style={{ width: "80%", alignSelf: "center", marginTop: 25 }}>
             <TextInputField
               placeHolder={"Location"}
+              keyboardType={"default"}
               placeHolderColor={"#ffffff"}
               inputFieldBackColor={"transparent"}
               inputColor="#ffffff"
@@ -310,7 +362,7 @@ const MatchSearch = (props) => {
                   Travel Distance
                 </Text>
               </View>
-              <TwoWaySlider callBack={() => console.log("first")} />
+              <TwoWaySlider callBack={callBack} />
             </View>
             <View style={{ width: "80%", alignSelf: "center", height: 79 }}>
               <View style={{ marginBottom: 15 }}>
@@ -410,7 +462,7 @@ const MatchSearch = (props) => {
                   transparent: true,
                   presentationStyle: "fullScreen", // for iOS, but raises a warning on android if not present
                 }}
-                placeholder="Type of match"
+                placeholder="Speed of match"
                 listMode="MODAL"
                 theme="DARK"
               />
@@ -419,17 +471,21 @@ const MatchSearch = (props) => {
           <View
             style={{ marginVertical: 32, width: "80%", alignSelf: "center" }}
           >
-            <GreenLinearGradientButton
-              title={"Search"}
-              // onSelect={this.handleSubmit}
-              onSelect={() => console.log("navigate to new result screen")}
-              height={45}
-              loading={false}
-              disabled={Object.values(state).every(
-                (value) => value === null || value === ""
-              )}
-              color={["#0B8140", "#0A5129"]}
-            />
+            {loading ? (
+              <ActivityIndicator size={"small"} />
+            ) : (
+              <GreenLinearGradientButton
+                title={"Search"}
+                onSelect={handleSubmit}
+                // onSelect={() => console.log("navigate to new result screen")}
+                height={45}
+                loading={false}
+                // disabled={Object.values(state).every(
+                //   (value) => value === null || value === ""
+                // )}
+                color={["#0B8140", "#0A5129"]}
+              />
+            )}
             <BlueLinearGradientButton
               title={"Clear"}
               onSelect={() => console.log("clear actions called")}

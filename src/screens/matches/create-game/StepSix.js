@@ -51,15 +51,15 @@ export default function StepSix(props) {
     setLoading(true);
     try {
       const response = await playerService.getAllTeammates();
-      let users = response.data.teamPlayers.data;
+      let users = response?.data;
       users =
         users.length > 0 &&
         users.map((u) => ({
-          id: u.player_id,
-          name: u.player_name,
+          id: u.role_id,
+          name: u.name,
         }));
       console.log("Friends", users);
-      setNextLink(response.data.teamPlayers.links.next);
+      setNextLink(response?.data);
       setPlayers(users);
     } catch (error) {
       console.log(error);

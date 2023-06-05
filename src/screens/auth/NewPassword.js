@@ -110,6 +110,7 @@ function NewPassword(props) {
                 inputFieldBackColor={"#1E2646"}
                 inputColor="#ffffff"
                 borderBottomColor={"#1E2646"}
+                keyboardType={"default"}
               />
               <TextInputField
                 placeHolder={"Confirm Password"}
@@ -117,6 +118,7 @@ function NewPassword(props) {
                 inputFieldBackColor={"#1E2646"}
                 inputColor="#ffffff"
                 borderBottomColor={"#1E2646"}
+                keyboardType={"default"}
               />
               <GreenLinearGradientButton
                 title={"SUBMIT"}

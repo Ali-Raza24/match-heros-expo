@@ -142,6 +142,7 @@ export default function Steptwo(props) {
         <View style={{ alignSelf: "center", width: "80%", marginTop: 20 }}>
           <TextInputField
             placeHolder={"Venue Name"}
+            keyboardType={"default"}
             placeHolderColor={"#ffffff"}
             inputFieldBackColor={"transparent"}
             inputColor="#ffffff"
@@ -164,6 +165,7 @@ export default function Steptwo(props) {
         <View style={{ alignSelf: "center", width: "80%" }}>
           <TextInputField
             placeHolder={"Add Location"}
+            keyboardType={"default"}
             placeHolderColor={"#ffffff"}
             inputFieldBackColor={"transparent"}
             inputColor="#ffffff"
@@ -215,12 +217,14 @@ export default function Steptwo(props) {
         />
       </View>
       {props.values.venue_name &&
-      props.values.county &&
       props.values.area &&
       props.values.surface_type ? (
         <Buttons {...props} />
       ) : (
-        <Buttons {...props} />
+        <DisableButtonGroup
+          customStyleContainer={{ marginTop: 30 }}
+          {...props}
+        />
         // <DisableButtonGroup {...props} />
       )}
     </ScrollView>

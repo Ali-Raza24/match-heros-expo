@@ -44,16 +44,16 @@ export default function InvitePlayers(props) {
     setLoading(true);
     try {
       const response = await playerService.getAllTeammates();
-      let users = response.data.teamPlayers.data;
+      let users = response?.data;
       users =
-        users.length > 0 &&
-        users.map((u) => ({
-          id: u.player_id,
-          name: u.player_name,
+        users?.length > 0 &&
+        users?.map((u) => ({
+          id: u.role_id,
+          name: u.name,
         }));
-      console.log("Friends", users);
-      setNextLink(response.data.teamPlayers.links.next);
-      setPlayers(users);
+      console.log("Friends", users, response?.data);
+      setNextLink(response?.data);
+      setPlayers(response?.data?.data);
     } catch (error) {
       console.log(error);
       console.log("Step SIX Error" + JSON.stringify(error.response?.data));

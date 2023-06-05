@@ -14,6 +14,7 @@ function TextInputField({
   borderBottomWidth,
   secureEntry,
   nonEditAble,
+  keyboardType,
 }) {
   return (
     <>
@@ -29,6 +30,7 @@ function TextInputField({
         value={value}
         onChangeText={onChangeText}
         editable={nonEditAble ? false : true}
+        keyboardType={keyboardType}
         style={{
           height: profile ? 30 : 45,
           borderRadius: profile ? 0 : 6,

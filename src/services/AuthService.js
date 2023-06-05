@@ -46,7 +46,7 @@ export default class AuthService extends ApiService {
 
   async isLogged() {
     const token = await AsyncStorage.getItem("userToken");
-    console.log("token is is loggedIn function#@#@", token);
+    console.log("token is is loggedIn function#@#@", token?.length > 5);
     return token?.length > 5;
   }
 

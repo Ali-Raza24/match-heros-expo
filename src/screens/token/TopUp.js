@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -14,6 +14,9 @@ import TextInputField from "../../component/molecules/TextInputField";
 import GreenLinearGradientButton from "../../component/molecules/GreenLinearGradientButton";
 function TopUp() {
   const inputRefs = useRef(null);
+  const [cardNum, setCardNum] = useState("");
+  const [expiry, setExpiry] = useState("");
+  const [ccv, setCcv] = useState("");
   return (
     <>
       <SvgImage
@@ -78,14 +81,15 @@ function TopUp() {
           <View style={{ width: "80%", alignSelf: "center", marginTop: 22 }}>
             <TextInputField
               placeHolder={"Card Number"}
+              keyboardType={"number-pad"}
               placeHolderColor={"#ffffff"}
               inputFieldBackColor={"transparent"}
               inputColor="#ffffff"
               borderBottomColor={"#636C92"}
               profile={true}
               onSubmitEditing={() => console.log("first")}
-              value={"123456"}
-              onChangeText={(text) => console.log("first")}
+              value={cardNum}
+              onChangeText={(text) => setCardNum(text)}
             />
             <View
               style={{
@@ -97,27 +101,29 @@ function TopUp() {
               <View style={{ width: "45%" }}>
                 <TextInputField
                   placeHolder={"Expiry"}
+                  keyboardType={"default"}
                   placeHolderColor={"#ffffff"}
                   inputFieldBackColor={"transparent"}
                   inputColor="#ffffff"
                   borderBottomColor={"#636C92"}
                   profile={true}
                   onSubmitEditing={() => console.log("first")}
-                  value={"08/8"}
-                  onChangeText={(text) => console.log("first")}
+                  value={expiry}
+                  onChangeText={(text) => setExpiry(text)}
                 />
               </View>
               <View style={{ width: "45%" }}>
                 <TextInputField
                   placeHolder={"CVC/CCV"}
+                  keyboardType={"number-pad"}
                   placeHolderColor={"#ffffff"}
                   inputFieldBackColor={"transparent"}
                   inputColor="#ffffff"
                   borderBottomColor={"#636C92"}
                   profile={true}
                   onSubmitEditing={() => console.log("first")}
-                  value={"CVC"}
-                  onChangeText={(text) => console.log("first")}
+                  value={ccv}
+                  onChangeText={(text) => setCcv(text)}
                 />
               </View>
             </View>

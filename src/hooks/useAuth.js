@@ -19,8 +19,8 @@ export const useAuth = () => {
     // this will keep the user state updated. Because the user is logged in, an action will be dispatched
     try {
       setLoading(true);
-      //   console.log("isLogged in value is:#@#@#@", await authService.isLogged());
-      if (await authService.isLogged()) {
+      const checkIsLogedIn = await authService.isLogged();
+      if (!!checkIsLogedIn) {
         await dispatch(authUser());
         setIsAuthenticated(true);
         setLoading(false);

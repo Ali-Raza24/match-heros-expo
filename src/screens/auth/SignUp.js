@@ -46,6 +46,7 @@ export default class SignUp extends Component {
       name: this.state.name,
       email: this.state.email,
       password: this.state.password,
+      role_id: "1",
     };
     console.log("in register user function");
     this.AuthService.register(data)
@@ -163,6 +164,7 @@ export default class SignUp extends Component {
                   <View style={{ marginTop: 27 }}>
                     <TextInputField
                       placeHolder={"Username"}
+                      keyboardType={"default"}
                       placeHolderColor={"#ffffff"}
                       inputFieldBackColor={"#1E2646"}
                       inputColor="#ffffff"
@@ -180,6 +182,7 @@ export default class SignUp extends Component {
                     {/* {this.state.errors?.email && <Text style={styles.error}>{this.state.errors.email}</Text>} */}
                     <TextInputField
                       placeHolder={"Email"}
+                      keyboardType={"email-address"}
                       placeHolderColor={"#ffffff"}
                       inputFieldBackColor={"#1E2646"}
                       inputColor="#ffffff"
@@ -202,6 +205,7 @@ export default class SignUp extends Component {
                     <View>
                       <TextInputField
                         placeHolder={"Password"}
+                        keyboardType={"default"}
                         placeHolderColor={"#ffffff"}
                         inputFieldBackColor={"#1E2646"}
                         inputColor="#ffffff"
@@ -243,6 +247,7 @@ export default class SignUp extends Component {
                     <View>
                       <TextInputField
                         placeHolder={"Repeat Password"}
+                        keyboardType={"default"}
                         placeHolderColor={"#ffffff"}
                         inputFieldBackColor={"#1E2646"}
                         inputColor="#ffffff"

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -9,13 +9,21 @@ import {
 } from "react-native";
 import SvgImage from "../../../assets/signIn.svg";
 import EditProfile from "../../../assets/editProfile.svg";
-import { logOutUser } from "../../redux/actions";
-import { useSelector } from "react-redux";
+import { logOutUser, authUser } from "../../redux/actions";
+import { useSelector, useDispatch } from "react-redux";
 import AuthService from "../../services/AuthService";
+// import { authUser } from "../redux/actions";
 function Menue(props) {
+  useEffect(() => {
+    (async () => {
+      await dispatch(authUser());
+    })();
+  }, []);
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const authServces = new AuthService();
-  console.log("user data is:#@#@#@", user);
+  // const authServces = new AuthService();
+  console.log("user data is in menue:#@#@#@", user);
+
   return (
     <>
       <SvgImage
@@ -171,6 +179,7 @@ function Menue(props) {
               />
             </TouchableOpacity>
             <TouchableOpacity
+              onPress={() => props.navigation.navigate("PrivacyPolicy")}
               style={{
                 height: 45,
                 width: "100%",
@@ -215,6 +224,7 @@ function Menue(props) {
               />
             </TouchableOpacity>
             <TouchableOpacity
+              onPress={() => props.navigation.navigate("TacPage")}
               style={{
                 height: 45,
                 width: "100%",
@@ -259,8 +269,8 @@ function Menue(props) {
               />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => {
-                logOutUser();
+              onPress={async () => {
+                await dispatch(logOutUser());
                 props.navigation.reset({
                   index: 0,
                   routes: [{ name: "SignIn" }],
