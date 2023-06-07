@@ -59,14 +59,14 @@ const MatchSearch = (props) => {
   const dispatch = useDispatch();
 
   const [openGameType, setOpenGameType] = useState(false);
-  const [matchType, setMatchType] = useState(null);
+  const [matchType, setMatchType] = useState("");
   const [matchtypes, setMatchTypes] = useState([
     { label: "Social Match", value: "Social Match" },
     { label: "Futsal", value: "Futsal" },
     { label: "Women's Football", value: "Women's Football" },
   ]);
   const [openMatchSpeed, setOpenMatchSpeed] = useState(false);
-  const [matchSped, setMatchSpeed] = useState(null);
+  const [matchSped, setMatchSpeed] = useState("");
   const [matchSpeeds, setMatchSpeeds] = useState([
     { label: "Slow", value: "Slow" },
     { label: "Moderate", value: "Moderate" },
@@ -83,23 +83,31 @@ const MatchSearch = (props) => {
   const [enddateTimestates, setEndDateTimeState] = useState({
     isVisibleDatePicker: false,
   });
-  // console.log(
-  //   "startDateTime in search Match Screen",
-  //   startDateTime,
-  //   startDateTime && moment(startDateTime).format("DD-MMM-YYYY")
-  // );
+  console.log(
+    "startDateTime in search Match Screen",
+    startDateTime && startDateTime.split(" ")[1].substr(0, 5),
+    startDateTime && moment(startDateTime).format("L").replace(/\//gi, "-"),
+    matchType,
+    matchSped
+  );
   const handleSubmit = () => {
     setLoading(true);
     const data = {
-      dateFrom: "12-12-2018",
-      dateTo: "12-12-2018",
-      timeFrom: "09:00",
-      timeTo: "08:00",
-      location: 1,
-      minAgeOfOponent: 10,
-      maxAgeOfOponent: 100,
-      matchType: "Ahmad",
-      matchSpeed: "",
+      dateFrom: startDateTime
+        ? moment(startDateTime).format("L").replace(/\//gi, "-")
+        : "",
+      dateTo: endDateTime
+        ? moment(endDateTime).format("L").replace(/\//gi, "-")
+        : "",
+      timeFrom: startDateTime
+        ? startDateTime.split(" ")[1].substr(0, 5)
+        : "00:00",
+      timeTo: endDateTime ? endDateTime.split(" ")[1].substr(0, 5) : "00:00",
+      location: location,
+      minAgeOfOponent: minimumAge,
+      maxAgeOfOponent: maximumAge,
+      matchType: matchType,
+      matchSpeed: matchSped,
     };
     try {
       gameService

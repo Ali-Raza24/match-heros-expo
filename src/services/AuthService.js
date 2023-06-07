@@ -136,7 +136,7 @@ export default class AuthService extends ApiService {
   async postAvailability(data) {
     const token = await AsyncStorage.getItem("userToken");
     return axios
-      .post(`https://match-heros.isoft-tech.com/api/avalibility`, data, {
+      .post(`${this.baseUrl}avalibility`, data, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

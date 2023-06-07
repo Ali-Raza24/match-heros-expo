@@ -48,7 +48,7 @@ export default class GameService extends ApiService {
   async gameReport(data) {
     const token = await AsyncStorage.getItem("userToken");
     return axios
-      .post(`https://match-heros.isoft-tech.com/api/report-game`, data, {
+      .post(`${this.baseUrl}report-game`, data, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

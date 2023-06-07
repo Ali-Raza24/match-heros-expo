@@ -3,6 +3,8 @@ import { SafeAreaView, View, Text } from "react-native";
 import MyGames from "./MyMatch";
 import SvgImage from "../../../assets/signIn.svg";
 function SearchGameList(props) {
+  const games = props?.route?.params?.games;
+  console.log("Game List in Search Game List Screen", games);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <SvgImage
@@ -14,11 +16,11 @@ function SearchGameList(props) {
           bottom: 0,
         }}
       />
-      {props?.games?.length > 0 ? (
+      {games?.length > 0 ? (
         <MyGames
           refreshing={() => console.log("on game refresh")}
-          onRefresh={() => console.log("onGame refresh")}
-          games={props.games}
+          onRefresh={false}
+          games={games}
           navigation={props.navigation}
         />
       ) : (

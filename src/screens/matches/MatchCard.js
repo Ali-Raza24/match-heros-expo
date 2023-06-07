@@ -43,35 +43,35 @@ export default class GameCard extends Component {
     });
 
     this.AuthService.getUser().then((response) => {
-      this.setState({ loggedInUserId: response.id });
+      this.setState({ loggedInUserId: response?.id });
     });
   }
 
   isPlayerInGame = () => {
     if (
-      this.state.gameTeams &&
-      this.state.loggedInUserId &&
-      this.state.gameTeams.length > 1
+      this.state?.gameTeams &&
+      this.state?.loggedInUserId &&
+      this.state?.gameTeams?.length > 1
     ) {
       return (
-        this.state.gameTeams.filter(
+        this.state?.gameTeams?.filter(
           (team) =>
-            !!team.players &&
-            team.players.filter(
-              (player) => player.id === this.state.loggedInUserId
-            ).length > 0
-        ).length > 0
+            !!team?.players &&
+            team?.players?.filter(
+              (player) => player?.id === this.state?.loggedInUserId
+            )?.length > 0
+        )?.length > 0
       );
     }
   };
 
   handleGameDate() {
     let date;
-    this.props.game.booking
-      ? (date = moment(this.props.game.booking.starts_at)
+    this.props?.game?.booking
+      ? (date = moment(this.props?.game?.booking?.starts_at)
           .format("DD. MMM YYYY [at] HH:mm")
           .toString())
-      : (date = moment(this.props.game.starts_at)
+      : (date = moment(this.props?.game?.starts_at)
           .format("DD. MMM YYYY [at] HH:mm")
           .toString());
     // date = 'Not booked';
@@ -135,13 +135,13 @@ export default class GameCard extends Component {
         ].reverse()}
       >
         <TouchableOpacity
-          key={this.props.game.id}
+          key={this.props?.game?.id}
           style={{ ...this.styles.cardStyle }}
           disabled={this.props?.noPress}
           onPress={() =>
             this.props.navigation.navigate("MatchDetail", {
-              id: this.props.game.id,
-              gameCreator: this.props.game.creator_id,
+              id: this.props?.game?.id,
+              gameCreator: this?.props.game?.creator_id,
               canSee: this.isPlayerInGame(),
             })
           }
