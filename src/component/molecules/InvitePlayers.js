@@ -34,6 +34,7 @@ export default function InvitePlayers(props) {
   const [selected, setSelected] = useState(0);
   const currentUser = useSelector((store) => store.user);
   const [invitePlayersList, setInvitePlayersList] = useState([]);
+  const [selectedPlayerList, setSelectedPlayersList] = useState([{}]);
   useEffect(() => {
     getAllPlayers();
   }, []);
@@ -114,6 +115,12 @@ export default function InvitePlayers(props) {
       </View>
     );
   }
+  const selectedFunc = () => {
+    const myArray = invitePlayersList.map((str) => ({ id: str }));
+    props.setValues({ ...props.values, player_ids: [...myArray] });
+    props.wizardRef();
+    // console.log("selected players is:#@#@#", myArray);
+  };
   console.log("players list is:#@#@", players);
   return (
     <View style={{ flex: 1 }}>
@@ -215,7 +222,8 @@ export default function InvitePlayers(props) {
         <GreenLinearGradientButton
           title={"SEND INVITES"}
           // onSelect={() => props.wizardRef.current.next()}
-          onSelect={props.wizardRef}
+          onSelect={selectedFunc}
+          // onSelect={props.wizardRef}
           height={45}
           onPress={() => console.log("second")}
           loading={false}

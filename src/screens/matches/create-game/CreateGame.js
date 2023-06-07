@@ -79,7 +79,7 @@ const CreateGameSchema = Yup.object().shape({
     otherwise: Yup.string().optional(),
   }),
   game_speed: Yup.string().optional(),
-  game_fee: Yup.string().required("Game fee is required."),
+  game_fee: Yup.number(),
   game_repeat: Yup.number().default(() => 0),
   fee_type: Yup.array().of(Yup.string().required("Choose a fee method")),
   player_ids: Yup.array().of(Yup.number()),
@@ -97,7 +97,7 @@ const initialValues = {
   match_duration: "",
   avg_game_players: "18",
   game_speed: "",
-  game_fee: "",
+  game_fee: 0,
   fee_type: [],
   venue_name: "",
   game_repeat: 0,
@@ -367,7 +367,8 @@ const CreateMatch = ({ navigation, ...props }) => {
           <StepSix
             // removePlayer={removePlayer}
             // errors={errors}
-            // values={values}
+            values={values}
+            setValues={setValues}
             // setShowHowManyWeeks={setShowHowManyWeeks}
             isLastStep={false}
             {...props}

@@ -111,6 +111,8 @@ export default function StepSix(props) {
       <InvitePlayers
         wizardRef={() => props.wizardRef.current.next()}
         headerText={true}
+        setValues={props.setValues}
+        values={props.values}
       />
     </>
   );

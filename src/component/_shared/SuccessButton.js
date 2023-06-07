@@ -27,6 +27,7 @@ const SuccessButton = (props) => {
       fontWeight="bold"
       onPress={onPress}
       icon={icon}
+      loading={props.loading}
     />
   );
 };

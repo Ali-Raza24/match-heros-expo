@@ -51,7 +51,7 @@ const PopupStyles = StyleSheet.create({
  * @returns The React Component
  */
 export default function StepFive(props) {
-  const [showPopup, setShowPopup] = useState(false);
+  const [fee, setFee] = useState(0);
   const inputRef = useRef();
   const handleFeeType = (feeType) => {
     if (props.values.fee_type.includes(feeType)) {
@@ -60,6 +60,7 @@ export default function StepFive(props) {
     }
     props.addFeeMethod(feeType);
   };
+  console.log("props.values.game_fee", props.values.game_fee, fee);
   return (
     <ScrollView style={styles.container}>
       <View style={{ width: "80%", alignSelf: "center", marginVertical: 10 }}>
@@ -79,15 +80,14 @@ export default function StepFive(props) {
               inputColor="#ffffff"
               borderBottomColor={"#ffffff"}
               borderBottomWidth={1.7}
-              // ref={inputRef}
               profile={true}
               onSubmitEditing={() => {
                 // this.passwordTextInput.focus();
               }}
-              // value={props.values.game_fee}
-              onChangeText={(text) =>
-                props.setValues({ ...props.values, game_fee: Number(text) })
-              }
+              onChangeText={(text) => {
+                props.setValues({ ...props.values, game_fee: text });
+                setFee(text);
+              }}
             />
             <ErrorText
               message={"game_fee" in props.errors && props.errors.game_fee}
@@ -103,7 +103,7 @@ export default function StepFive(props) {
         </View>
       </View>
 
-      {props.values.game_fee != 0 ? (
+      {fee != 0 ? (
         <Buttons {...props} />
       ) : (
         <DisableButtonGroup

@@ -101,15 +101,16 @@ function TopUp() {
               <View style={{ width: "45%" }}>
                 <TextInputField
                   placeHolder={"Expiry"}
-                  keyboardType={"default"}
+                  keyboardType={"number-pad"}
                   placeHolderColor={"#ffffff"}
                   inputFieldBackColor={"transparent"}
                   inputColor="#ffffff"
                   borderBottomColor={"#636C92"}
                   profile={true}
                   onSubmitEditing={() => console.log("first")}
-                  value={expiry}
+                  value={expiry.length == 2 ? expiry + "/" : expiry}
                   onChangeText={(text) => setExpiry(text)}
+                  nonEditAble={expiry.length == 5}
                 />
               </View>
               <View style={{ width: "45%" }}>

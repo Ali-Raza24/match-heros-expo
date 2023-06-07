@@ -5,7 +5,7 @@ export default class ApiService {
   constructor() {
     // this.baseUrl = "https://fiveaside.eu/api/"
     // For GennyMotion
-    this.baseUrl = "https://match-heros.isoft-tech.com/api/";
+    this.baseUrl = "http://63.33.237.96/api/";
     // this.baseUrl = "http://63.33.237.96/api/"
     // For EXPO Go
     // this.baseUrl = "https://b7bb-182-180-119-249.ap.ngrok.io/api/"

@@ -248,20 +248,20 @@ export default function StepSeven(props) {
           </TouchableOpacity>
         </View>
       </View>
-      {props.loading ? (
+      {/* {props.loading ? (
         <ActivityIndicator />
-      ) : (
-        <Buttons
-          {...props}
-          isLastStep={props.isLastStep}
-          onPress={() => {
-            console.log("first");
-            props?.onSubmit(props.values);
-            // props.setShowHowManyWeeks(true);
-            // props.navigation.goBack();
-          }}
-        />
-      )}
+      ) : ( */}
+      <Buttons
+        {...props}
+        isLastStep={props.isLastStep}
+        onPress={() => {
+          console.log("first");
+          props?.onSubmit(props.values);
+          // props.setShowHowManyWeeks(true);
+          // props.navigation.goBack();
+        }}
+      />
+      {/* )} */}
     </View>
   );
 }

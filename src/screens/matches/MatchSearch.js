@@ -38,6 +38,8 @@ import GreenLinearGradientButton from "../../component/molecules/GreenLinearGrad
 import BlueLinearGradientButton from "../../component/molecules/BlueLinearGradientButton";
 import DropDownPicker from "react-native-dropdown-picker";
 import GameService from "../../services/GameService";
+import DateTimePicker from "react-native-modal-datetime-picker";
+import moment from "moment";
 const MatchSearch = (props) => {
   const gameService = new GameService();
   const [countyOpen, setCountyOpen] = useState(false);
@@ -70,7 +72,22 @@ const MatchSearch = (props) => {
     { label: "Moderate", value: "Moderate" },
     { label: "Fast", value: "Fast" },
   ]);
+  const [startDateTime, setStartDateTime] = useState();
+  const [startDateTimeTitle, setStartDateTimeTitle] = useState();
+  const [dateTimestates, setStartDateTimeState] = useState({
+    isVisibleDatePicker: false,
+  });
 
+  const [endDateTime, setEndDateTime] = useState();
+  const [endDateTimeTitle, setEndDateTimeTitle] = useState();
+  const [enddateTimestates, setEndDateTimeState] = useState({
+    isVisibleDatePicker: false,
+  });
+  // console.log(
+  //   "startDateTime in search Match Screen",
+  //   startDateTime,
+  //   startDateTime && moment(startDateTime).format("DD-MMM-YYYY")
+  // );
   const handleSubmit = () => {
     setLoading(true);
     const data = {
@@ -110,7 +127,25 @@ const MatchSearch = (props) => {
     setMinimumAge(Number(min));
     setMaximumAge(Number(max));
   };
+  const showStartPicker = () => {
+    // setIsVisibleDatePicker(true);
+    setStartDateTimeState((prev) => ({ ...prev, isVisibleDatePicker: true }));
+  };
 
+  const hideStartPicker = () => {
+    // setIsVisibleDatePicker(false);
+    setStartDateTimeState((prev) => ({ ...prev, isVisibleDatePicker: false }));
+  };
+
+  const showEndPicker = () => {
+    // setIsVisibleDatePicker(true);
+    setEndDateTimeState((prev) => ({ ...prev, isVisibleDatePicker: true }));
+  };
+
+  const hideEndPicker = () => {
+    // setIsVisibleDatePicker(false);
+    setEndDateTimeState((prev) => ({ ...prev, isVisibleDatePicker: false }));
+  };
   return (
     <>
       <SvgImage
@@ -127,8 +162,237 @@ const MatchSearch = (props) => {
       >
         <ScrollView contentInsetAdjustmentBehavior="automatic">
           <StatusBar backgroundColor="#5E89E2" />
+          <View
+            style={{
+              width: "80%",
+              marginTop: 30,
+              alignSelf: "center",
+              display: "flex",
+              flexDirection: "row",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => showStartPicker()}
+              activeOpacity={0.6}
+              style={{ width: "50%" }}
+            >
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 14,
+                  lineHeight: 16,
+                  color: "#ffffff",
+                  marginBottom: 8,
+                }}
+              >
+                Start Date:
+              </Text>
+              <View
+                style={{
+                  backgroundColor: "#1E2646",
+                  width: 137,
+                  height: 45,
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: 8,
+                }}
+              >
+                <Image
+                  source={require("../../../assets/calender.png")}
+                  style={{
+                    height: 16,
+                    width: 18,
+                    resizeMode: "contain",
+                    marginRight: 8,
+                  }}
+                />
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 14,
+                    lineHeight: 16,
+                    color: "#ffffff",
+                  }}
+                >
+                  {startDateTime
+                    ? moment(startDateTime).format("DD. MMM YYYY")
+                    : "March 2023"}
+                </Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => showStartPicker()}
+              activeOpacity={0.6}
+              style={{ width: "50%" }}
+            >
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 14,
+                  lineHeight: 16,
+                  color: "#ffffff",
+                  marginBottom: 8,
+                }}
+              >
+                Start Time:
+              </Text>
+              <View
+                style={{
+                  backgroundColor: "#1E2646",
+                  width: 97,
+                  height: 45,
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: 8,
+                }}
+              >
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 14,
+                    lineHeight: 16,
+                    color: "#ffffff",
+                  }}
+                >
+                  {startDateTime
+                    ? moment(startDateTime).format("HH:mm")
+                    : "08:00"}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
 
           <View
+            style={{
+              width: "80%",
+              marginTop: 30,
+              alignSelf: "center",
+              display: "flex",
+              flexDirection: "row",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => showEndPicker()}
+              activeOpacity={0.6}
+              style={{ width: "50%" }}
+            >
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 14,
+                  lineHeight: 16,
+                  color: "#ffffff",
+                  marginBottom: 8,
+                }}
+              >
+                End Date:
+              </Text>
+              <View
+                style={{
+                  backgroundColor: "#1E2646",
+                  width: 137,
+                  height: 45,
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: 8,
+                }}
+              >
+                <Image
+                  source={require("../../../assets/calender.png")}
+                  style={{
+                    height: 16,
+                    width: 18,
+                    resizeMode: "contain",
+                    marginRight: 8,
+                  }}
+                />
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 14,
+                    lineHeight: 16,
+                    color: "#ffffff",
+                  }}
+                >
+                  {endDateTime
+                    ? moment(endDateTime).format("DD. MMM YYYY")
+                    : "March 2023"}
+                </Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => showEndPicker()}
+              activeOpacity={0.6}
+              style={{ width: "50%" }}
+            >
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 14,
+                  lineHeight: 16,
+                  color: "#ffffff",
+                  marginBottom: 8,
+                }}
+              >
+                End Time:
+              </Text>
+              <View
+                style={{
+                  backgroundColor: "#1E2646",
+                  width: 97,
+                  height: 45,
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: 8,
+                }}
+              >
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 14,
+                    lineHeight: 16,
+                    color: "#ffffff",
+                  }}
+                >
+                  {endDateTime ? moment(endDateTime).format("HH:mm") : "08:00"}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View>
+            {dateTimestates.isVisibleDatePicker && (
+              <DateTimePicker
+                isVisible={dateTimestates.isVisibleDatePicker}
+                onConfirm={(datetime) => {
+                  setStartDateTimeState((prev) => ({
+                    ...prev,
+                    isVisibleDatePicker: false,
+                  }));
+                  let formatdDate = moment(datetime).format(
+                    "YYYY-MM-DD HH:mm:ss"
+                  );
+                  setStartDateTime(formatdDate);
+                  // props.setFieldValue("starts_at", formatdDate);
+                  setStartDateTimeTitle(
+                    moment(formatdDate).format("DD. MMM YYYY HH:mm")
+                  );
+                }}
+                onCancel={hideStartPicker}
+                mode={"datetime"}
+                is24Hour={true}
+                date={new Date()}
+                isDarkModeEnabled={false}
+                cancelTextIOS={"Exit"}
+                confirmTextIOS={"OK"}
+                minuteInterval={30}
+              />
+            )}
+          </View>
+          {/* <View
             style={{
               display: "flex",
               flexDirection: "row",
@@ -225,8 +489,8 @@ const MatchSearch = (props) => {
                 </Text>
               </View>
             </View>
-          </View>
-          <View
+          </View> */}
+          {/* <View
             style={{
               display: "flex",
               flexDirection: "row",
@@ -323,7 +587,38 @@ const MatchSearch = (props) => {
                 </Text>
               </View>
             </View>
+          </View> */}
+
+          <View>
+            {enddateTimestates.isVisibleDatePicker && (
+              <DateTimePicker
+                isVisible={enddateTimestates.isVisibleDatePicker}
+                onConfirm={(datetime) => {
+                  setEndDateTimeState((prev) => ({
+                    ...prev,
+                    isVisibleDatePicker: false,
+                  }));
+                  let formatdDate = moment(datetime).format(
+                    "YYYY-MM-DD HH:mm:ss"
+                  );
+                  setEndDateTime(formatdDate);
+                  // props.setFieldValue("starts_at", formatdDate);
+                  setEndDateTimeTitle(
+                    moment(formatdDate).format("DD. MMM YYYY HH:mm")
+                  );
+                }}
+                onCancel={hideEndPicker}
+                mode={"datetime"}
+                is24Hour={true}
+                date={new Date()}
+                isDarkModeEnabled={false}
+                cancelTextIOS={"Exit"}
+                confirmTextIOS={"OK"}
+                minuteInterval={30}
+              />
+            )}
           </View>
+
           <View style={{ width: "80%", alignSelf: "center", marginTop: 25 }}>
             <TextInputField
               placeHolder={"Location"}
@@ -336,9 +631,7 @@ const MatchSearch = (props) => {
               // ref={inputRefs}
               onSubmitEditing={() => console.log("first")}
               value={state.player}
-              onChangeText={(text) =>
-                dispatch(playerSearchSetUsernameAction(text))
-              }
+              onChangeText={(text) => setLocation(text)}
             />
           </View>
           <View style={{ display: "flex" }}>
@@ -362,7 +655,7 @@ const MatchSearch = (props) => {
                   Travel Distance
                 </Text>
               </View>
-              <TwoWaySlider callBack={callBack} />
+              <TwoWaySlider callBack={() => console.log("travell distance")} />
             </View>
             <View style={{ width: "80%", alignSelf: "center", height: 79 }}>
               <View style={{ marginBottom: 15 }}>
@@ -377,7 +670,7 @@ const MatchSearch = (props) => {
                   Preferred age of opponents
                 </Text>
               </View>
-              <TwoWaySlider callBack={() => console.log("first")} />
+              <TwoWaySlider callBack={callBack} />
             </View>
           </View>
           <View>
@@ -471,24 +764,24 @@ const MatchSearch = (props) => {
           <View
             style={{ marginVertical: 32, width: "80%", alignSelf: "center" }}
           >
-            {loading ? (
+            {/* {loading ? (
               <ActivityIndicator size={"small"} />
-            ) : (
-              <GreenLinearGradientButton
-                title={"Search"}
-                onSelect={handleSubmit}
-                // onSelect={() => console.log("navigate to new result screen")}
-                height={45}
-                loading={false}
-                // disabled={Object.values(state).every(
-                //   (value) => value === null || value === ""
-                // )}
-                color={["#0B8140", "#0A5129"]}
-              />
-            )}
+            ) : ( */}
+            <GreenLinearGradientButton
+              title={"Search"}
+              onSelect={handleSubmit}
+              // onSelect={() => console.log("navigate to new result screen")}
+              height={45}
+              loading={loading}
+              // disabled={Object.values(state).every(
+              //   (value) => value === null || value === ""
+              // )}
+              color={["#0B8140", "#0A5129"]}
+            />
+            {/* )} */}
             <BlueLinearGradientButton
               title={"Clear"}
-              onSelect={() => console.log("clear actions called")}
+              onSelect={() => props.navigation.goBack()}
               height={45}
             />
           </View>

@@ -17,7 +17,7 @@ function Availability(props) {
   const [monday, setMonday] = useState({ startTime: "", endTime: "" });
   const [availabilityArray, setAvailabilityArray] = useState([
     {
-      day: "Friday",
+      day: "Sunday",
       endTime: "4:00",
 
       startTime: "5:00",
@@ -29,12 +29,12 @@ function Availability(props) {
       startTime: "6:00",
     },
     {
-      day: "Saturday",
+      day: "Tuesday",
       endTime: "7:00",
       startTime: "6:00",
     },
     {
-      day: "Sunday",
+      day: "Wednesday",
       endTime: "11:00",
 
       startTime: "1:00",
@@ -46,13 +46,13 @@ function Availability(props) {
       startTime: "2:00",
     },
     {
-      day: "Tuesday",
+      day: "Friday",
       endTime: "2:00",
 
       startTime: "5:00",
     },
     {
-      day: "Wednesday",
+      day: "Saturday",
       endTime: "3:00",
 
       startTime: "6:00",

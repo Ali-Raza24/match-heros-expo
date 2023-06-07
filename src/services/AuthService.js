@@ -116,7 +116,7 @@ export default class AuthService extends ApiService {
 
     const token = await AsyncStorage.getItem("userToken");
     return axios
-      .post(`https://match-heroes.shehbazahmed.com/api/profile`, formData, {
+      .post(`${this.baseUrl}profile`, formData, {
         headers: {
           "content-type": "multipart/form-data",
           Authorization: `Bearer ${token}`,

@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   TextInput,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import TextInputField from "./TextInputField";
 import GameService from "../../services/GameService";
@@ -17,7 +18,8 @@ function ReportMatchModal(props) {
   const gameService = new GameService();
   const [inputText, setInputText] = useState("");
   const [disable, setDisable] = useState(false);
-  const onMatchReportSubmit = () => {
+
+  const onMatchReportSubmit = async () => {
     setDisable(true);
     const data = {
       game_id: props?.gameId,
@@ -63,6 +65,7 @@ function ReportMatchModal(props) {
       alert("Report Match Unhandle Request:", e);
     }
   };
+  console.log("report submit loader value is:#@#@#@#", disable);
   return (
     <View style={StyleSheet.centeredView}>
       <Modal
@@ -133,9 +136,16 @@ function ReportMatchModal(props) {
                 alignItems: "center",
                 paddingHorizontal: 0,
               }}
-              onPress={onMatchReportSubmit}
+              onPress={() => {
+                onMatchReportSubmit();
+                setDisable(true);
+              }}
             >
-              <Text style={styles.textStyle}>SUBMIT</Text>
+              {disable ? (
+                <ActivityIndicator size={"small"} />
+              ) : (
+                <Text style={styles.textStyle}>SUBMIT</Text>
+              )}
             </TouchableOpacity>
           </View>
         </View>

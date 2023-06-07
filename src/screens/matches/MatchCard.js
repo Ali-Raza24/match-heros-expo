@@ -32,6 +32,11 @@ export default class GameCard extends Component {
   }
 
   componentDidMount() {
+    console.log(
+      "single game object",
+      this.props?.game?.creator_id,
+      this.props?.loggedInUser
+    );
     this.setState({
       game: { ...this.props?.game },
       gameTeams: [...this.props?.game?.teams],
@@ -100,7 +105,8 @@ export default class GameCard extends Component {
     console.log(
       "Game data in Match Card Component is:#@#@#@#",
       this.props?.game,
-      this.props.game?.booking?.pitch?.venue?.name
+      this.props.game?.booking?.pitch?.venue?.name,
+      this.state?.loggedInUserId
     );
     return (
       <LinearGradient

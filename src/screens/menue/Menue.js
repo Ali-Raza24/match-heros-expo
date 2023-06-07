@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import SvgImage from "../../../assets/signIn.svg";
 import EditProfile from "../../../assets/editProfile.svg";
@@ -14,6 +15,7 @@ import { useSelector, useDispatch } from "react-redux";
 import AuthService from "../../services/AuthService";
 // import { authUser } from "../redux/actions";
 function Menue(props) {
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     (async () => {
       await dispatch(authUser());
@@ -251,6 +253,7 @@ function Menue(props) {
                   source={require("../../../assets/termcondition.png")}
                   style={{ resizeMode: "contain", height: 22, width: 22 }}
                 />
+
                 <Text
                   style={{
                     fontSize: 16,
@@ -270,12 +273,15 @@ function Menue(props) {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={async () => {
+                setLoading(true);
                 await dispatch(logOutUser());
+                setLoading(false);
                 props.navigation.reset({
                   index: 0,
                   routes: [{ name: "SignIn" }],
                 });
               }}
+              disabled={loading}
               style={{
                 height: 45,
                 width: "100%",
@@ -302,17 +308,21 @@ function Menue(props) {
                   source={require("../../../assets/logout.png")}
                   style={{ resizeMode: "contain", height: 22, width: 22 }}
                 />
-                <Text
-                  style={{
-                    fontSize: 16,
-                    lineHeight: 19,
-                    fontWeight: "bold",
-                    color: "#ffffff",
-                    textAlign: "left",
-                  }}
-                >
-                  Log Out
-                </Text>
+                {loading ? (
+                  <ActivityIndicator size={"small"} />
+                ) : (
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      lineHeight: 19,
+                      fontWeight: "bold",
+                      color: "#ffffff",
+                      textAlign: "left",
+                    }}
+                  >
+                    Log Out
+                  </Text>
+                )}
               </View>
               <Image
                 source={require("../../../assets/leftArrow.png")}

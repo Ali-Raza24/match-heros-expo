@@ -74,6 +74,7 @@ export default class MyGames extends Component {
               addLine={true}
               key={item.id}
               game={item}
+              loggedInUser={this.state.loggedInUser}
             />
           </View>
         )}

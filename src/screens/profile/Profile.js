@@ -104,15 +104,35 @@ function Profile(props) {
             // props.navigation.navigate("Availability");
           },
           (error) => {
+            setButtonLoading(false);
+            Alert.alert(
+              "Error Reported Try Again.",
+              "",
+              [{ text: "OK", onPress: () => props.navigation.goBack() }],
+              { cancelable: false }
+            );
             console.log("Api call error", error?.response, error);
           }
         )
         .catch((error) => {
+          setButtonLoading(false);
+          Alert.alert(
+            "Error Reported Try Again.",
+            "",
+            [{ text: "OK", onPress: () => props.navigation.goBack() }],
+            { cancelable: false }
+          );
           console.log("Api call errorsssss", error?.response, error);
         });
     } catch (e) {
+      setButtonLoading(false);
       console.log("API error is:#@#@#@#", e, e?.response);
-      alert("API error is:#@#@#@#", e);
+      Alert.alert(
+        "Error Reported Try Again.",
+        "",
+        [{ text: "OK", onPress: () => props.navigation.goBack() }],
+        { cancelable: false }
+      );
     }
   };
   const handleSubmit = () => {
@@ -291,6 +311,7 @@ style = {{
                 }}
                 height={45}
                 color={["#0B8140", "#0A5129"]}
+                loading={buttonLoading}
               />
             </View>
           </View>
