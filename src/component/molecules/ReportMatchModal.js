@@ -45,12 +45,20 @@ function ReportMatchModal(props) {
             // props.navigation.navigate("Availability");
           },
           (error) => {
+            props.setIsModal(false);
+            setDisable(false);
+            Alert.alert("Something Went Wrong!", "", [{ text: "OK" }], {
+              cancelable: false,
+            });
             console.log("Report Match Api call error", error?.response, error);
           }
         )
         .catch((error) => {
           props.setIsModal(false);
-          alert("Report Match Unhandle Request:");
+          setDisable(false);
+          Alert.alert("Something Went Wrong!", "", [{ text: "OK" }], {
+            cancelable: false,
+          });
           console.log(
             "Report Match Api call errorsssss",
             error?.response,

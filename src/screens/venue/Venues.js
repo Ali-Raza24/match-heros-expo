@@ -59,9 +59,10 @@ export default class Venues extends Component {
 
   getVenues(params) {
     return this.VenueService.getVenues(params).then((response) => {
+      console.log("venues list is:#@#@#", response.data);
       this.setState({
         venues: response.data,
-        nextLink: response.links.next,
+        nextLink: false,
         loading: false,
       });
     });

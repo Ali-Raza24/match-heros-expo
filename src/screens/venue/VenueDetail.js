@@ -12,13 +12,14 @@ import {
   Dimensions,
 } from "react-native";
 import SvgImage from "../../../assets/signIn.svg";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import TwoWaySlider from "../../component/molecules/TwoWaySlider";
 import { LinearGradient } from "expo-linear-gradient";
 import DropDownPicker from "react-native-dropdown-picker";
 import { gameTypes } from "../../utils/game-types";
 import GameCard from "../matches/MatchCard";
-
+import GameService from "../../services/GameService";
+import moment from "moment";
+import DateTimePicker from "react-native-modal-datetime-picker";
 const singleGameData = {
   avg_game_players: null,
   block_booking_id: null,
@@ -195,34 +196,100 @@ const singleGameData = {
   venue_id: null,
 };
 function VenueDetail(props) {
-  const [date, setDate] = useState(new Date(1598051730000));
-  const [mode, setMode] = useState("date");
-  const [show, setShow] = useState(false);
+  const gameService = new GameService();
+  const [loading, setLoading] = useState(false);
   const [openGameType, setOpenGameType] = useState(false);
   const [matchValue, setMatchValue] = useState();
   const [toggleDropDown, setToggleDropDown] = useState(false);
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate;
-    setShow(false);
-    setDate(currentDate);
-  };
+  const [games, setGames] = useState([]);
 
-  const showMode = (currentMode) => {
-    if (Platform.OS === "android") {
-      setShow(false);
-      // for iOS, add a button that closes the picker
+  const [startDateTime, setStartDateTime] = useState();
+  const [startDateTimeTitle, setStartDateTimeTitle] = useState();
+  const [dateTimestates, setStartDateTimeState] = useState({
+    isVisibleDatePicker: false,
+  });
+
+  const [endDateTime, setEndDateTime] = useState();
+  const [endDateTimeTitle, setEndDateTimeTitle] = useState();
+  const [enddateTimestates, setEndDateTimeState] = useState({
+    isVisibleDatePicker: false,
+  });
+
+  const [minimumAge, setMinimumAge] = useState(0);
+  const [maximumAge, setMaximumAge] = useState(75);
+
+  const callBack = (min, max) => {
+    setMinimumAge(min);
+    setMaximumAge(max);
+    handleSubmit();
+  };
+  const handleSubmit = (matchType) => {
+    console.log(
+      "startDateTime format ",
+      startDateTime,
+      matchValue,
+      matchType?.value
+    );
+    setLoading(true);
+    const data = {
+      dateFrom: startDateTime
+        ? moment(startDateTime).format("L").replace(/\//gi, "-")
+        : "",
+      dateTo: endDateTime
+        ? moment(endDateTime).format("L").replace(/\//gi, "-")
+        : "",
+      timeFrom: "",
+      timeTo: "",
+      location: "",
+      minAgeOfOponent: minimumAge || "",
+      maxAgeOfOponent: maximumAge || "",
+      matchType: matchType?.value || "",
+      matchSpeed: "",
+    };
+    console.log("posted venue search data#@#@", data);
+    try {
+      gameService
+        .searchGame(data)
+        .then((res) => {
+          console.log("search game response is:#@#@#@", res?.data?.data?.data);
+          setLoading(false);
+          setGames([...res?.data?.data?.data]);
+          // props.navigation.navigate("SearchGameList", {
+          //   games: res?.data?.data?.data,
+          // });
+        })
+        .catch((error) => {
+          console.log("eror is:#@#@#@#@", error?.response);
+          setGames([]);
+          setLoading(false);
+        });
+    } catch (error) {
+      console.log("error in try catch game list in venue", error);
+      setGames([]);
+      setLoading(false);
     }
-    setMode(currentMode);
   };
 
-  const showDatepicker = () => {
-    setShow(true);
-    showMode("date");
+  const showStartPicker = () => {
+    // setIsVisibleDatePicker(true);
+    setStartDateTimeState((prev) => ({ ...prev, isVisibleDatePicker: true }));
   };
 
-  const showTimepicker = () => {
-    showMode("time");
+  const hideStartPicker = () => {
+    // setIsVisibleDatePicker(false);
+    setStartDateTimeState((prev) => ({ ...prev, isVisibleDatePicker: false }));
   };
+
+  const showEndPicker = () => {
+    // setIsVisibleDatePicker(true);
+    setEndDateTimeState((prev) => ({ ...prev, isVisibleDatePicker: true }));
+  };
+
+  const hideEndPicker = () => {
+    // setIsVisibleDatePicker(false);
+    setEndDateTimeState((prev) => ({ ...prev, isVisibleDatePicker: false }));
+  };
+
   console.log("venue detail is:##@#@#@", singleGameData?.id);
   return (
     <>
@@ -246,6 +313,147 @@ function VenueDetail(props) {
           <StatusBar backgroundColor="#5E89E2" />
 
           <View
+            style={{
+              width: "80%",
+              marginTop: 30,
+              alignSelf: "center",
+              display: "flex",
+              flexDirection: "row",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => showStartPicker()}
+              activeOpacity={0.6}
+              style={{ width: "50%" }}
+            >
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 14,
+                  lineHeight: 16,
+                  color: "#ffffff",
+                  marginBottom: 8,
+                }}
+              >
+                Date From:
+              </Text>
+              <View
+                style={{
+                  backgroundColor: "#1E2646",
+                  width: 137,
+                  height: 45,
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: 8,
+                }}
+              >
+                <Image
+                  source={require("../../../assets/calender.png")}
+                  style={{
+                    height: 16,
+                    width: 18,
+                    resizeMode: "contain",
+                    marginRight: 8,
+                  }}
+                />
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 14,
+                    lineHeight: 16,
+                    color: "#ffffff",
+                  }}
+                >
+                  {startDateTime
+                    ? moment(startDateTime).format("DD. MMM YYYY")
+                    : "March 2023"}
+                </Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => showEndPicker()}
+              activeOpacity={0.6}
+              style={{ width: "50%" }}
+            >
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 14,
+                  lineHeight: 16,
+                  color: "#ffffff",
+                  marginBottom: 8,
+                }}
+              >
+                End Date:
+              </Text>
+              <View
+                style={{
+                  backgroundColor: "#1E2646",
+                  width: 137,
+                  height: 45,
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: 8,
+                }}
+              >
+                <Image
+                  source={require("../../../assets/calender.png")}
+                  style={{
+                    height: 16,
+                    width: 18,
+                    resizeMode: "contain",
+                    marginRight: 8,
+                  }}
+                />
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 14,
+                    lineHeight: 16,
+                    color: "#ffffff",
+                  }}
+                >
+                  {endDateTime
+                    ? moment(endDateTime).format("DD. MMM YYYY")
+                    : "March 2023"}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+
+          <View>
+            {dateTimestates.isVisibleDatePicker && (
+              <DateTimePicker
+                isVisible={dateTimestates.isVisibleDatePicker}
+                onConfirm={(datetime) => {
+                  setStartDateTimeState((prev) => ({
+                    ...prev,
+                    isVisibleDatePicker: false,
+                  }));
+                  let formatdDate = moment(datetime).format("YYYY-MM-DD");
+                  setStartDateTime(formatdDate);
+                  // console.log("start month date", formatdDate);
+                  // props.setFieldValue("starts_at", formatdDate);
+                  setStartDateTimeTitle(
+                    moment(formatdDate).format("DD. MMM YYYY HH:mm")
+                  );
+                  handleSubmit();
+                }}
+                onCancel={hideStartPicker}
+                mode={"date"}
+                is24Hour={true}
+                date={new Date()}
+                isDarkModeEnabled={false}
+                cancelTextIOS={"Exit"}
+                confirmTextIOS={"OK"}
+                minuteInterval={30}
+              />
+            )}
+          </View>
+
+          {/* <View
             style={{
               display: "flex",
               flexDirection: "row",
@@ -342,7 +550,37 @@ function VenueDetail(props) {
                 </Text>
               </View>
             </View>
+          </View> */}
+
+          <View>
+            {enddateTimestates.isVisibleDatePicker && (
+              <DateTimePicker
+                isVisible={enddateTimestates.isVisibleDatePicker}
+                onConfirm={(datetime) => {
+                  setEndDateTimeState((prev) => ({
+                    ...prev,
+                    isVisibleDatePicker: false,
+                  }));
+                  let formatdDate = moment(datetime).format("YYYY-MM-DD");
+                  setEndDateTime(formatdDate);
+                  // props.setFieldValue("starts_at", formatdDate);
+                  setEndDateTimeTitle(
+                    moment(formatdDate).format("DD. MMM YYYY HH:mm")
+                  );
+                  handleSubmit();
+                }}
+                onCancel={hideEndPicker}
+                mode={"date"}
+                is24Hour={true}
+                date={new Date()}
+                isDarkModeEnabled={false}
+                cancelTextIOS={"Exit"}
+                confirmTextIOS={"OK"}
+                minuteInterval={30}
+              />
+            )}
           </View>
+
           <View
             style={{
               display: "flex",
@@ -363,9 +601,7 @@ function VenueDetail(props) {
               Age Bracket
             </Text>
             <View>
-              <TwoWaySlider
-                callBack={() => console.log("callBack from venue Detail")}
-              />
+              <TwoWaySlider callBack={callBack} />
             </View>
           </View>
           <View
@@ -386,6 +622,7 @@ function VenueDetail(props) {
                 open={openGameType}
                 items={gameTypes}
                 setOpen={setOpenGameType}
+                onSelectItem={(matchType) => handleSubmit(matchType)}
                 value={matchValue}
                 setValue={setMatchValue}
                 style={{ borderColor: "#1E2646", backgroundColor: "#1E2646" }}
@@ -457,18 +694,39 @@ function VenueDetail(props) {
               alignItems: "center",
             }}
           >
-            {/* <GameCard
-              navigation={props.navigation}
-              cardColor="transparent"
-              dataContainerColor="transparent"
-              locationContainerColor="transparent"
-              showShedow={false}
-              textColor="white"
-              addLine={true}
-              key={singleGameData?.id}
-              game={singleGameData}
-            /> */}
-            {["Monday", "Tuesday"].map((data, index) => (
+            {games?.length > 0 ? (
+              games.map((item, index) => (
+                <GameCard
+                  navigation={props.navigation}
+                  cardColor="transparent"
+                  dataContainerColor="transparent"
+                  locationContainerColor="transparent"
+                  showShedow={false}
+                  textColor="white"
+                  addLine={true}
+                  key={item?.id}
+                  game={item}
+                />
+              ))
+            ) : (
+              <View
+                style={{
+                  display: "flex",
+                  height: Dimensions.get("window").height / 3,
+                  width: "100%",
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={{ fontSize: 20, fontWeight: "bold", color: "#ffffff" }}
+                >
+                  No Match Found
+                </Text>
+              </View>
+            )}
+            {/* {["Monday", "Tuesday"].map((data, index) => (
               <LinearGradient
                 style={{
                   display: "flex",
@@ -557,7 +815,7 @@ function VenueDetail(props) {
                   </LinearGradient>
                 </View>
               </LinearGradient>
-            ))}
+            ))} */}
           </View>
         </ScrollView>
       </SafeAreaView>

@@ -43,19 +43,20 @@ export default class MyGames extends Component {
   };
 
   getGames = async () => {
-    return this.GameService.getUserGames(this.state.loggedInUser.id).then(
+    return this.GameService.getUserGames(this.state?.loggedInUser?.id).then(
       (res) => {
-        this.setState({ games: res.data, showSpinner: false });
+        this.setState({ games: res?.data, showSpinner: false });
       }
     );
   };
 
   renderGames() {
+    console.log("Single Match item in My Match Card", this.state?.games);
     return (
       <FlatList
         keyExtractor={(item, index) => index.toString()}
         style={{ backgroundColor: "transparent" }}
-        data={this.state.games}
+        data={this.state?.games}
         renderItem={({ item, index }) => (
           <View
             style={{
@@ -65,23 +66,23 @@ export default class MyGames extends Component {
             }}
           >
             <GameCard
-              navigation={this.props.navigation}
+              navigation={this?.props?.navigation}
               cardColor="transparent"
               dataContainerColor="transparent"
               locationContainerColor="transparent"
               showShedow={false}
               textColor="white"
               addLine={true}
-              key={item.id}
+              key={item?.id}
               game={item}
-              loggedInUser={this.state.loggedInUser}
+              loggedInUser={this?.state?.loggedInUser}
             />
           </View>
         )}
         // onEndReached={this.handleLoadMore}
         onEndReachedThreshold={0.2}
-        onRefresh={this.props.onRefresh}
-        refreshing={this.props.refreshing}
+        onRefresh={this?.props?.onRefresh}
+        refreshing={this?.props?.refreshing}
       />
     );
   }
@@ -89,17 +90,17 @@ export default class MyGames extends Component {
   render() {
     return (
       <View style={styles.mainContainer}>
-        {this.state.showSpinner ? (
+        {this.state?.showSpinner ? (
           <View
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
           >
             <ActivityIndicator
               size={50}
               color="#2b87ff"
-              animating={this.state.loading}
+              animating={this.state?.loading}
             />
           </View>
-        ) : this.state.games.length > 0 ? (
+        ) : this.state?.games?.length > 0 ? (
           this.renderGames()
         ) : (
           <View

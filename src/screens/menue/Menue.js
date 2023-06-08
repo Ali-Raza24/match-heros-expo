@@ -13,19 +13,37 @@ import EditProfile from "../../../assets/editProfile.svg";
 import { logOutUser, authUser } from "../../redux/actions";
 import { useSelector, useDispatch } from "react-redux";
 import AuthService from "../../services/AuthService";
+import { useIsFocused } from "@react-navigation/native";
 // import { authUser } from "../redux/actions";
 function Menue(props) {
+  const authServices = new AuthService();
+  const isFocused = useIsFocused();
   const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    (async () => {
-      await dispatch(authUser());
-    })();
-  }, []);
+  const [userProfile, setUserProfile] = useState();
+  // useEffect(() => {
+  //   (async () => {
+  //     await dispatch(authUser());
+  //   })();
+  // }, []);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   // const authServces = new AuthService();
-  console.log("user data is in menue:#@#@#@", user);
-
+  console.log("user data is in menue:#@#@#@", user?.id, isFocused);
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        authServices.getLoginUserProfile(user?.id).then((res) => {
+          setUserProfile(res.data);
+          console.log("user profile is:#@#@#@#", res?.data);
+        });
+      } catch (error) {
+        alert("something went wrong getting user profile");
+      }
+    };
+    if (user?.id || isFocused) {
+      getUser();
+    }
+  }, [user || isFocused]);
   return (
     <>
       <SvgImage
@@ -42,7 +60,13 @@ function Menue(props) {
         <SafeAreaView style={{ flex: 1 }}>
           <View style={{ width: "80%", alignSelf: "center" }}>
             <TouchableOpacity
-              onPress={() => props.navigation.navigate("Profile")}
+              onPress={() => {
+                userProfile
+                  ? props.navigation.navigate("Profile", {
+                      userProfile: userProfile,
+                    })
+                  : alert("Something went wrong while getting profile");
+              }}
               style={{
                 flex: 0.3,
                 width: "100%",
@@ -73,7 +97,7 @@ function Menue(props) {
                     textAlign: "center",
                   }}
                 >
-                  {user?.name}
+                  {userProfile?.name}
                 </Text>
                 <Text
                   style={{
@@ -84,7 +108,7 @@ function Menue(props) {
                     textAlign: "center",
                   }}
                 >
-                  {user?.email}
+                  {userProfile?.email}
                 </Text>
               </View>
             </TouchableOpacity>

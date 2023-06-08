@@ -21,20 +21,33 @@ import PhotoUpload from "../../component/_shared/PhotoUpload";
 import AuthService from "../../services/AuthService";
 import { useSelector } from "react-redux";
 function Profile(props) {
+  const userProfile = props.route?.params?.userProfile;
   const authService = new AuthService();
   const user = useSelector((state) => state.user);
   const [toggleDropDown, setToggleDropDown] = useState(false);
   const [openCountryList, setOpenCountryList] = useState(false);
-  const [county_id, setCountryName] = useState(user?.location?.county?.name);
+  const [county_id, setCountryName] = useState(
+    userProfile?.location?.county?.name
+  );
   const [countriesList, setCountriesList] = useState(countiesList);
   const [profileImage, setProfileImage] = useState("");
-  const [name, setName] = useState(user?.name);
-  const [email, setEmail] = useState(user?.email);
-  const [city_id, setCity_id] = useState(user?.location?.city?.name);
+  const [name, setName] = useState(userProfile?.name);
+  const [email, setEmail] = useState(userProfile?.email);
+  const [city_id, setCity_id] = useState(userProfile?.location);
   const [errors, setValidationErrors] = useState({});
-  const [minimumAge, setMinimumAge] = useState("");
-  const [maximumAge, setMaximumAge] = useState("");
-  console.log("user county is:#@#@#", county_id, user?.location?.county);
+  const [minimumAge, setMinimumAge] = useState(
+    userProfile?.ageBracket?.split("-")[0]
+  );
+  const [maximumAge, setMaximumAge] = useState(
+    userProfile?.ageBracket?.split("-")[1]
+  );
+  console.log(
+    "user county is:#@#@#",
+    county_id,
+    userProfile?.location,
+    userProfile?.ageBracket?.split("-")[0],
+    userProfile?.ageBracket?.split("-")[1]
+  );
   // const [county_id,setCountryName] = useState("")
   const [profileImageObj, setProfileImageObj] = useState(null);
   const [buttonLoading, setButtonLoading] = useState(false);
@@ -81,8 +94,18 @@ function Profile(props) {
     const data = {
       name: name,
       email: email,
+      // location: {
+      //   city: {
+      //     id: 12,
+      //     name: city_id,
+      //   },
+      //   county: {
+      //     id: 1,
+      //     name: county_id,
+      //   },
+      // },
+      location: city_id,
       county_id: county_id,
-      city_id: city_id,
       minimum_age: minimumAge,
       maximum_age: maximumAge,
       avatarObject: profileImageObj,

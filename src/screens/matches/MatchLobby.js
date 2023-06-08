@@ -166,10 +166,10 @@ function MatchLobby(props) {
               </View>
             </View>
           ))}
-          <FloatingButton
+          {/* <FloatingButton
             onPress={() => console.log("first")}
             // onPress={() => this.props.navigation.navigate('CreateGame')}
-          />
+          /> */}
         </ScrollView>
       </SafeAreaView>
     </>

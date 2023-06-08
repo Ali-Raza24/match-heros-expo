@@ -135,10 +135,10 @@ export const GameLobbyScreen = () => {
           </Text>
         </View>
       )}
-      <FloatingButton
+      {/* <FloatingButton
         onPress={() => console.log("first")}
         // onPress={() => this.props.navigation.navigate('CreateGame')}
-      />
+      /> */}
       {/* </LinearGradient> */}
     </SafeAreaView>
   );

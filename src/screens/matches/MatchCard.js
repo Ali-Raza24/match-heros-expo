@@ -34,13 +34,13 @@ export default class GameCard extends Component {
   componentDidMount() {
     console.log(
       "single game object",
-      this.props?.game?.creator_id,
+      this.props?.game,
       this.props?.loggedInUser
     );
-    this.setState({
-      game: { ...this.props?.game },
-      gameTeams: [...this.props?.game?.teams],
-    });
+    // this.setState({
+    //   game: { ...this.props?.game },
+    //   gameTeams: [...this.props?.game?.teams],
+    // });
 
     this.AuthService.getUser().then((response) => {
       this.setState({ loggedInUserId: response?.id });
@@ -165,7 +165,9 @@ export default class GameCard extends Component {
                 />
               </View>
               <View style={{ ...this.styles.dateContainer }}>
-                {/* <Text style={this.styles.dateTextStyle}>{this.handleGameDate()}</Text> */}
+                <Text style={this.styles.dateTextStyle}>
+                  {this.handleGameDate()}
+                </Text>
 
                 <Text style={this.styles.dateTextStyle}>
                   {this.props.game?.game_type || "Social Game"}
