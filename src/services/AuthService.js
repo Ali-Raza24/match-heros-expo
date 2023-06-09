@@ -154,23 +154,20 @@ export default class AuthService extends ApiService {
 
     // let myDate = data.dob.split("/");
     // let formatDate = myDate[2] + "-" + myDate[1] + "-" + myDate[0];
-    console.log("12-12-2022");
     formData.append("name", data.name);
     formData.append("email", data.email);
-    // if (data?.location) {
-    //   formData.append("city", {
-    //     id: 1,
-    //     name: "Antrim",
-    //   });
-    //   formData.append("county", {
-    //     id: 2,
-    //     name: "Antrim",
-    //   });
-    // }
-    formData.append("city", data?.location);
-    formData.append("county", data?.county_id);
-    formData.append("minOponentAge", Number(data?.minimum_age));
-    formData.append("maxOponentAge", Number(data?.maximum_age));
+    if (data?.avatarObject) {
+      formData.append("avatar_image", {
+        uri: data.avatarObject.assets[0].uri,
+        name: data.avatarObject.fileName,
+        type: "image/jpeg",
+      });
+    }
+
+    formData.append("town", data?.town);
+    formData.append("country_id", data?.country_id);
+    formData.append("minOponentAge", Number(data?.minOponentAge));
+    formData.append("maxOponentAge", Number(data?.maxOponentAge));
     formData.append("_method", "PATCH");
     return formData;
   }

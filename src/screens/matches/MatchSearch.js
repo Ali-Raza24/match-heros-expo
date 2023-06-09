@@ -93,12 +93,8 @@ const MatchSearch = (props) => {
   const handleSubmit = () => {
     setLoading(true);
     const data = {
-      dateFrom: startDateTime
-        ? moment(startDateTime).format("L").replace(/\//gi, "-")
-        : "",
-      dateTo: endDateTime
-        ? moment(endDateTime).format("L").replace(/\//gi, "-")
-        : "",
+      dateFrom: startDateTime ? moment(startDateTime).format("DD-MM-YYYY") : "",
+      dateTo: endDateTime ? moment(endDateTime).format("DD-MM-YYYY") : "",
       timeFrom: startDateTime
         ? startDateTime.split(" ")[1].substr(0, 5)
         : "00:00",

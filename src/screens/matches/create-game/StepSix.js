@@ -50,7 +50,7 @@ export default function StepSix(props) {
   const getAllPlayers = async () => {
     setLoading(true);
     try {
-      const response = await playerService.getAllTeammates();
+      const response = await playerService.getAllPlayers();
       let users = response?.data;
       users =
         users.length > 0 &&
@@ -60,7 +60,7 @@ export default function StepSix(props) {
         }));
       console.log("Friends", users);
       setNextLink(response?.data);
-      setPlayers(users);
+      setPlayers(response?.data);
     } catch (error) {
       console.log(error);
       console.log("Step SIX Error" + JSON.stringify(error.response?.data));
@@ -93,7 +93,7 @@ export default function StepSix(props) {
           id: u.player_id,
           name: u.player_name,
         }));
-        setPlayers([...players, ...playersList]);
+        // setPlayers([...players, ...playersList]);
       });
     }
   };

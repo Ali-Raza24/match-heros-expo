@@ -44,7 +44,7 @@ export default function InvitePlayers(props) {
   const getAllPlayers = async () => {
     setLoading(true);
     try {
-      const response = await playerService.getAllTeammates();
+      const response = await playerService.getAllPlayers();
       let users = response?.data;
       users =
         users?.length > 0 &&
@@ -87,7 +87,7 @@ export default function InvitePlayers(props) {
           id: u.player_id,
           name: u.player_name,
         }));
-        setPlayers([...players, ...playersList]);
+        // setPlayers([...players, ...playersList]);
       });
     }
   };
@@ -174,7 +174,7 @@ export default function InvitePlayers(props) {
           keyExtractor={(item, index) => index}
           ListFooterComponent={renderFooter}
           // ListEmptyComponent={renderEmptyList}
-          onEndReached={handleLoadMore}
+          // onEndReached={handleLoadMore}
           showsVerticallScrollIndicator={false}
           onEndReachedThreshold={0.5}
           // onRefresh={onRefresh}

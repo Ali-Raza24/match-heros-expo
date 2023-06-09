@@ -10,6 +10,7 @@ import {
   ScrollView,
   StatusBar,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import SvgImage from "../../../assets/signIn.svg";
 import TwoWaySlider from "../../component/molecules/TwoWaySlider";
@@ -226,18 +227,14 @@ function VenueDetail(props) {
   const handleSubmit = (matchType) => {
     console.log(
       "startDateTime format ",
-      startDateTime,
+      moment(startDateTime).format("DD-MM-YYYY"),
       matchValue,
       matchType?.value
     );
     setLoading(true);
     const data = {
-      dateFrom: startDateTime
-        ? moment(startDateTime).format("L").replace(/\//gi, "-")
-        : "",
-      dateTo: endDateTime
-        ? moment(endDateTime).format("L").replace(/\//gi, "-")
-        : "",
+      dateFrom: startDateTime ? moment(startDateTime).format("DD-MM-YYYY") : "",
+      dateTo: endDateTime ? moment(endDateTime).format("DD-MM-YYYY") : "",
       timeFrom: "",
       timeTo: "",
       location: "",
@@ -719,13 +716,22 @@ function VenueDetail(props) {
                   alignItems: "center",
                 }}
               >
-                <Text
-                  style={{ fontSize: 20, fontWeight: "bold", color: "#ffffff" }}
-                >
-                  No Match Found
-                </Text>
+                {loading ? (
+                  <ActivityIndicator size={"small"} />
+                ) : (
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      fontWeight: "bold",
+                      color: "#ffffff",
+                    }}
+                  >
+                    No Match Found
+                  </Text>
+                )}
               </View>
             )}
+
             {/* {["Monday", "Tuesday"].map((data, index) => (
               <LinearGradient
                 style={{

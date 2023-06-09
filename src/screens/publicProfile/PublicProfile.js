@@ -40,6 +40,7 @@ class PublicProfile extends Component {
       city: "",
       county: "",
       id: "",
+      ageBracket: "",
       teams: [],
       refreshing: false,
       addPlayerObj: {
@@ -99,6 +100,7 @@ class PublicProfile extends Component {
       county_id: data.location ? data.location.county.id : "",
       city: data.location ? data.location.city.name : "",
       county: data.location ? data.location.county.name : "",
+      ageBracket: data?.ageBracket || "",
     });
   }
 
@@ -236,7 +238,10 @@ class PublicProfile extends Component {
                 {[
                   { title: "Matches Played", value: "8" },
                   { title: "Matches Organized", value: "3" },
-                  { title: "Preferred age of opponents", value: "28-40" },
+                  {
+                    title: "Preferred age of opponents",
+                    value: this.state.ageBracket,
+                  },
                 ].map((data, index) => (
                   <TouchableOpacity
                     key={index}

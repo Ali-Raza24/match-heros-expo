@@ -27,22 +27,23 @@ function Profile(props) {
   const [toggleDropDown, setToggleDropDown] = useState(false);
   const [openCountryList, setOpenCountryList] = useState(false);
   const [county_id, setCountryName] = useState(
-    userProfile?.location?.county?.name
+    userProfile?.address?.country?.id
   );
   const [countriesList, setCountriesList] = useState(countiesList);
   const [profileImage, setProfileImage] = useState("");
   const [name, setName] = useState(userProfile?.name);
   const [email, setEmail] = useState(userProfile?.email);
-  const [city_id, setCity_id] = useState(userProfile?.location);
+  const [location, setLocation] = useState(userProfile?.address?.town);
   const [errors, setValidationErrors] = useState({});
   const [minimumAge, setMinimumAge] = useState(
-    userProfile?.ageBracket?.split("-")[0]
+    Number(userProfile?.ageBracket?.split("-")[0])
   );
   const [maximumAge, setMaximumAge] = useState(
-    userProfile?.ageBracket?.split("-")[1]
+    Number(userProfile?.ageBracket?.split("-")[1])
   );
   console.log(
     "user county is:#@#@#",
+    userProfile?.address?.country?.id,
     county_id,
     userProfile?.location,
     userProfile?.ageBracket?.split("-")[0],
@@ -68,8 +69,8 @@ function Profile(props) {
     if (county_id === "") {
       errors.county_id = "County name field is required";
     }
-    if (city_id === "") {
-      errors.city_id = "Location name field is required";
+    if (location === "") {
+      errors.location = "Location name field is required";
     }
 
     console.log(errors);
@@ -94,20 +95,10 @@ function Profile(props) {
     const data = {
       name: name,
       email: email,
-      // location: {
-      //   city: {
-      //     id: 12,
-      //     name: city_id,
-      //   },
-      //   county: {
-      //     id: 1,
-      //     name: county_id,
-      //   },
-      // },
-      location: city_id,
-      county_id: county_id,
-      minimum_age: minimumAge,
-      maximum_age: maximumAge,
+      town: location,
+      country_id: county_id,
+      minOponentAge: minimumAge,
+      maxOponentAge: maximumAge,
       avatarObject: profileImageObj,
     };
     try {
@@ -121,7 +112,26 @@ function Profile(props) {
             Alert.alert(
               "You successfully edit profile.",
               "",
-              [{ text: "OK", onPress: () => props.navigation.goBack() }],
+              [
+                {
+                  text: "OK",
+                  onPress: () => {
+                    props.navigation.reset({
+                      index: 0,
+                      routes: [
+                        {
+                          name: "Dashboard",
+                          state: { routes: [{ name: "Menu" }] },
+                        },
+                      ],
+                    });
+                    // props.navigation.reset({
+                    //   index: 0,
+                    //   routes: [{ name: "Menu" }],
+                    // });
+                  },
+                },
+              ],
               { cancelable: false }
             );
             // props.navigation.navigate("Availability");
@@ -294,7 +304,7 @@ style = {{
                     transparent: true,
                     presentationStyle: "fullScreen", // for iOS, but raises a warning on android if not present
                   }}
-                  placeholder="Country Name"
+                  placeholder={county_id ? county_id : "Country Name"}
                   listMode="MODAL"
                   theme="DARK"
                 />
@@ -314,12 +324,12 @@ style = {{
                 inputColor="#ffffff"
                 borderBottomColor={"#636C92"}
                 profile={true}
-                onChangeText={(text) => setCity_id(text)}
-                value={city_id}
+                onChangeText={(text) => setLocation(text)}
+                value={location}
               />
-              {errors?.errors?.city_id && (
+              {errors?.errors?.location && (
                 <Text style={{ color: "red", top: -22 }}>
-                  {errors.errors.city_id}
+                  {errors.errors.location}
                 </Text>
               )}
             </View>

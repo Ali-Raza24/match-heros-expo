@@ -82,6 +82,6 @@ export default class PlayerService extends ApiService {
     );
   }
   async getAllTeammates() {
-    return axios.get(this.baseUrl + `temp-players`);
+    return axios.get(this.baseUrl + `all/team-player`);
   }
 }

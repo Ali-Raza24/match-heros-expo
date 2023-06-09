@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component, useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -33,7 +33,8 @@ const Teams = (props) => {
   const [nextLink, setNextLink] = useState("");
   const [endReached, setEndReached] = useState(false);
   const [showInvitePlayers, setShowInvitePlayers] = useState(false);
-  useState(() => {
+
+  useEffect(() => {
     getTeammates();
   }, []);
 
@@ -42,9 +43,10 @@ const Teams = (props) => {
     try {
       const response = await playerService.getAllTeammates();
       const data = response.data.teamPlayers;
+      console.log("teammates data##@#@#@#", data);
       const _teams = formatTeammate(data.data);
       setTeams(_teams);
-      setNextLink(data.links.next);
+      setNextLink(data?.links?.next);
       setTimeout(() => {
         setLoading(false);
       }, 5000);
@@ -122,7 +124,7 @@ const Teams = (props) => {
   };
 
   function displayTeammates() {
-    if (teams && teams.length > 0) {
+    if (teams && teams?.length > 0) {
       return (
         <FlatList
           data={teams}
@@ -170,12 +172,31 @@ const Teams = (props) => {
           refreshing={refreshing}
         />
       );
+    } else {
+      return (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <Text style={{ color: "#ffffff", fontSize: 20, fontWeight: "bold" }}>
+            You Don't have any team yet!
+          </Text>
+        </View>
+      );
     }
   }
 
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <SvgImage
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 16,
+            bottom: 0,
+          }}
+        />
         <ActivityIndicator size={50} color="#2b87ff" animating={loading} />
       </View>
     );
