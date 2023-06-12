@@ -76,6 +76,7 @@ export default class MyGames extends Component {
               key={item?.id}
               game={item}
               loggedInUser={this?.state?.loggedInUser}
+              fromInviteHeroMatch={this.props?.fromInviteHeroMatch}
             />
           </View>
         )}

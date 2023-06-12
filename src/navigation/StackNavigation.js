@@ -49,6 +49,7 @@ import SearchGameList from "../screens/matches/SearchGameList";
 import CancellationPolicy from "../screens/token/CancellationPolicy";
 import TacPage from "../../termsAndConditions/TACPage";
 import PrivacyPolicy from "../screens/privacypolicy/PrivacyPolicy";
+import InviteHeroMatchClick from "../screens/publicProfile/InviteHeroMatchClick";
 const Stack = createStackNavigator();
 
 function MyStack() {
@@ -561,6 +562,18 @@ function MyStack() {
           component={PrivacyPolicy}
           options={{
             headerTitle: "Privacy Policy",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#11172D" },
+            headerTitleStyle: { color: "#ffffff" },
+            headerTintColor: "#ffffff",
+            headerTintColor: "green",
+          }}
+        />
+        <Stack.Screen
+          name="InviteHeroMatchClick"
+          component={InviteHeroMatchClick}
+          options={{
+            headerTitle: "Invite Hero",
             headerTitleAlign: "center",
             headerStyle: { backgroundColor: "#11172D" },
             headerTitleStyle: { color: "#ffffff" },

@@ -5,9 +5,9 @@ export default class ImageService {
   constructor() {
     this.teamImagesUrl = config.TEAM_IMAGES_URL;
     this.coverImagesUrl = config.COVER_IMAGES_URL;
-    this.profileImagesUrl = config.PROFILE_IMAGES_URL;
+    this.profileImagesUrl = `http://63.33.237.96/uploads/images/profile/`;
     this.venueImageUrl = config.VENUE_IMAGES_URL;
-    this.baseUrl = config.ROOT_URL;
+    this.baseUrl = `http://63.33.237.96/api/`;
   }
 
   getPlayerAvatarUri(imageUrl, playerid) {

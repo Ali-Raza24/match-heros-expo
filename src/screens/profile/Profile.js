@@ -20,9 +20,12 @@ import DropDownPicker from "react-native-dropdown-picker";
 import PhotoUpload from "../../component/_shared/PhotoUpload";
 import AuthService from "../../services/AuthService";
 import { useSelector } from "react-redux";
+import GameService from "../../services/GameService";
+import ImageService from "../../services/ImageService";
 function Profile(props) {
   const userProfile = props.route?.params?.userProfile;
   const authService = new AuthService();
+  const imageServices = new ImageService();
   const user = useSelector((state) => state.user);
   const [toggleDropDown, setToggleDropDown] = useState(false);
   const [openCountryList, setOpenCountryList] = useState(false);
@@ -168,6 +171,10 @@ function Profile(props) {
       );
     }
   };
+  console.log(
+    "player avatar uri:#@#@#@",
+    imageServices.getPlayerAvatarUri(profileImage, 36)
+  );
   const handleSubmit = () => {
     console.log(
       "errors is:##@#@",

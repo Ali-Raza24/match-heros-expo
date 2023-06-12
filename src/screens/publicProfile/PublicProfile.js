@@ -181,7 +181,8 @@ class PublicProfile extends Component {
     console.log(
       "prevRoutes is:#@#@#@# Heros",
       prevRoute?.name,
-      this?.state?.name
+      this?.state?.name,
+      this.props?.currentUserId
     );
     console.log("country and city is:", this.state.county, this.state.city);
     return (
@@ -328,7 +329,11 @@ class PublicProfile extends Component {
               >
                 <GreenLinearGradientButton
                   title={"Invite Hero to Match".toUpperCase()}
-                  onSelect={() => this.props.navigation.navigate("InviteHero")}
+                  onSelect={() =>
+                    this.props.navigation.navigate("InviteHero", {
+                      playerId: this.props?.currentUserId,
+                    })
+                  }
                   // onSelect={() => this.props.navigation.navigate("Profile")}
                   height={45}
                   loading={false}

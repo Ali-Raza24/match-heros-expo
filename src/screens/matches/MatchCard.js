@@ -106,7 +106,9 @@ export default class GameCard extends Component {
       "Game data in Match Card Component is:#@#@#@#",
       this.props?.game,
       this.props.game?.booking?.pitch?.venue?.name,
-      this.state?.loggedInUserId
+      this.state?.loggedInUserId,
+      this.props?.fromInviteHeroMatch,
+      this.props?.game?.creator_id
     );
     return (
       <LinearGradient
@@ -139,11 +141,15 @@ export default class GameCard extends Component {
           style={{ ...this.styles.cardStyle }}
           disabled={this.props?.noPress}
           onPress={() =>
-            this.props.navigation.navigate("MatchDetail", {
-              id: this.props?.game?.id,
-              gameCreator: this?.props.game?.creator_id,
-              canSee: this.isPlayerInGame(),
-            })
+            this.props?.fromInviteHeroMatch
+              ? this.props.navigation.navigate("InviteHeroMatchClick", {
+                  game: this.props?.game,
+                })
+              : this.props.navigation.navigate("MatchDetail", {
+                  id: this.props?.game?.id,
+                  gameCreator: this?.props.game?.creator_id,
+                  canSee: this.isPlayerInGame(),
+                })
           }
           // onPress={() => !this.props.noPress && this.props.navigation.navigate("ViewGame", {
           //   id: this.props.game.id,
