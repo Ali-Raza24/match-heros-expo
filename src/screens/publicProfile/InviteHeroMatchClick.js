@@ -24,7 +24,7 @@ function InviteHeroMatchClick(props) {
   const game = props?.route?.params?.game;
   const gameService = new GameService();
   const [myMatches, setMyMatches] = useState([]);
-  const [matchFee, setMatchFee] = useState("");
+  const [matchFee, setMatchFee] = useState(0);
   const [isModal, setIsModal] = useState(false);
   const [loading, setLoading] = useState(false);
   //   useEffect(() => {
@@ -49,6 +49,27 @@ function InviteHeroMatchClick(props) {
   //         setLoading(false);
   //       });
   //   };
+
+  const handleInvitePlayerInvitation = async () => {
+    setLoading(true);
+    const data = {
+      game_id: game?.id,
+      inviteeable_id: props?.onClickPlayerId,
+      fee: matchFee,
+    };
+    console.log("data before calling invitePlayerToMatch API is :@!@!@", data);
+    gameService
+      .inviteHeroToMatch(data)
+      .then(() => {
+        setIsModal(true);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log("err", err);
+        setLoading(false);
+        alert("Something went wrong!");
+      });
+  };
   const handleGameDate = () => {
     let date;
     game?.booking
@@ -248,7 +269,7 @@ function InviteHeroMatchClick(props) {
               </View>
               <GreenLinearGradientButton
                 title={"Invite".toUpperCase()}
-                onSelect={() => setIsModal(true)}
+                onSelect={handleInvitePlayerInvitation}
                 // onSelect={() => this.props.navigation.navigate("Profile")}
                 height={45}
                 loading={false}

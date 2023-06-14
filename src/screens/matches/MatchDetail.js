@@ -492,7 +492,7 @@ class MatchDetail extends Component {
                     "#E9C155",
                   ].reverse()}
                 >
-                  <View style={{ ...styles.cardStyle }}>
+                  <View style={{ ...this.styles.cardStyle }}>
                     <View style={{}}>
                       <View
                         style={{
@@ -519,7 +519,7 @@ class MatchDetail extends Component {
                           {/* <Text style={styles.dateTextStyle}>Social Game</Text> */}
                           <Text
                             style={{
-                              ...styles.dateTextStyle,
+                              ...this.styles.dateTextStyle,
                               fontSize: 20,
                               lineHeight: 24,
                             }}

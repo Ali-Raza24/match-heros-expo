@@ -332,6 +332,7 @@ class PublicProfile extends Component {
                   onSelect={() =>
                     this.props.navigation.navigate("InviteHero", {
                       playerId: this.props?.currentUserId,
+                      onClickPlayerId: this?.state?.id,
                     })
                   }
                   // onSelect={() => this.props.navigation.navigate("Profile")}

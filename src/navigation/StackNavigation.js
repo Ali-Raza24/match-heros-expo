@@ -50,6 +50,7 @@ import CancellationPolicy from "../screens/token/CancellationPolicy";
 import TacPage from "../../termsAndConditions/TACPage";
 import PrivacyPolicy from "../screens/privacypolicy/PrivacyPolicy";
 import InviteHeroMatchClick from "../screens/publicProfile/InviteHeroMatchClick";
+import EditGameScreen from "../screens/matches/edit-game";
 const Stack = createStackNavigator();
 
 function MyStack() {
@@ -574,6 +575,18 @@ function MyStack() {
           component={InviteHeroMatchClick}
           options={{
             headerTitle: "Invite Hero",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#11172D" },
+            headerTitleStyle: { color: "#ffffff" },
+            headerTintColor: "#ffffff",
+            headerTintColor: "green",
+          }}
+        />
+        <Stack.Screen
+          name="EditGameScreen"
+          component={EditGameScreen}
+          options={{
+            headerTitle: "Edit Match",
             headerTitleAlign: "center",
             headerStyle: { backgroundColor: "#11172D" },
             headerTitleStyle: { color: "#ffffff" },

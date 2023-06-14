@@ -84,9 +84,9 @@ class Match extends Component {
   getMyGames = () => {
     this.GameService.getUserGames(this.props.user.id)
       .then((games) => {
-        console.log("user match is:#@#@#@", games);
+        console.log("user match is:#@#@#@", games?.data?.length);
         this.setState({
-          myGames: games.data,
+          myGames: games?.data,
           myGamesRefreshing: false,
           loading: false,
         });
@@ -434,7 +434,8 @@ class Match extends Component {
           {this.state.selected === 2 && (
             <MyGames
               refreshing={this.state.myGamesRefreshing}
-              onRefresh={this.onMyGamesRefresh}
+              // onRefresh={this.onMyGamesRefresh}
+              onRefresh={() => console.log("first")}
               games={this.state.myGames}
               navigation={this.props.navigation}
             />

@@ -129,7 +129,9 @@ export default class GameService extends ApiService {
   async invitePlayersToGame(gameId, data) {
     return axios.post(this.baseUrl + `games/${gameId}/invitations`, data);
   }
-
+  async inviteHeroToMatch(data) {
+    return axios.post(this.baseUrl + `invite-heroTo-match`, data);
+  }
   async confirmedInvitedPlayers(gameId) {
     return axios.get(
       this.baseUrl + `games/${gameId}/confirmed-invited-players`

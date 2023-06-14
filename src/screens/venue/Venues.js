@@ -300,9 +300,9 @@ export default class Venues extends Component {
               <SearchArea
                 county_id={this.state.county_id}
                 counties={this.counties}
-                searchCounty={(county) => this.searchVenueCounty(county)}
+                searchCounty={(text) => this.searchVenueCounty(text)}
                 city_id={this.state.city_id}
-                searchCity={(city) => this.searchVenueCity(city)}
+                searchCity={(text) => this.searchVenueCity(text)}
                 getCities={this.getCities}
                 dateTime={false}
               />
@@ -374,9 +374,9 @@ export default class Venues extends Component {
                     <ListItem.Subtitle
                       style={{ color: "#ffffff", fontSize: 14 }}
                     >
-                      {item.location.county.name +
+                      {item?.location?.county?.name +
                         ", " +
-                        item.location.city.name}
+                        item.location?.city?.name}
                     </ListItem.Subtitle>
                   </ListItem.Content>
                   <ListItem.Chevron

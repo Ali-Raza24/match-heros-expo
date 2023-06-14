@@ -144,6 +144,7 @@ export default class GameCard extends Component {
             this.props?.fromInviteHeroMatch
               ? this.props.navigation.navigate("InviteHeroMatchClick", {
                   game: this.props?.game,
+                  onClickPlayerId: this?.props?.onClickPlayerId,
                 })
               : this.props.navigation.navigate("MatchDetail", {
                   id: this.props?.game?.id,

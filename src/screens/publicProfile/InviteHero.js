@@ -20,6 +20,7 @@ import GameService from "../../services/GameService";
 import MyGames from "../matches/MyMatch";
 function InviteHero(props) {
   const playerId = props?.route?.params?.playerId;
+  const onClickPlayerId = props?.route?.params?.onClickPlayerId;
   console.log("Player id is in invite hero List:@#@#@#", playerId);
   const gameService = new GameService();
   const [myMatches, setMyMatches] = useState([]);
@@ -33,7 +34,7 @@ function InviteHero(props) {
     gameService
       .getUserGames(playerId)
       .then((games) => {
-        console.log("user match is:#@#@#@", games?.data);
+        // console.log("user match is:#@#@#@", games?.data?.length);
         setMyMatches(games?.data);
         setLoading(false);
         // this.setState({
@@ -72,6 +73,7 @@ function InviteHero(props) {
             games={myMatches}
             navigation={props.navigation}
             fromInviteHeroMatch={true}
+            onClickPlayerId={onClickPlayerId}
           />
         )}
         {/* <View style={{ display: "flex", width: "80%", alignSelf: "center" }}>

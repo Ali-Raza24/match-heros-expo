@@ -11,22 +11,15 @@ import {
   ScrollView,
   ImageBackground,
 } from "react-native";
-import React, {
-  useLayoutEffect,
-  useRef,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { useLayoutEffect, useMemo, useState } from "react";
 import ToolTip from "react-native-walkthrough-tooltip";
 import Colors from "../../../../assets/Colors";
 import Countries from "../../../component/_shared/Counties";
 import DropDownPicker from "react-native-dropdown-picker";
 import Buttons from "./ButtonGroup";
 import ErrorText from "./ErrorText";
-import DisableButtonGroup from "./DisableButtonGroup";
-import TextInputField from "../../../component/molecules/TextInputField";
 import GreenLinearGradientButton from "../../../component/molecules/GreenLinearGradientButton";
+import TextInputField from "../../../component/molecules/TextInputField";
 
 const popoverText = (
   <Text>
@@ -98,21 +91,18 @@ export default function Steptwo(props) {
       // });
     };
   }, [showPopup]);
-  useEffect(() => {
-    if (item?.name) {
-      props.setValues({ ...props.values, venue_name: item?.name });
-    }
-  }, [item?.name]);
+
   const getCities = () => {
-    return Countries.find((x) => x.id === props?.values?.county)
-      ? Countries.find((x) => x.id === props?.values?.county)?.cities
+    return Countries.find((x) => x.id === Number(props.values.county))
+      ? Countries.find((x) => x.id === Number(props.values.county)).cities
       : [];
   };
 
-  const handleSurfaceType = (callback) => {
-    props.setFieldValue("surface_type", callback(props.values.surface_type));
-  };
+  if (!props.values) {
+    return null;
+  }
 
+  // console.log('STEP 2', props.values)
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.text}>Venue Details</Text>
@@ -154,7 +144,7 @@ export default function Steptwo(props) {
               // this.passwordTextInput.focus();
             }}
             nonEditAble={true}
-            value={item?.name}
+            value={item?.name ? item?.name : props.values.venue_name}
             onChangeText={props.handleChange("venue_name")}
           />
 
@@ -185,7 +175,20 @@ export default function Steptwo(props) {
           <ErrorText message={"area" in props.errors && props.errors?.area} />
         </View>
       </View>
+      {/* <View style={styles.inputAndLabelContainer}>
+                    <FormLabel containerStyle={styles.labelContainer} labelStyle={styles.label}>Venue Name</FormLabel>
+                    <FormInput
+                        blurOnSubmit={false}
+                        inputStyle={styles.inputStyle}
+                        containerStyle={styles.inputContainerStyle}
+                        onChangeText={props.handleChange("venue_name")}
+                        onBlur={props.handleBlur("venue_name")}
+                        value={props.values.venue_name}
+                        placeholder='Name of the Venue'
+                    />
+                    <ErrorText message={'venue_name' in props.errors && 'venue_name' in props.touched && props.errors.venue_name} />
 
+                </View> */}
       <View style={styles.selectContainer}>
         <DropDownPicker
           open={openSurface}
@@ -216,20 +219,50 @@ export default function Steptwo(props) {
           message={"surface_type" in props.errors && props.errors.surface_type}
         />
       </View>
-      {props.values.venue_name &&
-      props.values.area &&
-      props.values.surface_type ? (
-        <Buttons {...props} />
-      ) : (
-        <DisableButtonGroup
-          customStyleContainer={{ marginTop: 30 }}
-          {...props}
-        />
-        // <DisableButtonGroup {...props} />
-      )}
+      <Buttons {...props} />
     </ScrollView>
   );
 }
+
+// Picker Styles
+
+// const pickerSelectStyles = StyleSheet.create({
+
+//     viewContainer: {
+//         backgroundColor: Colors.white,
+//         width: '100%',
+//         marginLeft: 'auto',
+//         marginRight: 'auto',
+//         borderRadius: 10,
+//         marginVertical: 10
+//     },
+//     inputIOS: {
+//         marginVertical: 7,
+//         width: '90%',
+//         backgroundColor: 'white',
+//         borderRadius: 10,
+//         color: 'rgba(112,112,112,0.5)'
+//         // to ensure the text is never behind the icon
+//     },
+//     inputAndroid: {
+//         marginVertical: 7,
+//         marginHorizontal: 4,
+//         width: '90%',
+//         backgroundColor: 'white',
+
+//         borderRadius: 10,
+//         color: 'rgba(112,112,112,0.5)'
+//     },
+// })
+
+// const surfaceTypePicker = StyleSheet.create({
+//     ...pickerSelectStyles,
+//     viewContainer: {
+//         ...pickerSelectStyles.viewContainer,
+//         width: '60%',
+//         marginTop: 30
+//     }
+// })
 
 const styles = StyleSheet.create({
   addVenue: {
@@ -237,8 +270,8 @@ const styles = StyleSheet.create({
   },
   dropdownPickerContainer: {
     zIndex: 999,
-    width: "80%",
-    // marginTop: 15,
+    width: "100%",
+    marginTop: 15,
   },
   dropdownPickerContainer2: {
     zIndex: 999,
@@ -273,14 +306,12 @@ const styles = StyleSheet.create({
   },
   groundImageContainer: {
     alignItems: "center",
-    width: "80%",
-    height: 79,
     flex: 1,
   },
   groundImage: {
-    width: "80%",
-    height: 79,
-    // borderRadius: 8,
+    width: 200,
+    height: 70,
+    borderRadius: 8,
   },
   inputAndLabelContainer: {
     width: "80%",
@@ -303,7 +334,7 @@ const styles = StyleSheet.create({
   label: {
     textAlign: "left",
     fontSize: 15,
-    // fontFamily: "SourceSansPro-SemiBold",
+    fontFamily: "SourceSansPro-SemiBold",
     color: "white",
   },
   labelContainer: {
@@ -324,9 +355,8 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   selectContainer: {
-    justifyContent: "flex-start",
     alignItems: "center",
-    // marginTop: 15,
+    marginTop: 15,
     marginBottom: 10,
     width: "100%",
   },
@@ -347,12 +377,10 @@ const styles = StyleSheet.create({
   },
   text: {
     color: Colors.white,
-    width: "87%",
-    alignSelf: "flex-end",
     fontSize: 18,
     marginTop: 5,
     marginBottom: 10,
-    textAlign: "left",
+    textAlign: "center",
   },
   transparentButton: {
     paddingTop: 10,

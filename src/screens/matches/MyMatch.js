@@ -77,12 +77,13 @@ export default class MyGames extends Component {
               game={item}
               loggedInUser={this?.state?.loggedInUser}
               fromInviteHeroMatch={this.props?.fromInviteHeroMatch}
+              onClickPlayerId={this?.props?.onClickPlayerId}
             />
           </View>
         )}
         // onEndReached={this.handleLoadMore}
         onEndReachedThreshold={0.2}
-        onRefresh={this?.props?.onRefresh}
+        // onRefresh={this?.props?.onRefresh}
         refreshing={this?.props?.refreshing}
       />
     );
