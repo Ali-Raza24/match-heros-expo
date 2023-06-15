@@ -22,6 +22,7 @@ import moment from "moment";
 import { getCities, getCounty } from "../../utils/county-area";
 function InviteHeroMatchClick(props) {
   const game = props?.route?.params?.game;
+  const onClickPlayerId = props?.route?.params?.onClickPlayerId;
   const gameService = new GameService();
   const [myMatches, setMyMatches] = useState([]);
   const [matchFee, setMatchFee] = useState(0);
@@ -54,7 +55,7 @@ function InviteHeroMatchClick(props) {
     setLoading(true);
     const data = {
       game_id: game?.id,
-      inviteeable_id: props?.onClickPlayerId,
+      inviteeable_id: onClickPlayerId,
       fee: matchFee,
     };
     console.log("data before calling invitePlayerToMatch API is :@!@!@", data);

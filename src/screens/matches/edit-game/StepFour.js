@@ -77,7 +77,13 @@ export default function StepFour(props) {
     props.setFieldValue("game_speed", callback(props.values.game_speed));
     setGameSpeed(callback(gameSpeed));
   };
-
+  const callBacks = (min, max) => {
+    props.setValues({
+      ...props.values,
+      minAgeOfPlayer: min,
+      maxAgeOfPlayer: max,
+    });
+  };
   return (
     <ScrollView style={styles.container}>
       <View style={{ width: "100%", alignSelf: "center" }}>
@@ -87,7 +93,7 @@ export default function StepFour(props) {
           </Text>
 
           <View style={styles.gameSpeedContainer}>
-            <Text style={styles.gameSpeedText}>Match Speed</Text>
+            {/* <Text style={styles.gameSpeedText}>Match Speed</Text> */}
 
             {/* Game Speed Picker */}
             <View style={styles.pickerContainer}>
@@ -273,12 +279,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   pickerContainer: {
-    width: "50%",
+    alignSelf: "center",
+    width: "100%",
   },
   gameSpeedText: {
     color: "white",
     fontSize: 21,
-    textAlign: "center",
+    textAlign: "left",
   },
   gameSpeedIconWrapper: {
     width: 50,

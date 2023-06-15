@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Image,
   SafeAreaView,
+  Alert,
 } from "react-native";
 import React, {
   useEffect,
@@ -38,7 +39,7 @@ import * as Yup from "yup";
 import { formatGame } from "./format-game";
 import { displayDangerToast, displaySuccessToast } from "../../../utils/toast";
 import StepSeven from "./StepSeven";
-
+import SvgImage from "../../../../assets/signIn.svg";
 const EditGameSchema = Yup.object().shape({
   game_type: Yup.string().required("Game type is required!"),
   game_size: Yup.string().required("Game size is required!"),
@@ -109,6 +110,97 @@ export default function EditGameScreen(props) {
   // Get id from the params object
   const route = useRoute();
   // Fetch game from the api
+
+  const onSubmit = (values) => {
+    setLoading(true);
+    let data = {};
+    console.log("onSubmit function called@!@!");
+    // if (Object.keys(errors).length > 0) {
+    //   console.log("Error Create Game Handle Submit");
+    //   displayDangerToast(toast, "Please fill all the required fields.");
+    //   return;
+    // }
+    if (isLastStep) {
+      data = {
+        ...values,
+      };
+      // data = { ...values, player_ids: players };
+      // if (values.venue_name && values.venue_name.length > 0) {
+      //   data.custom_venue = true;
+      // }
+
+      gameService
+        .edit(data)
+        .then((response) => {
+          console.log("Game Edit", response.data);
+          // displaySuccessToast(toast, "Game has been updated Successfully!");
+          Alert.alert(
+            "Match Updated Successfully!.",
+            "",
+            [
+              {
+                text: "OK",
+                onPress: () => {
+                  setLoading(false);
+                  props.navigation.reset({
+                    index: 0,
+                    routes: [
+                      {
+                        name: "Dashboard",
+                        state: { routes: [{ name: "Matches" }] },
+                      },
+                    ],
+                  });
+                },
+              },
+            ],
+            {
+              cancelable: false,
+            }
+          );
+          return;
+        })
+        .catch((err) => {
+          const error = err.response?.data;
+          setLoading(false);
+          Alert.alert(
+            "Something went wrong!.",
+            "",
+            [
+              {
+                text: "OK",
+                onPress: () => {
+                  props.navigation.reset({
+                    index: 0,
+                    routes: [
+                      {
+                        name: "Dashboard",
+                        state: { routes: [{ name: "Matches" }] },
+                      },
+                    ],
+                  });
+                },
+              },
+            ],
+            {
+              cancelable: false,
+            }
+          );
+          // if ("message" in error) {
+          //   if (error.message.length > 50) {
+          //     displayDangerToast(
+          //       toast,
+          //       "Something went wrong. Please try again."
+          //     );
+          //     return;
+          //   }
+          //   displayDangerToast(toast, error.message);
+          //   return;
+          // }
+        });
+    }
+  };
+
   useEffect(() => {
     setLoading(true);
     gameService
@@ -233,7 +325,21 @@ export default function EditGameScreen(props) {
       values.fee_type && values.fee_type.filter((type) => type !== methodName);
     setFieldValue("fee_type", filteredFeeTypes);
   };
-
+  // const addPlayer = (id) => {
+  //   const isPlayerExist = values.player_ids.find((p) => p === id);
+  //   if (isPlayerExist) {
+  //     return;
+  //   }
+  //   const updatedPlayers = [...values.player_ids, id];
+  //   setFieldValue("player_ids", updatedPlayers);
+  // };
+  // get id from the StepSix Component and remove it from the players array
+  // const removePlayer = (id) => {
+  //   const filteredPlayers = [...values.player_ids].filter(
+  //     (playerId) => playerId !== id
+  //   );
+  //   setFieldValue("player_ids", filteredPlayers);
+  // };
   const addPlayer = (id) => {
     const isPlayerExist = players.find((p) => p === id);
     if (isPlayerExist) {
@@ -336,19 +442,20 @@ export default function EditGameScreen(props) {
       {
         content: (
           <StepSix
-            errors={errors}
+            // removePlayer={removePlayer}
+            // errors={errors}
             values={values}
-            setFieldValue={setFieldValue}
-            setShowHowManyWeeks={setShowHowManyWeeks}
-            isLastStep={isLastStep}
+            setValues={setValues}
+            // setShowHowManyWeeks={setShowHowManyWeeks}
+            isLastStep={false}
             {...props}
             currentStep={currentStep}
-            wizardRef={wizard}
-            players={players}
-            removePlayer={removePlayer}
-            addPlayer={addPlayer}
-            setValues={setValues}
             navigation={props.navigation}
+            wizardRef={wizard}
+            // players={values.player_ids}
+            // addPlayer={addPlayer}
+            // handleSubmit={handleSubmit}
+            // loading={loading}
           />
         ),
       },
@@ -365,7 +472,7 @@ export default function EditGameScreen(props) {
             currentStep={currentStep}
             navigation={props.navigation}
             wizardRef={wizard}
-            players={values.player_ids}
+            players={values?.player_ids}
             addPlayer={addPlayer}
             handleSubmit={handleSubmit}
             onSubmit={onSubmit}
@@ -382,48 +489,19 @@ export default function EditGameScreen(props) {
     return weeks().map((week) => ({ label: week, value: week }));
   }, []);
 
-  const onSubmit = (values) => {
-    let data = {};
-
-    if (Object.keys(errors).length > 0) {
-      console.log("Error Create Game Handle Submit");
-      displayDangerToast(toast, "Please fill all the required fields.");
-      return;
-    }
-    if (isLastStep) {
-      data = { ...values, player_ids: players };
-      if (values.venue_name && values.venue_name.length > 0) {
-        data.custom_venue = true;
-      }
-
-      gameService
-        .edit(data)
-        .then((response) => {
-          console.log("Game Edit", response.data);
-          displaySuccessToast(toast, "Game has been updated Successfully!");
-          props.navigation.navigate("Matches");
-          return;
-        })
-        .catch((err) => {
-          const error = err.response?.data;
-          if ("message" in error) {
-            if (error.message.length > 50) {
-              displayDangerToast(
-                toast,
-                "Something went wrong. Please try again."
-              );
-              return;
-            }
-            displayDangerToast(toast, error.message);
-            return;
-          }
-        });
-    }
-  };
   // Loading is True
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <SvgImage
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 16,
+            bottom: 0,
+          }}
+        />
         <ActivityIndicator size={50} color="#2b87ff" animating={loading} />
       </View>
     );

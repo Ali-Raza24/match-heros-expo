@@ -3,6 +3,10 @@ import React from "react";
 import SuccessButton from "../../../component/_shared/SuccessButton";
 
 export default function Buttons(props) {
+  console.log(
+    "onPress Button is in success#@#@#@",
+    props?.onPress ? true : false
+  );
   return (
     <View style={[styles.buttonContainer, props.customStyleContainer]}>
       {props.isLastStep === false ? (
@@ -10,7 +14,7 @@ export default function Buttons(props) {
           title="Cancel"
           transparent
           outline
-          customStyle={{ borderWidth: 1, borderColor: "white" }}
+          customStyle={{ backgroundColor: "#203761" }}
           onPress={() => {
             props.navigation.goBack();
           }}
@@ -18,11 +22,15 @@ export default function Buttons(props) {
       ) : null}
       <SuccessButton
         title={props.isLastStep ? "Finish" : "Next"}
+        customStyle={{ backgroundColor: "#0A5129" }}
         {...props}
         onPress={
-          props.onPress ? props.onPress : () => props.wizardRef.current.next()
+          props?.onPress ? props?.onPress : () => props.wizardRef.current.next()
         }
-        disabled={props.wizardRef.current.isLastStep}
+        disabled={
+          props.wizardRef.current.isLastStep ||
+          (props.isLastStep && !props.values.numOfReqPlayers)
+        }
       />
     </View>
   );

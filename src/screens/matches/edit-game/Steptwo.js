@@ -59,7 +59,6 @@ export default function Steptwo(props) {
   const [openSurface, setOpenSurface] = useState(false);
   const [openCity, setOpenCity] = useState(false);
   const [openCounty, setOpenCounty] = useState(false);
-  const inputRef = useRef();
   const item = props?.route?.params?.item;
   console.log("params are #@#@#@", item?.name);
 
@@ -101,7 +100,9 @@ export default function Steptwo(props) {
   if (!props.values) {
     return null;
   }
-
+  const handleSurfaceType = (callback) => {
+    props.setFieldValue("surface_type", callback(props.values.surface_type));
+  };
   // console.log('STEP 2', props.values)
   return (
     <ScrollView style={styles.container}>
@@ -355,10 +356,11 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   selectContainer: {
+    alignSelf: "center",
     alignItems: "center",
     marginTop: 15,
     marginBottom: 10,
-    width: "100%",
+    width: "80%",
   },
 
   surfaceImage: {

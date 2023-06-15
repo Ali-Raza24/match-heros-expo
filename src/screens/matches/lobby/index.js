@@ -34,6 +34,7 @@ export const GameLobbyScreen = () => {
   const [loading, setLoading] = useState();
   const [mounted, setMounted, refMounted] = useState(false);
   useEffect(() => {
+    console.log("gameId is in useEffect#@#@#", gameId);
     setMounted(true);
     handleGame(gameId);
     return () => {
@@ -51,9 +52,9 @@ export const GameLobbyScreen = () => {
   const handleGame = async (gameid) => {
     setLoading(true);
     try {
-      const _game = await gameService.getGame(gameid);
-      console.log("_game list", _game);
-      refMounted.current && setGame(_game);
+      const usersList = await gameService.getGameRequestUsers(gameid);
+      console.log("getGameRequestUsers list#@#@#@#", usersList);
+      refMounted.current && setGame(usersList);
       setLoading(false);
     } catch (error) {
       console.log("GAME LOBBY SCREEN ERROR: ", error?.response?.data, error);

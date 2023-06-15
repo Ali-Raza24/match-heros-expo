@@ -21,7 +21,11 @@ import MyGames from "../matches/MyMatch";
 function InviteHero(props) {
   const playerId = props?.route?.params?.playerId;
   const onClickPlayerId = props?.route?.params?.onClickPlayerId;
-  console.log("Player id is in invite hero List:@#@#@#", playerId);
+  console.log(
+    "Player id is in invite hero List:@#@#@#",
+    playerId,
+    onClickPlayerId
+  );
   const gameService = new GameService();
   const [myMatches, setMyMatches] = useState([]);
   const [isModal, setIsModal] = useState(false);

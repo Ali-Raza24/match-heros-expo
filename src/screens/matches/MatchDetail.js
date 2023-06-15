@@ -285,7 +285,8 @@ class MatchDetail extends Component {
       this.state?.game?.id,
       this.state?.game?.numOfReqPlayers,
       this.state?.game?.starts_at.split(" ")[1],
-      this.state?.game?.game_fee
+      this.state?.game?.game_fee,
+      this.state.game?.teams[0]?.players[0]?.id
     );
     if (showSpinner) {
       return (
@@ -670,6 +671,17 @@ class MatchDetail extends Component {
                     <GreenLinearGradientButton
                       title={"View Match Organiser".toUpperCase()}
                       onSelect={() =>
+                        this.props.navigation.navigate("PublicProfile", {
+                          id: this.state.game?.teams[0]?.players[0]?.id,
+                        })
+                      }
+                      height={45}
+                      loading={false}
+                      color={["#1F436E", "#4272B8"]}
+                    />
+                    <GreenLinearGradientButton
+                      title={"Match Lobby".toUpperCase()}
+                      onSelect={() =>
                         this.props.navigation.navigate("GameLobby", {
                           gameId: this.state?.game?.id,
                           gameCreator: this.state?.game?.player_ids,
@@ -678,7 +690,7 @@ class MatchDetail extends Component {
                       }
                       height={45}
                       loading={false}
-                      color={["#1F436E", "#4272B8"]}
+                      color={["#203761", "#203761"]}
                     />
                   </>
                 )}
@@ -686,7 +698,11 @@ class MatchDetail extends Component {
                   <>
                     <GreenLinearGradientButton
                       title={"Edit Match".toUpperCase()}
-                      onSelect={() => console.log("edit match called!")}
+                      onSelect={() =>
+                        this?.props?.navigation?.navigate("EditGameScreen", {
+                          gameId: this.state?.game?.id,
+                        })
+                      }
                       height={45}
                       loading={false}
                       color={["#1F436E", "#203761"]}

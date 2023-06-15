@@ -45,6 +45,15 @@ export default class GameService extends ApiService {
       .get(this.baseUrl + `games/${gameId}`)
       .then((response) => response.data);
   }
+  async getGameRequestUsers(gameId) {
+    const data = {
+      game_id: gameId,
+    };
+    console.log("request for players list:#@#@#@", data);
+    return axios
+      .get(`${this.baseUrl}get-notifications-game-profiles`, data)
+      .then((response) => response.data);
+  }
   async gameReport(data) {
     const token = await AsyncStorage.getItem("userToken");
     return axios
@@ -130,7 +139,7 @@ export default class GameService extends ApiService {
     return axios.post(this.baseUrl + `games/${gameId}/invitations`, data);
   }
   async inviteHeroToMatch(data) {
-    return axios.post(this.baseUrl + `invite-heroTo-match`, data);
+    return axios.post(this.baseUrl + `invite-hero-to-match`, data);
   }
   async confirmedInvitedPlayers(gameId) {
     return axios.get(

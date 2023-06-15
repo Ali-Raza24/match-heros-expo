@@ -351,6 +351,10 @@ export default class Venues extends Component {
                       ? this.props.navigation.navigate("VenuesInfo", {
                           item: item,
                         })
+                      : prevRoute?.name == "EditGameScreen"
+                      ? this.props.navigation.navigate("EditGameScreen", {
+                          item: item,
+                        })
                       : this.props.navigation.navigate("CreateMatch", {
                           item: item,
                         })

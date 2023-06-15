@@ -108,7 +108,8 @@ export default class GameCard extends Component {
       this.props.game?.booking?.pitch?.venue?.name,
       this.state?.loggedInUserId,
       this.props?.fromInviteHeroMatch,
-      this.props?.game?.creator_id
+      this.props?.game?.creator_id,
+      this.props?.onClickPlayerId
     );
     return (
       <LinearGradient

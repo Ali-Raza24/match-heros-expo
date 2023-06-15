@@ -51,7 +51,11 @@ export default class MyGames extends Component {
   };
 
   renderGames() {
-    console.log("Single Match item in My Match Card", this.state?.games);
+    console.log(
+      "Single Match item in My Match Card",
+      this.state?.games,
+      this.props?.onClickPlayerId
+    );
     return (
       <FlatList
         keyExtractor={(item, index) => index.toString()}

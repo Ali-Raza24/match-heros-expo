@@ -36,58 +36,7 @@ export default function StepSeven(props) {
   const [publicToggle, setPublicToggle] = useState(false);
   const [keepPrivate, setKeepPrivate] = useState(false);
   const currentUser = useSelector((store) => store.user);
-
-  const getAllPlayers = async () => {
-    setLoading(true);
-    try {
-      const response = await playerService.getAllTeammates();
-      let users = response.data.teamPlayers.data;
-      users =
-        users.length > 0 &&
-        users.map((u) => ({
-          id: u.player_id,
-          name: u.player_name,
-        }));
-      console.log("Friends", users);
-      setNextLink(response.data.teamPlayers.links.next);
-      setPlayers(users);
-    } catch (error) {
-      console.log(error);
-      console.log("Step SIX Error" + JSON.stringify(error.response?.data));
-    }
-    setLoading(false);
-  };
-
-  const renderFooter = () => {
-    return endReached ? (
-      <View
-        style={{
-          width: "100%",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <View style={{ paddingVertical: 20 }}>
-          <ActivityIndicator size={50} color="#2b87ff" animating={true} />
-        </View>
-      </View>
-    ) : null;
-  };
-  const handleLoadMore = () => {
-    if (nextLink) {
-      setEndReached(true);
-      playerService.getNextPlayers(nextLink).then((response) => {
-        setEndReached(false);
-        setNextLink(response.teamPlayers.links.next);
-        const playersList = response.teamPlayers.data.map((u) => ({
-          id: u.player_id,
-          name: u.player_name,
-        }));
-        setPlayers([...players, ...playersList]);
-      });
-    }
-  };
-
+  console.log("props.onsubMit in StepSeven", props?.onSubmit, props?.loading);
   return (
     <View>
       <View style={{ width: "80%", alignSelf: "center", marginTop: 42 }}>
@@ -252,9 +201,7 @@ export default function StepSeven(props) {
         isLastStep={props.isLastStep}
         onPress={() => {
           console.log("first");
-          props?.onSubmit(props.values);
-          // props.setShowHowManyWeeks(true);
-          // props.navigation.goBack();
+          props?.onSubmit(props?.values);
         }}
       />
       {/* )} */}

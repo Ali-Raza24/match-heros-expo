@@ -28,7 +28,7 @@ function Menue(props) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   // const authServces = new AuthService();
-  console.log("user data is in menue:#@#@#@", user?.id, isFocused);
+  console.log("user data is in menue:#@#@#@", user?.id, user, isFocused);
   useEffect(() => {
     const getUser = async () => {
       try {
