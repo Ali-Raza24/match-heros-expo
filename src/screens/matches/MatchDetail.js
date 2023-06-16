@@ -708,6 +708,19 @@ class MatchDetail extends Component {
                       color={["#1F436E", "#203761"]}
                     />
                     <GreenLinearGradientButton
+                      title={"Match Lobby".toUpperCase()}
+                      onSelect={() =>
+                        this.props.navigation.navigate("GameLobby", {
+                          gameId: this.state?.game?.id,
+                          gameCreator: this.state?.game?.player_ids,
+                          game: this.state.game,
+                        })
+                      }
+                      height={45}
+                      loading={false}
+                      color={["#0B8140", "#0A5129"]}
+                    />
+                    <GreenLinearGradientButton
                       title={"Delete Match".toUpperCase()}
                       onSelect={this.handleGameDelete}
                       height={45}

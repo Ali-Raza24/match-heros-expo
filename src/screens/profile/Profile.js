@@ -210,9 +210,13 @@ function Profile(props) {
               marginTop: 18,
             }}
           >
-            {profileImage.length > 0 ? (
+            {profileImage.length > 0 || userProfile?.images?.avatar ? (
               <Image
-                source={{ uri: profileImage }}
+                source={{
+                  uri: profileImage
+                    ? profileImage
+                    : userProfile?.images?.avatar,
+                }}
                 style={{
                   resizeMode: "cover",
                   height: 134,

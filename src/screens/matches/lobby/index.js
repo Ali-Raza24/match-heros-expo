@@ -52,6 +52,13 @@ export const GameLobbyScreen = () => {
   const handleGame = async (gameid) => {
     setLoading(true);
     try {
+      const data = {
+        game_id: gameid,
+      };
+      // const regex = "/,(?!s*?[{[\"'w])/g";
+      // const json = await data.replace(regex, "");
+      // const dataModify = await JSON.parse(json);
+      console.log("game id is:#@#@#@", data);
       const usersList = await gameService.getGameRequestUsers(gameid);
       console.log("getGameRequestUsers list#@#@#@#", usersList);
       refMounted.current && setGame(usersList);

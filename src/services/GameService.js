@@ -45,14 +45,17 @@ export default class GameService extends ApiService {
       .get(this.baseUrl + `games/${gameId}`)
       .then((response) => response.data);
   }
-  async getGameRequestUsers(gameId) {
-    const data = {
-      game_id: gameId,
-    };
+  async getGameRequestUsers(data) {
     console.log("request for players list:#@#@#@", data);
     return axios
-      .get(`${this.baseUrl}get-notifications-game-profiles`, data)
-      .then((response) => response.data);
+      .get(`${this.baseUrl}get-notifications-game-profiles`, { game_id: data })
+      .then((response) => {
+        console.log("palyers list is:#@#@#@#", response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.log("error in game services is", error);
+      });
   }
   async gameReport(data) {
     const token = await AsyncStorage.getItem("userToken");

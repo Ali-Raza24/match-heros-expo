@@ -99,7 +99,7 @@ class PublicProfile extends Component {
       city_id: data.location ? data.location.city.id : "",
       county_id: data.location ? data.location.county.id : "",
       city: data.location ? data.location.city.name : "",
-      county: data.location ? data.location.county.name : "",
+      county: data?.address?.country?.name ? data?.address?.country?.name : "",
       ageBracket: data?.ageBracket || "",
     });
   }

@@ -44,6 +44,7 @@ function Menue(props) {
       getUser();
     }
   }, [user || isFocused]);
+  console.log("userProfile", userProfile?.images?.avatar);
   return (
     <>
       <SvgImage
@@ -74,13 +75,25 @@ function Menue(props) {
                 marginTop: 18,
               }}
             >
-              <EditProfile
-                height={90}
-                width={90}
-                style={{
-                  resizeMode: "contain",
-                }}
-              />
+              {userProfile?.images?.avatar ? (
+                <Image
+                  source={{ uri: userProfile?.images?.avatar }}
+                  style={{
+                    height: 90,
+                    width: 90,
+                    borderRadius: 45,
+                    resizeMode: "contain",
+                  }}
+                />
+              ) : (
+                <EditProfile
+                  height={90}
+                  width={90}
+                  style={{
+                    resizeMode: "contain",
+                  }}
+                />
+              )}
               <View
                 style={{
                   display: "flex",
