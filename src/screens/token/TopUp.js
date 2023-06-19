@@ -7,16 +7,65 @@ import {
   TouchableOpacity,
   Text,
   Image,
+  TextInput,
   Dimensions,
 } from "react-native";
 import SvgImage from "../../../assets/signIn.svg";
 import TextInputField from "../../component/molecules/TextInputField";
 import GreenLinearGradientButton from "../../component/molecules/GreenLinearGradientButton";
+import { CardNumberTextInput, CardDateTextInput } from "rn-credit-card-textinput";
+let value = 0;
 function TopUp() {
   const inputRefs = useRef(null);
   const [cardNum, setCardNum] = useState("");
   const [expiry, setExpiry] = useState("");
   const [ccv, setCcv] = useState("");
+  const [cardValue, setCardValue] = useState('');
+  const [focusCardNum, setFocusCardNum] = useState(false);
+
+  const [cardDateValue, setCardDateValue] = useState('');
+  const [focusCardDateNum, setFocusCardDateNum] = useState(false);
+
+
+  const updateText = (cardNum) => {
+    // console.log("card numb is:#@#@", cardNum)
+    setCardValue(cardNum)
+  }
+  const updateCardDate = (cardNum) => {
+    setCardDateValue(cardNum)
+  }
+  const numberWithSpace = (x) => x.replace(/\W/gi, '').replace(/(.{4})/g, '$1 ');
+  const cardNumText = (text) => {
+    value = value + 1
+    console.log("onChangeText", value);
+    let textIn = numberWithSpace(text);
+    if (text.length < cardNum.length) {
+      const lastChar = cardNum[cardNum.length - 1];
+      console.log("last index val", lastChar)
+      if (lastChar === ' ') {
+        setCardNum(text)
+        return;
+      }
+    }
+    setCardNum(textIn)
+    // console.log("number with card white space", numberWithSpace(text))
+    // if (cardNum == '') {
+    //   alert("text")
+    //   setCardNum(text)
+    // } else {
+    //   console.log("text is:#@#@", "0 1 2 3 4 5 6 7 8 9".includes(text), typeof numberWithSpace(text))
+    //   setCardNum(numberWithSpace(text))
+    // }
+  }
+  const handleKeyPress = ({ nativeEvent }) => {
+    // console.log("key press", nativeEvent.key)
+    if (nativeEvent.key === 'Backspace' && cardNum.endsWith(' ')) {
+      // alert("text")
+      value = value + 1
+      console.log("onSpace", value)
+      // setCardNum(cardNum.slice(0, -1));
+    }
+  };
   return (
     <>
       <SvgImage
@@ -79,6 +128,42 @@ function TopUp() {
             />
           </View>
           <View style={{ width: "80%", alignSelf: "center", marginTop: 22 }}>
+            <CardNumberTextInput errorColor={"red"}
+              labelColor={"#ddd"}
+              focusColor={"#1c32a0"}
+              // defaultBorderColor={"#ffffff"}
+              placeholder={"Card number"}
+              label={"Card Number"}
+              // focus={focusCardNum}
+              // touched={true}
+              updateTextVal={(t) => {
+                updateText(t)
+              }}
+
+              // onFocus={() => setFocusCardNum(true)}
+              labelStyle={{
+                color: '#333',
+                fontWeight: '400'
+              }}
+              inputWrapStyle={{
+                // borderRadius: 10,
+                borderBottomWidth: 1,
+                borderBottomColor: '#ffffff',
+                borderTopColor: 'transparent',
+                borderLeftColor: 'transparent',
+
+              }}
+              placeholderTextColor={"#ccc"}
+              value={cardValue}
+              defaultValue={cardValue}
+              inputStyle={{
+                color: '#333',
+                fontWeight: 'bold',
+              }} />
+            {/* <TextInput
+              value={cardNum}
+              onChangeText={(text) => cardNumText(text)}
+            /> */}
             <TextInputField
               placeHolder={"Card Number"}
               keyboardType={"number-pad"}
@@ -89,7 +174,12 @@ function TopUp() {
               profile={true}
               onSubmitEditing={() => console.log("first")}
               value={cardNum}
-              onChangeText={(text) => setCardNum(text)}
+              onChangeText={(text) => {
+                cardNumText(text)
+              }}
+              onKeyPress={handleKeyPress}
+            // clearButtonMode="while-editing"
+
             />
             <View
               style={{
@@ -108,9 +198,17 @@ function TopUp() {
                   borderBottomColor={"#636C92"}
                   profile={true}
                   onSubmitEditing={() => console.log("first")}
-                  value={expiry.length == 2 ? expiry + "/" : expiry}
-                  onChangeText={(text) => setExpiry(text)}
-                  nonEditAble={expiry.length == 5}
+                  value={expiry}
+                  onChangeText={(text) => {
+                    if (text.length == 2) {
+                      setExpiry(text.substr(0, 5))
+                      // setExpiry(text.substr(0, 5))
+                    } else {
+                      setExpiry(text)
+                    }
+                    // expiry.length != 5 && setExpiry(text)
+                  }}
+                // nonEditAble={expiry.length == 5}
                 />
               </View>
               <View style={{ width: "45%" }}>

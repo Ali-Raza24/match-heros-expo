@@ -15,6 +15,7 @@ function TextInputField({
   secureEntry,
   nonEditAble,
   keyboardType,
+  onKeyPress,
 }) {
   return (
     <>
@@ -42,6 +43,7 @@ function TextInputField({
           borderBottomWidth: profile ? 1 : borderBottomWidth | 0,
           borderBottomColor: borderBottomColor,
         }}
+        onKeyPress={onKeyPress}
       />
     </>
   );
