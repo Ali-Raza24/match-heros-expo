@@ -12,11 +12,45 @@ import {
 import SvgImage from "../../../assets/signIn.svg";
 import TextInputField from "../../component/molecules/TextInputField";
 import GreenLinearGradientButton from "../../component/molecules/GreenLinearGradientButton";
+import PaymentService from "../../services/PaymentService";
 function PayRequest() {
   const [email, setEmail] = useState("");
   const [amount, setAmount] = useState("");
   const [purpose, setPurpose] = useState("");
+  const [loading, setLoading] = useState(false);
   const inputRefs = useRef(null);
+  const paymentService = new PaymentService();
+
+  const handlePaymentRequest = async () => {
+    setLoading(true);
+    var data = {
+      "amount": 777.90,
+      "purpose": purpose,
+      "receiver_email": email
+    };
+
+    try {
+      await paymentService
+        .paymentRequest(data)
+        .then(() => {
+          setLoading(false);
+          alert("Paid successfully!");
+        })
+        .catch((error) => {
+          if (error.response?.data?.error?.message == "Undefined variable $receiver") {
+            alert(`receiver email doesn't found`)
+            setLoading(false);
+          } else {
+            alert("Something went wrong please try again");
+            setLoading(false);
+          }
+        });
+      setLoading(false);
+    } catch (error) {
+      console.log("error is:#@#@#", error?.response)
+      setLoading(false);
+    }
+  };
   return (
     <>
       <SvgImage
@@ -86,10 +120,11 @@ function PayRequest() {
             <View style={{ marginVertical: 32 }}>
               <GreenLinearGradientButton
                 title={"SEND PAY REQUEST"}
-                // onSelect={() => this.props.navigation.navigate("TopUp")}
+                disabled={email.length == 0 || purpose.length == 0 || amount.length == 0}
+                onSelect={handlePaymentRequest}
                 // onSelect={() => this.props.navigation.navigate("Profile")}
                 height={45}
-                loading={false}
+                loading={loading}
                 color={["#0B8140", "#0A5129"]}
               />
             </View>

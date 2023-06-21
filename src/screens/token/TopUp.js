@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -13,59 +13,86 @@ import {
 import SvgImage from "../../../assets/signIn.svg";
 import TextInputField from "../../component/molecules/TextInputField";
 import GreenLinearGradientButton from "../../component/molecules/GreenLinearGradientButton";
-import { CardNumberTextInput, CardDateTextInput } from "rn-credit-card-textinput";
+import {
+  CardNumberTextInput,
+  CardDateTextInput,
+} from "rn-credit-card-textinput";
+import PaymentService from "../../services/PaymentService";
+var stripe = require("stripe-client")(
+  "pk_test_51NL4wVLcjTAvFILZEuIeZLdjDfRAy14nggmGedTz9fj01cfCCRWkG6MGKczU3v5e5qZAaEnOyaz09GjZArsEB29v00291WbGdi"
+);
+// import stripe from 'stripe-client'
 let value = 0;
 function TopUp() {
+  const paymentService = new PaymentService();
   const inputRefs = useRef(null);
   const [cardNum, setCardNum] = useState("");
   const [expiry, setExpiry] = useState("");
   const [ccv, setCcv] = useState("");
-  const [cardValue, setCardValue] = useState('');
-  const [focusCardNum, setFocusCardNum] = useState(false);
-
-  const [cardDateValue, setCardDateValue] = useState('');
+  const [cardValue, setCardValue] = useState("");
+  const [cardHolderName, setCardHolderName] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [cardDateValue, setCardDateValue] = useState("");
   const [focusCardDateNum, setFocusCardDateNum] = useState(false);
 
-
   const updateText = (cardNum) => {
-    // console.log("card numb is:#@#@", cardNum)
-    setCardValue(cardNum)
-  }
+    setCardValue(cardNum);
+  };
   const updateCardDate = (cardNum) => {
-    setCardDateValue(cardNum)
-  }
-  const numberWithSpace = (x) => x.replace(/\W/gi, '').replace(/(.{4})/g, '$1 ');
-  const cardNumText = (text) => {
-    value = value + 1
-    console.log("onChangeText", value);
-    let textIn = numberWithSpace(text);
-    if (text.length < cardNum.length) {
-      const lastChar = cardNum[cardNum.length - 1];
-      console.log("last index val", lastChar)
-      if (lastChar === ' ') {
-        setCardNum(text)
-        return;
+    setCardDateValue(cardNum);
+  };
+  const handlerSubmitPaymentAPI = async () => {
+    setLoading(true);
+    var information = {
+      card: {
+        number: cardValue,
+        exp_month: cardDateValue.substring(0, 2),
+        exp_year: cardDateValue.substring(3, 5),
+        cvc: ccv,
+        name: cardHolderName,
+      },
+    };
+
+    try {
+      var card = await stripe.createToken(information);
+      const data = {
+        stripeToken: card.id,
+        stripeTokenType: "card",
+        stripeEmail: "ali@gmail.com",
+        amount: 100,
+      };
+      await paymentService
+        .postPayment(data)
+        .then(() => {
+          setLoading(false);
+          alert("Paid successfully!");
+        })
+        .catch((error) => {
+          alert("Something went wrong please try again");
+          console.log("error in catch block is:#@#@#@", error?.response)
+          setLoading(false);
+        });
+      setLoading(false);
+    } catch (error) {
+      console.log("error in catch block is:#@#@#@", error?.response)
+      setLoading(false);
+    }
+
+    // console.log("response is:#@#@", card)
+  };
+  const handleCCVText = (text) => {
+    if (text.length < ccv.length) {
+      setCcv(text);
+      // setCcv(text)
+    } else {
+      if (ccv.length > 2) {
+        alert("CCV cannot Exceed upto 3 character");
+      } else {
+        setCcv(text);
       }
     }
-    setCardNum(textIn)
-    // console.log("number with card white space", numberWithSpace(text))
-    // if (cardNum == '') {
-    //   alert("text")
-    //   setCardNum(text)
-    // } else {
-    //   console.log("text is:#@#@", "0 1 2 3 4 5 6 7 8 9".includes(text), typeof numberWithSpace(text))
-    //   setCardNum(numberWithSpace(text))
-    // }
-  }
-  const handleKeyPress = ({ nativeEvent }) => {
-    // console.log("key press", nativeEvent.key)
-    if (nativeEvent.key === 'Backspace' && cardNum.endsWith(' ')) {
-      // alert("text")
-      value = value + 1
-      console.log("onSpace", value)
-      // setCardNum(cardNum.slice(0, -1));
-    }
   };
+
   return (
     <>
       <SvgImage
@@ -127,59 +154,48 @@ function TopUp() {
               style={{ height: 197, width: "100%", resizeMode: "contain" }}
             />
           </View>
+
           <View style={{ width: "80%", alignSelf: "center", marginTop: 22 }}>
-            <CardNumberTextInput errorColor={"red"}
-              labelColor={"#ddd"}
+            <TextInputField
+              placeHolder={"Card Holder Name"}
+              keyboardType={"default"}
+              placeHolderColor={"#ffffff"}
+              inputFieldBackColor={"transparent"}
+              inputColor="#ffffff"
+              borderBottomColor={"#ffffff"}
+              profile={true}
+              onSubmitEditing={() => console.log("first")}
+              value={cardHolderName}
+              onChangeText={(text) => setCardHolderName(text)}
+            />
+
+            <CardNumberTextInput
+              errorColor={"red"}
+              labelColor={"#ffffff"}
               focusColor={"#1c32a0"}
-              // defaultBorderColor={"#ffffff"}
               placeholder={"Card number"}
               label={"Card Number"}
-              // focus={focusCardNum}
-              // touched={true}
               updateTextVal={(t) => {
-                updateText(t)
+                updateText(t);
               }}
-
-              // onFocus={() => setFocusCardNum(true)}
               labelStyle={{
-                color: '#333',
-                fontWeight: '400'
+                color: "#ffffff",
+                fontWeight: "400",
               }}
               inputWrapStyle={{
-                // borderRadius: 10,
                 borderBottomWidth: 1,
-                borderBottomColor: '#ffffff',
-                borderTopColor: 'transparent',
-                borderLeftColor: 'transparent',
-
+                borderBottomColor: "#ffffff",
+                borderTopColor: "transparent",
+                borderLeftColor: "transparent",
+                borderRightColor: "transparent",
               }}
               placeholderTextColor={"#ccc"}
               value={cardValue}
               defaultValue={cardValue}
               inputStyle={{
-                color: '#333',
-                fontWeight: 'bold',
-              }} />
-            {/* <TextInput
-              value={cardNum}
-              onChangeText={(text) => cardNumText(text)}
-            /> */}
-            <TextInputField
-              placeHolder={"Card Number"}
-              keyboardType={"number-pad"}
-              placeHolderColor={"#ffffff"}
-              inputFieldBackColor={"transparent"}
-              inputColor="#ffffff"
-              borderBottomColor={"#636C92"}
-              profile={true}
-              onSubmitEditing={() => console.log("first")}
-              value={cardNum}
-              onChangeText={(text) => {
-                cardNumText(text)
+                color: "#ffffff",
+                fontWeight: "bold",
               }}
-              onKeyPress={handleKeyPress}
-            // clearButtonMode="while-editing"
-
             />
             <View
               style={{
@@ -189,26 +205,35 @@ function TopUp() {
               }}
             >
               <View style={{ width: "45%" }}>
-                <TextInputField
-                  placeHolder={"Expiry"}
-                  keyboardType={"number-pad"}
-                  placeHolderColor={"#ffffff"}
-                  inputFieldBackColor={"transparent"}
-                  inputColor="#ffffff"
-                  borderBottomColor={"#636C92"}
-                  profile={true}
-                  onSubmitEditing={() => console.log("first")}
-                  value={expiry}
-                  onChangeText={(text) => {
-                    if (text.length == 2) {
-                      setExpiry(text.substr(0, 5))
-                      // setExpiry(text.substr(0, 5))
-                    } else {
-                      setExpiry(text)
-                    }
-                    // expiry.length != 5 && setExpiry(text)
+                <CardDateTextInput
+                  errorColor={"red"}
+                  labelColor={"#ddd"}
+                  focusColor={"#1c32a0"}
+                  placeholder={"MM/YY"}
+                  label={"Expiry date"}
+                  focus={focusCardDateNum}
+                  updateCardDateText={(t) => {
+                    updateCardDate(t);
                   }}
-                // nonEditAble={expiry.length == 5}
+                  onFocus={() => setFocusCardDateNum(true)}
+                  labelStyle={{
+                    color: "#ffffff",
+                    fontWeight: "400",
+                  }}
+                  inputWrapStyle={{
+                    borderBottomWidth: 1,
+                    borderBottomColor: "#ffffff",
+                    borderTopColor: "transparent",
+                    borderLeftColor: "transparent",
+                    borderRightColor: "transparent",
+                  }}
+                  placeholderTextColor={"#ccc"}
+                  value={cardDateValue}
+                  defaultValue={cardDateValue}
+                  inputStyle={{
+                    color: "#ffffff",
+                    fontWeight: "bold",
+                  }}
                 />
               </View>
               <View style={{ width: "45%" }}>
@@ -218,11 +243,11 @@ function TopUp() {
                   placeHolderColor={"#ffffff"}
                   inputFieldBackColor={"transparent"}
                   inputColor="#ffffff"
-                  borderBottomColor={"#636C92"}
+                  borderBottomColor={"#ffffff"}
                   profile={true}
                   onSubmitEditing={() => console.log("first")}
                   value={ccv}
-                  onChangeText={(text) => setCcv(text)}
+                  onChangeText={handleCCVText}
                 />
               </View>
             </View>
@@ -230,10 +255,15 @@ function TopUp() {
           <View style={{ marginTop: 24, width: "80%", alignSelf: "center" }}>
             <GreenLinearGradientButton
               title={"PAY NOW"}
-              // onSelect={() => this.props.navigation.navigate("TopUp")}
-              // onSelect={() => this.props.navigation.navigate("Profile")}
+              disabled={
+                cardHolderName.length == 0 ||
+                cardDateValue.length == 0 ||
+                ccv.length == 0 ||
+                cardValue.length == 0
+              }
+              onSelect={handlerSubmitPaymentAPI}
               height={45}
-              loading={false}
+              loading={loading}
               color={["#0B8140", "#0A5129"]}
             />
           </View>

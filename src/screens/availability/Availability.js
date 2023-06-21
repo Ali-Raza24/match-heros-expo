@@ -12,106 +12,196 @@ import {
 import SvgImage from "../../../assets/signIn.svg";
 import AuthService from "../../services/AuthService";
 import GreenLinearGradientButton from "../../component/molecules/GreenLinearGradientButton";
+
 function Availability(props) {
   const authService = new AuthService();
   const [monday, setMonday] = useState({ startTime: "", endTime: "" });
+  const [start, setStartTime] = useState({ startMTime: "", endMTime: "", startTTime: "", endTTime: "", startWTime: "", endWTime: "", startTHTime: "", endTHTime: "", startFTime: "", endFTime: "", startSTime: "", endSTime: "", startSUNTime: "", endSUNTime: "" });
   const [availabilityArray, setAvailabilityArray] = useState([
     {
-      day: "Sunday",
-      endTime: "4:00",
-
-      startTime: "5:00",
-    },
-    {
       day: "Monday",
-      endTime: "3:00",
+      endTime: start.endMTime,
 
-      startTime: "6:00",
+      startTime: start.startMTime,
     },
     {
       day: "Tuesday",
-      endTime: "7:00",
-      startTime: "6:00",
+      endTime: start.endTTime,
+
+      startTime: start.startTTime,
     },
     {
       day: "Wednesday",
-      endTime: "11:00",
+      endTime: start.endWTime,
 
-      startTime: "1:00",
+      startTime: start.startWTime,
     },
     {
       day: "Thursday",
-      endTime: "10:00",
+      endTime: start.endTHTime,
 
-      startTime: "2:00",
+      startTime: start.startTHTime,
     },
     {
       day: "Friday",
-      endTime: "2:00",
+      endTime: start.endFTime,
 
-      startTime: "5:00",
+      startTime: start.startFTime,
     },
     {
       day: "Saturday",
-      endTime: "3:00",
+      endTime: start.endSTime,
 
-      startTime: "6:00",
+      startTime: start.startSTime,
+    },
+    {
+      day: "Sunday",
+      endTime: start.endSUNTime,
+
+      startTime: start.startSUNTime,
     },
   ]);
   const [checkedDaysList, setCheckedDaysList] = useState([]);
   const [userAvailability, setUserAvailability] = useState([]);
-  console.log("availability array is :#@#@#@#@", userAvailability);
+
+  let arrayAv = [
+    start.endMTime && start.startMTime && {
+      day: "Monday",
+      endTime: start.endMTime,
+
+      startTime: start.startMTime,
+    },
+    start.endTTime && start.startTTime && {
+      day: "Tuesday",
+      endTime: start.endTTime,
+
+      startTime: start.startTTime,
+    },
+    start.endWTime && start.startWTime && {
+      day: "Wednesday",
+      endTime: start.endWTime,
+
+      startTime: start.startWTime,
+    },
+    start.endTHTime && start.startTHTime && {
+      day: "Thursday",
+      endTime: start.endTHTime,
+
+      startTime: start.startTHTime,
+    },
+    start.endFTime && start.startFTime && {
+      day: "Friday",
+      endTime: start.endFTime,
+
+      startTime: start.startFTime,
+    },
+    start.endSTime && start.startSTime && {
+      day: "Saturday",
+      endTime: start.endSTime,
+
+      startTime: start.startSTime,
+    },
+    start.endSUNTime && start.startSUNTime && {
+      day: "Sunday",
+      endTime: start.endSUNTime,
+
+      startTime: start.startSUNTime,
+    },
+  ];
+  let newAvailArray = []
+  for (let i = 0; i < arrayAv.length; i++) {
+    if (arrayAv[i] != "") {
+      newAvailArray.push(arrayAv[i])
+    }
+  }
+
+  console.log("availability array is :#@#@#@#@", userAvailability, newAvailArray);
   const handleAvailabilitySubmit = () => {
     const data = {
-      avalibility: userAvailability,
+      avalibility: newAvailArray,
     };
-    try {
-      authService
-        ?.postAvailability(data)
-        .then(
-          (response) => {
-            console.log(
-              "success response of post availability API is:#@#@",
-              response
-            );
+    if (newAvailArray.length == 0) {
+      alert("Please set your Availability Start and End Time properly!")
+    } else {
+      try {
+        authService
+          ?.postAvailability(data)
+          .then(
+            (response) => {
+              console.log(
+                "success response of post availability API is:#@#@",
+                response
+              );
 
-            // this.setState({ buttonLoading: false });
+              // this.setState({ buttonLoading: false });
+              Alert.alert(
+                "Availability submitted successfully!",
+                "",
+                [{ text: "OK", onPress: () => props.navigation.goBack() }],
+                { cancelable: false }
+              );
+              // props.navigation.navigate("Availability");
+            },
+            (error) => {
+              console.log("Availability Api call error", error?.response, error);
+              Alert.alert(
+                "Availability submitted successfully!",
+                "",
+                [{ text: "OK", onPress: () => props.navigation.goBack() }],
+                { cancelable: false }
+              );
+            }
+          )
+          .catch((error) => {
+            console.log(
+              "Availability Api call errorsssss",
+              error?.response,
+              error
+            );
             Alert.alert(
               "Availability submitted successfully!",
               "",
               [{ text: "OK", onPress: () => props.navigation.goBack() }],
               { cancelable: false }
             );
-            // props.navigation.navigate("Availability");
-          },
-          (error) => {
-            console.log("Availability Api call error", error?.response, error);
-            Alert.alert(
-              "Availability submitted successfully!",
-              "",
-              [{ text: "OK", onPress: () => props.navigation.goBack() }],
-              { cancelable: false }
-            );
-          }
-        )
-        .catch((error) => {
-          console.log(
-            "Availability Api call errorsssss",
-            error?.response,
-            error
-          );
-          Alert.alert(
-            "Availability submitted successfully!",
-            "",
-            [{ text: "OK", onPress: () => props.navigation.goBack() }],
-            { cancelable: false }
-          );
-        });
-    } catch (e) {
-      console.log("API error is:#@#@#@#", e, e?.response);
-      alert("API error is:#@#@#@#", e);
+          });
+      } catch (e) {
+        console.log("API error is:#@#@#@#", e, e?.response);
+        alert("API error is:#@#@#@#", e);
+      }
     }
   };
+  function formatTimeString(x) {
+    x = x.replace(
+      /^([1-9]\/|[2-9])$/g, '0$1' // 3 > 03
+    ).replace(
+      /^(0[1-9]|1[0-2])$/g, '$1' // 11 > 11
+    ).replace(
+      /^([0-1])([3-9])$/g, '0$1$2' // 13 > 01/3
+    ).replace(
+      /^(0?[1-9]|1[0-2])([0-9]{2})$/g, '$1$2' // 141 > 01/41
+    ).replace(
+      /^([0]+)\/|[0]+$/g, '0' // 0/ > 0 and 00 > 0
+    ).replace(
+      /[^\d\/]|^[\/]*$/g, '' // To allow only digits and /
+    ).replace(
+      /\/\//g, '' // Remove forward slashes
+    );
+
+    // Add the time format "00:00"
+    const hours = x.substr(0, 2);
+    const minutes = x.substr(2, 2);
+    x = hours.padStart(2, '0') + ':' + minutes.padStart(2, '0');
+
+    return x;
+  }
+  const handleStartTime = (text, startTime, endTime) => {
+    setStartTime({ ...start, [startTime]: formatTimeString(text), [endTime]: start[endTime] })
+  }
+  const handleEndTime = (text, startTime, endTime) => {
+    setStartTime({ ...start, [startTime]: start[startTime], [endTime]: formatTimeString(text) })
+  }
+  console.log("start time is:#@#@", start)
   return (
     <>
       <SvgImage
@@ -258,24 +348,31 @@ function Availability(props) {
                               color: "#ffffff",
                               textAlign: "center",
                             }}
-                            onChangeText={(text) =>
-                              data.setState((dat) => ({
-                                ...dat,
-                                startTime: text,
-                              }))
-                            }
-                            // onChangeText={(text) => {
-                            //   const item = {
-                            //     // day: data.day,
-                            //     startTime: text,
-                            //     // endTime: data.endTime,
-                            //     // id: data.id,
-                            //   };
-                            //   setUserAvailability([
-                            //     ...userAvailability,
-                            //     { ...data, startTime: text },
-                            //   ]);
-                            // }}
+                            keyboardType="number-pad"
+                            onChangeText={(text) => {
+                              let startTime = i == 0 ? "startMTime" : i == 1 ? "startTTime" : i == 2 ? "startWTime" : i == 3 ? "startTHTime" : i == 4 ? "startFTime" : i == 5 ? "startSTime" : "startSUNTime";
+                              let endTime = i == 0 ? "endMTime" : i == 1 ? "endTTime" : i == 2 ? "endWTime" : i == 3 ? "endTHTime" : i == 4 ? "endFTime" : i == 5 ? "endSTime" : "endSUNTime";
+                              handleStartTime(text, startTime, endTime)
+                            }}
+                            value={i == 0 ? start.startMTime : i == 1 ? start.startTTime : i == 2 ? start.startWTime : i == 3 ? start.startTHTime : i == 4 ? start.startFTime : i == 5 ? start.startSTime : start.startSUNTime}
+                          // onChangeText={(text) =>
+                          //   data.setState((dat) => ({
+                          //     ...dat,
+                          //     startTime: text,
+                          //   }))
+                          // }
+                          // onChangeText={(text) => {
+                          //   const item = {
+                          //     // day: data.day,
+                          //     startTime: text,
+                          //     // endTime: data.endTime,
+                          //     // id: data.id,
+                          //   };
+                          //   setUserAvailability([
+                          //     ...userAvailability,
+                          //     { ...data, startTime: text },
+                          //   ]);
+                          // }}
                           />
                           <TextInput
                             style={{
@@ -288,24 +385,27 @@ function Availability(props) {
                               color: "#ffffff",
                               textAlign: "center",
                             }}
-                            onChangeText={(text) =>
-                              data.setState((dat) => ({
-                                ...dat,
-                                endTime: text,
-                              }))
-                            }
-                            // onChangeText={(text) => {
-                            //   const item = {
-                            //     day: data.day,
-                            //     startTime: data.startTime,
-                            //     endTime: text,
-                            //     id: data.id,
-                            //   };
-                            //   setUserAvailability([
-                            //     ...userAvailability,
-                            //     ...item,
-                            //   ]);
-                            // }}
+                            keyboardType="number-pad"
+
+                            onChangeText={(text) => {
+                              let startTime = i == 0 ? "startMTime" : i == 1 ? "startTTime" : i == 2 ? "startWTime" : i == 3 ? "startTHTime" : i == 4 ? "startFTime" : i == 5 ? "startSTime" : "startSUNTime";
+                              let endTime = i == 0 ? "endMTime" : i == 1 ? "endTTime" : i == 2 ? "endWTime" : i == 3 ? "endTHTime" : i == 4 ? "endFTime" : i == 5 ? "endSTime" : "endSUNTime";
+                              handleEndTime(text, startTime, endTime)
+
+                            }}
+                            value={i == 0 ? start.endMTime : i == 1 ? start.endTTime : i == 2 ? start.endWTime : i == 3 ? start.endTHTime : i == 4 ? start.endFTime : i == 5 ? start.endSTime : start.endSUNTime}
+                          // onChangeText={(text) => {
+                          //   const item = {
+                          //     day: data.day,
+                          //     startTime: data.startTime,
+                          //     endTime: text,
+                          //     id: data.id,
+                          //   };
+                          //   setUserAvailability([
+                          //     ...userAvailability,
+                          //     ...item,
+                          //   ]);
+                          // }}
                           />
                         </View>
                       </View>

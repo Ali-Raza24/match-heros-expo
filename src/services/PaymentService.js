@@ -13,4 +13,10 @@ export default class PaymentService extends ApiService {
   async getTokenPrice() {
     return axios.get(`${this.baseUrl}token-price`);
   }
+  async postPayment(data) {
+    return axios.post(`${this.baseUrl}deposit`, data);
+  }
+  async paymentRequest(data) {
+    return axios.post(`${this.baseUrl}send-payment-request`, data);
+  }
 }
