@@ -53,7 +53,7 @@ export const GameLobbyScreen = () => {
     setLoading(true);
     try {
       const data = {
-        game_id: gameid,
+        game_id: gameid
       };
       // const regex = "/,(?!s*?[{[\"'w])/g";
       // const json = await data.replace(regex, "");

@@ -55,10 +55,11 @@ function TopUp() {
 
     try {
       var card = await stripe.createToken(information);
+      console.log("stripe return object#@#@#@", card, card?.card?.id)
       const data = {
-        stripeToken: card.id,
+        stripeToken: card?.card?.id,
         stripeTokenType: "card",
-        stripeEmail: "ali@gmail.com",
+        stripeEmail: "ranaawais3553+1@gmail.com",
         amount: 100,
       };
       await paymentService
