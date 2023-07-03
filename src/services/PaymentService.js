@@ -1,6 +1,6 @@
 import ApiService from "./ApiService";
 import axios from "axios";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 export default class PaymentService extends ApiService {
   async executePayment(token, amount) {
     return axios.post(`${this.baseUrl}charge`, { token, amount });
@@ -15,6 +15,30 @@ export default class PaymentService extends ApiService {
   }
   async postPayment(data) {
     return axios.post(`${this.baseUrl}deposit`, data);
+  }
+  async cashOutPayment(data) {
+    const modifyFormData = await this.makeFormData(data);
+    const token = await AsyncStorage.getItem("userToken");
+    return axios.post(`${this.baseUrl}cash-payout`, modifyFormData, {
+      headers: {
+        "content-type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
+  makeFormData(data) {
+    const formData = new FormData();
+    for (const [key, value] of Object.entries(data)) {
+      formData.append(`${key}: ${value}`);
+    }
+    // formData.append("name", data.name);
+    // formData.append("email", data.email);
+    // formData.append("town", data?.town);
+    // formData.append("country_id", data?.country_id);
+    // formData.append("minOponentAge", Number(data?.minOponentAge));
+    // formData.append("maxOponentAge", Number(data?.maxOponentAge));
+    // formData.append("_method", "PATCH");
+    return formData;
   }
   async paymentRequest(data) {
     return axios.post(`${this.baseUrl}send-payment-request`, data);

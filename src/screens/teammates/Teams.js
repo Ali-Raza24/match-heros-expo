@@ -131,33 +131,76 @@ const Teams = (props) => {
           renderItem={({ item, index }) => {
             return (
               <>
-                <TouchableOpacity
+                <View
                   key={item?.id}
-                  onPress={() =>
-                    props.navigation.navigate("PublicProfile", {
-                      id: item.id,
-                    })
-                  }
+                  // onPress={() =>
+                  //   props.navigation.navigate("PublicProfile", {
+                  //     id: item.id,
+                  //   })
+                  // }
                   style={styles.teammateContainer}
                 >
-                  <Image
-                    style={styles.avatarStyle}
-                    source={require("../../../assets/image/default_avatar.jpg")}
-                  />
-                  <Text style={styles.teammateNameStyle}>{item.name}</Text>
-                  <TouchableOpacity
+                  <View style={{ display: 'flex', flex: 2, alignItems: 'center', flexDirection: 'row' }}>
+                    <Image
+                      style={styles.avatarStyle}
+                      source={require("../../../assets/image/default_avatar.jpg")}
+                    />
+                    <Text style={styles.teammateNameStyle}>{item.name}</Text>
+                  </View>
+                  <View
                     // onPress={() => props.navigation.navigate("ViewPlayer", { id: item.id })}
                     style={styles.teammateViewProfileButton}
                   >
                     <Text style={styles.teammateViewProfileText}></Text>
-                    <AntDesign
+                    <View
+                      style={{
+                        display: "flex",
+                        flexDirection: 'row',
+                        alignItems: "center",
+                        justifyContent: "space-between",
+
+                      }}
+                    >
+                      <TouchableOpacity activeOpacity={0.6}
+                        onPress={() => props.navigation.navigate("TeammateChat", {
+                          playerName: item.name
+                        })}>
+                        <Image
+                          source={require("../../../assets/chatIcon.png")}
+                          style={{
+                            height: 40,
+                            width: 40,
+                            resizeMode: "contain",
+
+                          }}
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity activeOpacity={0.6}
+                        onPress={() =>
+                          props.navigation.navigate("PublicProfile", {
+                            id: item.id,
+                          })
+                        }
+                      >
+                        <Image
+                          source={require("../../../assets/friendRequest.png")}
+                          style={{
+                            height: 60,
+                            width: 60,
+                            resizeMode: "contain",
+
+                          }}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                    {/* <AntDesign
                       name="right"
                       style={{ marginTop: 2, marginHorizontal: 4 }}
                       size={18}
                       color="#0B8140"
-                    />
-                  </TouchableOpacity>
-                </TouchableOpacity>
+                    /> */}
+                  </View>
+                </View>
                 <View style={styles.itemSeprator} />
               </>
             );
@@ -264,7 +307,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     flex: 1,
     alignSelf: "flex-end",
-    paddingBottom: 12,
+    // paddingBottom: 12,
   },
   teammateViewProfileText: {
     color: Colors.green,

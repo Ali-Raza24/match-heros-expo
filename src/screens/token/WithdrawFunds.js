@@ -13,12 +13,44 @@ import {
 import SvgImage from "../../../assets/signIn.svg";
 import TextInputField from "../../component/molecules/TextInputField";
 import GreenLinearGradientButton from "../../component/molecules/GreenLinearGradientButton";
+import PaymentService from "../../services/PaymentService";
 function WithdrawFunds() {
+  const paymentService = new PaymentService()
   const [withdrawFunds, setWithdrawFunds] = useState("");
   const [fullname, setFullName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [loading, setLoading] = useState(false);
   const [ibn, setIbn] = useState("");
   const inputRefs = useRef(null);
+
+  const handleCashOutAPI = async () => {
+    setLoading(true);
+    const data = {
+      withdraw_amount: withdrawFunds,
+      full_name: fullname,
+      phone_number: phoneNumber,
+      iban: ibn,
+    };
+    try {
+      await paymentService
+        .cashOutPayment(data)
+        .then(() => {
+          setLoading(false);
+          alert("Withdraw successfully!");
+        })
+        .catch((error) => {
+          alert("Something went wrong please try again");
+          console.log("error in catch block is:#@#@#@", error?.response)
+          setLoading(false);
+        });
+      setLoading(false);
+    } catch (error) {
+      console.log("error in catch block is:#@#@#@", error?.response)
+      setLoading(false);
+    }
+
+    // console.log("response is:#@#@", card)
+  };
   return (
     <>
       <SvgImage
@@ -158,10 +190,10 @@ function WithdrawFunds() {
             <View style={{ marginVertical: 32 }}>
               <GreenLinearGradientButton
                 title={"WITHDRAW FUNDS"}
-                // onSelect={() => this.props.navigation.navigate("TopUp")}
+                onSelect={handleCashOutAPI}
                 // onSelect={() => this.props.navigation.navigate("Profile")}
                 height={45}
-                loading={false}
+                loading={loading}
                 color={["#0B8140", "#0A5129"]}
               />
             </View>

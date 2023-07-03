@@ -51,7 +51,7 @@ export default Chat = () => {
   const [conversation, setConversation] = useState(null);
   const [messagesArr, setMessages] = useState([]);
   const route = useRoute();
-  const gameId = route.params.gameId;
+  const gameId = route?.params?.gameId || 1;
   const toast = useToast();
 
   useEffect(() => {
@@ -133,10 +133,11 @@ export default Chat = () => {
     } catch (err) {
       console.log("Send Chat Message Error: ", err);
       if (err) {
-        toast.show("Something went wrong.", {
-          type: "danger",
-          placement: "top",
-        });
+        alert("Something went wrong!");
+        // toast.show("Something went wrong.", {
+        //   type: "danger",
+        //   placement: "top",
+        // });
         return;
       }
     }

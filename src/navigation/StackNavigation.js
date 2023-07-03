@@ -51,6 +51,7 @@ import TacPage from "../../termsAndConditions/TACPage";
 import PrivacyPolicy from "../screens/privacypolicy/PrivacyPolicy";
 import InviteHeroMatchClick from "../screens/publicProfile/InviteHeroMatchClick";
 import EditGameScreen from "../screens/matches/edit-game";
+import TeammateChat from "../screens/chat/TeammateChat";
 const Stack = createStackNavigator();
 
 function MyStack() {
@@ -479,6 +480,18 @@ function MyStack() {
           component={Chat}
           options={{
             headerTitle: "Chat",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#11172D" },
+            headerTitleStyle: { color: "#ffffff" },
+            headerTintColor: "#ffffff",
+            headerTintColor: "green",
+          }}
+        />
+        <Stack.Screen
+          name="TeammateChat"
+          component={TeammateChat}
+          options={{
+            // headerTitle: '',
             headerTitleAlign: "center",
             headerStyle: { backgroundColor: "#11172D" },
             headerTitleStyle: { color: "#ffffff" },

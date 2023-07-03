@@ -29,6 +29,7 @@ function TopUp() {
   const [cardNum, setCardNum] = useState("");
   const [expiry, setExpiry] = useState("");
   const [ccv, setCcv] = useState("");
+  const [amount, setAmount] = useState("0")
   const [cardValue, setCardValue] = useState("");
   const [cardHolderName, setCardHolderName] = useState("");
   const [loading, setLoading] = useState(false);
@@ -60,7 +61,7 @@ function TopUp() {
         stripeToken: card?.card?.id,
         stripeTokenType: "card",
         stripeEmail: "ranaawais3553+1@gmail.com",
-        amount: 100,
+        amount: Number(amount),
       };
       await paymentService
         .postPayment(data)
@@ -252,15 +253,31 @@ function TopUp() {
                 />
               </View>
             </View>
+            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+              <View style={{ width: "45%" }}>
+                <TextInputField
+                  placeHolder={"Amount"}
+                  keyboardType={"number-pad"}
+                  placeHolderColor={"#ffffff"}
+                  inputFieldBackColor={"transparent"}
+                  inputColor="#ffffff"
+                  borderBottomColor={"#ffffff"}
+                  profile={true}
+                  onSubmitEditing={() => console.log("first")}
+                  value={amount}
+                  onChangeText={(text) => setAmount(text)}
+                />
+              </View>
+            </View>
           </View>
-          <View style={{ marginTop: 24, width: "80%", alignSelf: "center" }}>
+          <View style={{ marginBottom: 20, width: "80%", alignSelf: "center" }}>
             <GreenLinearGradientButton
               title={"PAY NOW"}
               disabled={
                 cardHolderName.length == 0 ||
                 cardDateValue.length == 0 ||
                 ccv.length == 0 ||
-                cardValue.length == 0
+                cardValue.length == 0 || amount == 0
               }
               onSelect={handlerSubmitPaymentAPI}
               height={45}
