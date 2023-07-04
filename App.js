@@ -11,6 +11,7 @@ import rootReducer from "./src/redux/reducers/rootReducer";
 import ReduxThunk from "redux-thunk";
 import { Provider, useSelector } from "react-redux";
 import MyStack from "./src/navigation/StackNavigation";
+import TeammateChat from "./src/screens/chat/TeammateChat";
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 LogBox.ignoreLogs([
   "VirtualizedLists should never be nested inside plain ScrollViews with the same orientation because it can break windowing and other functionality - use another VirtualizedList-backed container instead.",
@@ -21,6 +22,7 @@ export default function App() {
   return (
     <>
       <Provider store={store}>
+        {/* <TeammateChat /> */}
         <MyStack />
       </Provider>
     </>

@@ -68,7 +68,8 @@ function MyStack() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName={isAuthenticated ? "Dashboard" : "Onboarding"}
+        // initialRouteName={isAuthenticated ? "Dashboard" : "Onboarding"}
+        initialRouteName="TeammateChat"
       >
         <Stack.Screen
           name="Onboarding"
