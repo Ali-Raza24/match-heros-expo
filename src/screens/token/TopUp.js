@@ -9,6 +9,7 @@ import {
   Image,
   TextInput,
   Dimensions,
+  Alert,
 } from "react-native";
 import SvgImage from "../../../assets/signIn.svg";
 import TextInputField from "../../component/molecules/TextInputField";
@@ -17,19 +18,21 @@ import {
   CardNumberTextInput,
   CardDateTextInput,
 } from "rn-credit-card-textinput";
+import { useSelector } from "react-redux";
 import PaymentService from "../../services/PaymentService";
 var stripe = require("stripe-client")(
-  "pk_test_51NL4wVLcjTAvFILZEuIeZLdjDfRAy14nggmGedTz9fj01cfCCRWkG6MGKczU3v5e5qZAaEnOyaz09GjZArsEB29v00291WbGdi"
+  `pk_test_uRC3Kuw7CoyAHrW8razoFn0Q007Yro80Wp`
 );
 // import stripe from 'stripe-client'
 let value = 0;
-function TopUp() {
+function TopUp(props) {
+  const user = useSelector((state) => state.user);
   const paymentService = new PaymentService();
   const inputRefs = useRef(null);
   const [cardNum, setCardNum] = useState("");
   const [expiry, setExpiry] = useState("");
   const [ccv, setCcv] = useState("");
-  const [amount, setAmount] = useState("0")
+  const [amount, setAmount] = useState("0");
   const [cardValue, setCardValue] = useState("");
   const [cardHolderName, setCardHolderName] = useState("");
   const [loading, setLoading] = useState(false);
@@ -56,27 +59,34 @@ function TopUp() {
 
     try {
       var card = await stripe.createToken(information);
-      console.log("stripe return object#@#@#@", card, card?.card?.id)
+      console.log("stripe return object#@#@#@", card, card?.id, card?.card?.id);
       const data = {
-        stripeToken: card?.card?.id,
+        stripeToken: card?.id,
         stripeTokenType: "card",
-        stripeEmail: "ranaawais3553+1@gmail.com",
+        stripeEmail: user?.email,
         amount: Number(amount),
       };
       await paymentService
         .postPayment(data)
         .then(() => {
           setLoading(false);
-          alert("Paid successfully!");
+          Alert.alert(
+            "Success!",
+            "Paid successfully!",
+            [{ text: "OK", onPress: () => props.navigation.goBack() }],
+            {
+              cancelable: false,
+            }
+          );
         })
         .catch((error) => {
           alert("Something went wrong please try again");
-          console.log("error in catch block is:#@#@#@", error?.response)
+          console.log("error in then catch block is:#@#@#@", error);
           setLoading(false);
         });
       setLoading(false);
     } catch (error) {
-      console.log("error in catch block is:#@#@#@", error?.response)
+      console.log("error in try catch block is:#@#@#@", error?.response);
       setLoading(false);
     }
 
@@ -253,7 +263,13 @@ function TopUp() {
                 />
               </View>
             </View>
-            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
               <View style={{ width: "45%" }}>
                 <TextInputField
                   placeHolder={"Amount"}
@@ -277,7 +293,8 @@ function TopUp() {
                 cardHolderName.length == 0 ||
                 cardDateValue.length == 0 ||
                 ccv.length == 0 ||
-                cardValue.length == 0 || amount == 0
+                cardValue.length == 0 ||
+                amount == 0
               }
               onSelect={handlerSubmitPaymentAPI}
               height={45}

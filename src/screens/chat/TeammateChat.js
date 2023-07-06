@@ -12,8 +12,11 @@ import {
   View,
   Text,
   TextInput,
+  Alert,
 } from "react-native";
 import GameService from "../../services/GameService";
+import { Camera } from "expo-camera";
+import * as ImagePicker from "expo-image-picker";
 import { Icon } from "react-native-elements";
 //   import Echo from "laravel-echo";
 import Pusher from "pusher-js/react-native";
@@ -22,6 +25,7 @@ import {
   Send,
   InputToolbar,
   Composer,
+  Actions,
 } from "react-native-gifted-chat";
 import ChatService from "../../services/ChatService";
 import ImageService from "../../services/ImageService";
@@ -57,6 +61,8 @@ const pusher = new Pusher("e74f15a5a517688c7598", {
 export default TeammateChat = (props) => {
   const [state, setState] = useState(initialState);
   const [conversation, setConversation] = useState(null);
+  const [startCamera, setStartCamera] = useState(false);
+  const [imagePath, setPickedImagePath] = useState("");
   const [messagesArr, setMessages] = useState([
     {
       _id: 1,
@@ -161,7 +167,35 @@ export default TeammateChat = (props) => {
   //     console.log("handleGetGame function error is", err?.response?.data);
   //   }
   // };
+  // const __startCamera = async () => {
+  //   const {status} = await Camera.requestPermissionsAsync()
+  //   if (status === 'granted') {
+  //     // start the camera
+  //     setStartCamera(true)
+  //   } else {
+  //     Alert.alert('Access denied')
+  //   }
+  // }
+  const openCamera = async () => {
+    // Ask the user for the permission to access the camera
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
 
+    if (permissionResult.granted === false) {
+      alert("You've refused to allow this appp to access your camera!");
+      return;
+    }
+
+    const result = await ImagePicker.launchCameraAsync();
+
+    // Explore the result
+    console.log("image object is:#@#@", result);
+
+    if (!result.canceled) {
+      setPickedImagePath(result.assets[0].uri);
+      console.log("image path is:#@#@#@", result.assets[0].uri);
+      return result.assets[0].uri;
+    }
+  };
   const formatNewMessage = (message) => {
     return {
       _id: message.id,
@@ -183,7 +217,7 @@ export default TeammateChat = (props) => {
       return formatNewMessage(message);
     });
   };
-  console.log("messages array is:#@#@#@", messagesArr);
+  // console.log("messages array is:#@#@#@", messagesArr);
   const onSend = async (messages) => {
     console.log("messages array inside onSend Function:#@#@#@", messages);
     try {
@@ -253,29 +287,29 @@ export default TeammateChat = (props) => {
     // }
     // return null;
   };
-  const renderComposer = (props) => {
-    return (
-      <Composer {...props}>
-        <TouchableOpacity
-          style={{
-            display: "flex",
-            height: 40,
-            width: 40,
-            backgroundColor: "#4070B4",
-            borderRadius: 6,
-            justifyContent: "center",
-            alignItems: "center",
-            marginRight: 10,
-          }}
-        >
-          <Image
-            source={require("../../../assets/sendButton.png")}
-            style={{ resizeMode: "contain", height: 20, width: 20 }}
-          />
-        </TouchableOpacity>
-      </Composer>
-    );
-  };
+  // const renderComposer = (props) => {
+  //   return (
+  //     <Composer {...props}>
+  //       <TouchableOpacity
+  //         style={{
+  //           display: "flex",
+  //           height: 40,
+  //           width: 40,
+  //           backgroundColor: "#4070B4",
+  //           borderRadius: 6,
+  //           justifyContent: "center",
+  //           alignItems: "center",
+  //           marginRight: 10,
+  //         }}
+  //       >
+  //         <Image
+  //           source={require("../../../assets/sendButton.png")}
+  //           style={{ resizeMode: "contain", height: 20, width: 20 }}
+  //         />
+  //       </TouchableOpacity>
+  //     </Composer>
+  //   );
+  // };
   return (
     <React.Fragment>
       <StatusBar backgroundColor="#5E89E2" />
@@ -292,38 +326,57 @@ export default TeammateChat = (props) => {
           // renderComposer={renderComposer}
           //   minInputToolbarHeight={60}
           renderSend={sendButtonIcon}
-          renderActions={() => (
-            <View
-              style={{
-                minHeight: 60,
-                alignItems: "center",
+          renderActions={(props) => (
+            <Actions
+              {...props}
+              containerStyle={{
+                minHeight: 50,
+                width: 40,
+                // backgroundColor: "red",
                 justifyContent: "center",
-                display: "flex",
-
-                // backgroundColor: "#121212",
-                // flexDirection: "row",
+                alignItems: "center",
+                alignSelf: "center",
               }}
-            >
-              <View
-                style={{
-                  display: "flex",
-                  height: 40,
-                  width: 40,
-                  borderWidth: 1,
-                  borderColor: "#121212",
-                  // backgroundColor: "#4070B4",
-                  borderRadius: 6,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  // marginRight: 10,
-                }}
-              >
-                <Image
-                  source={require("../../../assets/cameraIcon.png")}
-                  style={{ resizeMode: "contain", height: 13, width: 15 }}
-                />
-              </View>
-            </View>
+              options={{
+                "Take a Photo": openCamera,
+              }}
+              // onSend = ({ image: "https://picsum.photos/id/237/200/300" });
+              // onSend={(args) => console.log("send args from action", args)}
+              icon={() => (
+                <View
+                  style={{
+                    minHeight: 50,
+                    // alignItems: "flex-end",
+                    justifyContent: "flex-end",
+                    alignSelf: "flex-end",
+                    display: "flex",
+                    // flexDirection: "row",
+                  }}
+                >
+                  <View
+                    style={{
+                      display: "flex",
+                      height: 40,
+                      width: 40,
+                      borderWidth: 1,
+                      borderColor: "#dddddd",
+                      // backgroundColor: "#4070B4",
+                      borderRadius: 6,
+                      borderTopRightRadius: 0,
+                      borderBottomRightRadius: 0,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      // marginRight: 10,
+                    }}
+                  >
+                    <Image
+                      source={require("../../../assets/cameraIcon.png")}
+                      style={{ resizeMode: "contain", height: 13, width: 15 }}
+                    />
+                  </View>
+                </View>
+              )}
+            />
           )}
           showUserAvatar={true}
           alwaysShowSend={true}
@@ -344,7 +397,8 @@ export default TeammateChat = (props) => {
           minComposerHeight={40}
           minInputToolbarHeight={60}
           textInputStyle={{
-            borderRadius: 25,
+            borderTopRightRadius: 25,
+            borderBottomRightRadius: 25,
             borderWidth: 0.5,
             borderColor: "#dddddd",
             marginTop: 10,
@@ -446,3 +500,202 @@ export default TeammateChat = (props) => {
     </React.Fragment>
   );
 };
+
+// import React, { useEffect, useState } from "react";
+// import {
+//   View,
+//   StyleSheet,
+//   Image,
+//   SafeAreaView,
+//   TextInput,
+//   Platform,
+// } from "react-native";
+// import {
+//   Bubble,
+//   Composer,
+//   GiftedChat,
+//   InputToolbar,
+//   Message,
+//   Send,
+//   TouchableOpacity,
+// } from "react-native-gifted-chat";
+// import { useChatState } from "./vincereChatProvider";
+// import Header from "../atom/ChatHeader";
+
+// const Chat = ({ navigation }) => {
+//   const [messageList, setMsgList] = useState([]);
+//   const {
+//     messages,
+//     loadMoreMessages,
+//     loadingChatMessages,
+//     sendMessage,
+//     chatIsConnected,
+//     renderMessageImage,
+//     profile,
+//   } = useChatState();
+
+//   useEffect(() => {
+//     if (messages && messages.length > 0) {
+//       let giftedChatMessages = messages.map((chatMessage) => {
+//         let gcm = {
+//           _id: chatMessage.id,
+//           text: chatMessage.message,
+//           // createdAt: chatMessage.createdAt,
+//           sentFromParticipant: chatMessage.sentFromParticipant,
+//           user: {
+//             _id: chatMessage.id,
+//             name: chatMessage.firstName + " " + chatMessage.lastName,
+//             avatar:
+//               chatMessage.fileURLs && chatMessage.fileURLs.length > 0
+//                 ? chatMessage.fileURLs[0]
+//                 : "",
+//           },
+//         };
+//         return gcm;
+//       });
+//       if (messageList.length > 0) {
+//         GiftedChat.append(
+//           giftedChatMessages.slice(Math.max(giftedChatMessages.length - 20, 1))
+//         );
+//       }
+//       setMsgList(giftedChatMessages);
+//     }
+//   }, [messages]);
+
+//   const ifCloseToTop = ({ layoutMeasurement, contentOffset, contentSize }) => {
+//     return contentOffset.y === 0;
+//   };
+
+//   return (
+//     <View style={styles.container}>
+//       <SafeAreaView style={styles.container}>
+//         <Header
+//           navigation={navigation}
+//           headerTitle={"Coach"}
+//           headerChat={"online"}
+//         />
+//         <View style={{ ...styles.chatContainer }}>
+//           <GiftedChat
+//             messages={messageList}
+//             onSend={(messages) => {
+//               sendMessage(messages[0].text);
+//             }}
+//             user={{
+//               _id: profile.uid,
+//               name: profile.firstName + " " + profile.lastName,
+//             }}
+//             renderUsernameOnMessage={false}
+//             inverted={false}
+//             listViewProps={{
+//               scrollEventThrottle: 400,
+//               onScroll: async ({ nativeEvent }) => {
+//                 if (ifCloseToTop(nativeEvent)) {
+//                   loadMoreMessages();
+//                 }
+//               },
+//               showsVerticalScrollIndicator: false,
+//             }}
+//             renderAvatar={null}
+//             renderComposer={(props) => {
+//               return (
+//                 <Composer {...props} textInputStyle={styles.textInputStyle} />
+//               );
+//             }}
+//             minComposerHeight={44}
+//             renderBubble={(props) => {
+//               return (
+//                 <Bubble
+//                   {...props}
+//                   textStyle={{
+//                     right: {
+//                       color: "#F7E5E5",
+//                     },
+//                     left: {
+//                       color: "#F7E5E5",
+//                     },
+//                   }}
+//                   wrapperStyle={{
+//                     left: styles.wrapperLeftStyle,
+//                     right: styles.wrapperRightStyle,
+//                   }}
+//                 />
+//               );
+//             }}
+//             renderMessage={(props) => {
+//               const renderMsg = messageList.filter(
+//                 (item) =>
+//                   item._id &&
+//                   item.text === props.currentMessage.text &&
+//                   props.currentMessage._id
+//               );
+//               return (
+//                 <Message
+//                   {...props}
+//                   // renderDay={() => <Text>Date</Text>}
+//                   position={renderMsg[0].sentFromParticipant ? "left" : "right"}
+//                 />
+//               );
+//             }}
+//             renderSend={(props) => {
+//               return (
+//                 <Send
+//                   {...props}
+//                   textStyle={styles.sendColor}
+//                   containerStyle={{ marginBottom: 5 }}
+//                   alwaysShowSend={true}
+//                 >
+//                   <Image
+//                     style={{ height: 44 }}
+//                     source={
+//                       props.text
+//                         ? require("../../assets/images/send.png")
+//                         : require("../../assets/images/mic.png")
+//                     }
+//                   />
+//                 </Send>
+//               );
+//             }}
+//             keyboardShouldPersistTaps={"never"}
+//           />
+//         </View>
+//       </SafeAreaView>
+//     </View>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   wrapperLeftStyle: {
+//     backgroundColor: "#2F65A7",
+//     borderTopEndRadius: 20,
+//     borderBottomEndRadius: 20,
+//     borderBottomStartRadius: 20,
+//     borderTopStartRadius: 0,
+//     padding: 5,
+//   },
+//   wrapperRightStyle: {
+//     backgroundColor: "#00274C",
+//     borderTopEndRadius: 0,
+//     borderBottomEndRadius: 20,
+//     borderBottomStartRadius: 20,
+//     borderTopStartRadius: 20,
+//     padding: 5,
+//   },
+//   textInputStyle: {
+//     borderWidth: 1,
+//     borderColor: "gray",
+//     borderRadius: 10,
+//     paddingTop: Platform.OS === "ios" ? 13 : 3,
+//     marginEnd: 5,
+//     paddingHorizontal: 10,
+//     backgroundColor: "#FFFFFF",
+//   },
+//   container: {
+//     flex: 1,
+//   },
+//   chatContainer: {
+//     flex: 1,
+//     marginHorizontal: 25,
+//   },
+// });
+
+// export default Chat;
