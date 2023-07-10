@@ -26,6 +26,7 @@ import {
   InputToolbar,
   Composer,
   Actions,
+  Bubble,
 } from "react-native-gifted-chat";
 import ChatService from "../../services/ChatService";
 import ImageService from "../../services/ImageService";
@@ -36,7 +37,7 @@ import { useState } from "react";
 import { useRoute } from "@react-navigation/native";
 import { useToast } from "react-native-toast-notifications";
 import moment from "moment";
-
+import { useSelector } from "react-redux";
 const authService = new AuthService();
 const gameService = new GameService();
 const chatService = new ChatService();
@@ -49,20 +50,28 @@ const initialState = {
   loggedInUser: null,
 };
 
-const pusher = new Pusher("e74f15a5a517688c7598", {
-  cluster: "ap2",
-  auth: {
-    headers: {
-      Authorization: "Bearer " + authService._getToken().then((token) => token),
-    },
-  },
+// const pusher = new Pusher("054ed4ae6f8bf42469eb", {
+//   cluster: "mt1",
+//   auth: {
+//     headers: {
+//       Authorization: "Bearer " + authService._getToken().then((token) => token),
+//     },
+//   },
+// });
+const pusher = new Pusher("054ed4ae6f8bf42469eb", {
+  cluster: "mt1",
+  encrypted: true,
 });
 
 export default TeammateChat = (props) => {
+  const user = useSelector((state) => state.user);
+  // const authServces = new AuthService();
+  console.log("user data is in menue:#@#@#@", user?.id);
   const [state, setState] = useState(initialState);
   const [conversation, setConversation] = useState(null);
   const [startCamera, setStartCamera] = useState(false);
   const [imagePath, setPickedImagePath] = useState("");
+  const [pusherChannel, setPusherChannel] = useState(null);
   const [messagesArr, setMessages] = useState([
     {
       _id: 1,
@@ -85,6 +94,7 @@ export default TeammateChat = (props) => {
       .getUser()
       .then((user) => setState((prev) => ({ ...prev, loggedInUser: user })));
     //   handleGetGame();
+    getChatMessages();
   }, []);
 
   useLayoutEffect(() => {
@@ -132,26 +142,82 @@ export default TeammateChat = (props) => {
         </View>
       ),
     });
-    console.log("C-ID", conversation?.id);
-    pusher.connection.bind("state_change", (states) =>
-      console.log("Connected Pusher", states)
-    );
-    const channel = pusher.subscribe(`conversation.${conversation?.id}`);
-    channel.bind("pusher:subscription_succeeded", () =>
-      console.log("Connection established to channel")
-    );
-    channel.bind("NewMessage", (data) => {
-      console.log("PUSHER", data);
-      const formatedMessage = formatNewMessage(data.message);
-      const oldMessages = [...messages];
-      oldMessages.unshift(formatedMessage);
-      // setMessages(oldMessages);
-    });
-    return () => {
-      channel.unsubscribe();
-    };
-  }, [conversation]);
-
+    // console.log("C-ID", conversation?.id);
+    // pusher.connection.bind("state_change", (states) =>
+    //   console.log("Connected Pusher", states)
+    // );
+    // const channel = pusher.subscribe(`chat`);
+    // channel.bind("pusher:subscription_succeeded", () =>
+    //   console.log("Connection established to channel")
+    // );
+    // const channel = pusher.subscribe("chat");
+    // channel.bind("message-sent", (data) => {
+    //   console.log("messages list inside pusher is:#@#@#@#@", data?.message);
+    // });
+    // console.log("channel messages is:#@#@#@$#$@", channel);
+    // channel.handleEvent((event) => console.log(`Event received: ${event}`));
+    // console.log(
+    //   "channel event is:#@#@#2",
+    //   channel.handleEvent(({ data }) => console.log("first", data))
+    // );
+    // channel.bind("message-sent", (data) => {
+    //   console.log("PUSHER", data);
+    //   const formatedMessage = formatNewMessage(data.message);
+    //   const oldMessages = [...messages];
+    //   oldMessages.unshift(formatedMessage);
+    //   // setMessages(oldMessages);
+    // });
+    // return () => {
+    //   channel.unsubscribe();
+    // };
+  }, []);
+  useEffect(() => {
+    const channel = pusher.subscribe("chat");
+    setPusherChannel(channel);
+    // PREVIOUSLY
+    // channel.bind(EVENT_NAME, (pusherData) => {
+    //   ...
+    //   Accessing "data" here would give the state used
+    //   during binding the event
+    //});
+  }, []);
+  useEffect(() => {
+    console.log("Updated data : ");
+    if (pusherChannel && pusherChannel.bind) {
+      console.log("Unbinding Event");
+      pusherChannel.unbind("message-sent");
+      console.log("Rebinding Event");
+      pusherChannel.bind("message-sent", (pusherData) => {
+        // USE UPDATED "data" here
+        console.log("updated pusher data is:#@#@#@$$@", pusherData);
+      });
+    }
+  }, [pusherChannel]);
+  const getChatMessages = async () => {
+    try {
+      const receiver_id = 1;
+      const response = await chatService.getMessage(receiver_id).then((res) => {
+        // handleGetGame()
+        // console.log("response.data messages list is", res?.data?.data);
+        return res?.data?.data;
+      });
+      console.log("messages list is:#@#@#@", response);
+      const formatMessages = formatDataForChat(response);
+      console.log("format messages is :3@#@#@", formatMessages);
+      setMessages([...formatMessages]);
+      // setMessages([...messagesArr, messages[0]]);
+    } catch (err) {
+      console.log("Send Chat Message Error: ", err?.response);
+      if (err) {
+        alert("Something went wrong!");
+        // toast.show("Something went wrong.", {
+        //   type: "danger",
+        //   placement: "top",
+        // });
+        return;
+      }
+    }
+  };
   // const handleGetGame = async () => {
   //   const game = await gameService.getGame(gameId);
   //   console.log(
@@ -198,16 +264,13 @@ export default TeammateChat = (props) => {
   };
   const formatNewMessage = (message) => {
     return {
-      _id: message.id,
-      text: message.body,
+      _id: message?.id,
+      text: message?.message,
       createdAt: moment(message.created_at).toDate(),
       user: {
-        _id: message.user.id,
-        name: message.user.name,
-        avatar: imageService.getPlayerAvatarUri(
-          message.user.avatar,
-          message.user.id
-        ).uri,
+        _id: message.receiver_id,
+        name: "awais",
+        avatar: null,
       },
     };
   };
@@ -221,19 +284,21 @@ export default TeammateChat = (props) => {
   const onSend = async (messages) => {
     console.log("messages array inside onSend Function:#@#@#@", messages);
     try {
-      if (conversation && conversation.id) {
+      if (true) {
         const { _id, createdAt, text, user } = messages[0];
         console.log("Send Message Response", messages);
-        const response = await chatService
-          .sendMessage(conversation.id, text)
-          .then(() => {
-            // handleGetGame()
-          });
-        setMessages([...messagesArr, messages[0]]);
+        const data = {
+          receiver_id: 1,
+          message: text,
+        };
+        const response = await chatService.sendMessage(data).then(() => {
+          // handleGetGame()
+        });
+        setMessages([messages[0], ...messagesArr]);
       }
-      setMessages([...messagesArr, messages[0]]);
+      // setMessages([...messagesArr, messages[0]]);
     } catch (err) {
-      console.log("Send Chat Message Error: ", err);
+      console.log("Send Chat Message Error: ", err?.response);
       if (err) {
         alert("Something went wrong!");
         // toast.show("Something went wrong.", {
@@ -243,6 +308,39 @@ export default TeammateChat = (props) => {
         return;
       }
     }
+  };
+
+  const renderBubble = (props) => {
+    const message_sender_id = props.currentMessage.user._id;
+
+    return (
+      <Bubble
+        {...props}
+        position={message_sender_id == 4 ? "right" : "left"}
+        textStyle={{
+          right: {
+            color: "#ffffff",
+            fontSize: 12,
+          },
+          left: {
+            // color: "#ffffff",
+            fontSize: 12,
+          },
+        }}
+        wrapperStyle={{
+          right: {
+            backgroundColor: "#4A74EA",
+            marginRight: 5,
+            marginVertical: 5,
+          },
+          left: {
+            marginLeft: 12,
+            backgroundColor: "#FFFFFF",
+            marginVertical: 5,
+          },
+        }}
+      />
+    );
   };
 
   const { loggedInUser } = state;
@@ -318,11 +416,12 @@ export default TeammateChat = (props) => {
         <GiftedChat
           messages={messagesArr}
           onSend={(messages) => onSend(messages)}
-          user={{
-            _id: "2",
-            name: "Awais",
-            avatar: null,
-          }}
+          // user={{
+          //   _id: "4",
+          //   name: "Awais",
+          //   avatar: null,
+          // }}
+          renderBubble={renderBubble}
           // renderComposer={renderComposer}
           //   minInputToolbarHeight={60}
           renderSend={sendButtonIcon}
