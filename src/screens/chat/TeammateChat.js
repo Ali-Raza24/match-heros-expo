@@ -20,6 +20,7 @@ import * as ImagePicker from "expo-image-picker";
 import { Icon } from "react-native-elements";
 //   import Echo from "laravel-echo";
 import Pusher from "pusher-js/react-native";
+import io from "socket.io-client";
 import {
   GiftedChat,
   Send,
@@ -49,7 +50,7 @@ const imageService = new ImageService();
 const initialState = {
   loggedInUser: null,
 };
-
+const SOCKET_URL = "https://unpand.dmteknologi.com/api/messages.php";
 // const pusher = new Pusher("054ed4ae6f8bf42469eb", {
 //   cluster: "mt1",
 //   auth: {

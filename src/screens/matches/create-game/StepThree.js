@@ -217,20 +217,7 @@ export default function StepThree(props) {
           showsVerticalScrollIndicator={false}
         >
           <View style={{ flex: 1 }}>
-            {[
-              "05",
-              "10",
-              "15",
-              "20",
-              "25",
-              "30",
-              "35",
-              "40",
-              "45",
-              "50",
-              "55",
-              "00:00",
-            ].map((data, index) => (
+            {["30", "60", "90"].map((data, index) => (
               <TouchableOpacity
                 onPress={() => {
                   props.setValues({ ...props.values, match_duration: data });

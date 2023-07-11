@@ -130,8 +130,8 @@ function BottomTab() {
                   style={{ justifyContent: "center", alignItems: "center" }}
                 >
                   <Image
-                    source={require("../../assets/matchesIcon.png")}
-                    style={{ width: 16, height: 16, resizeMode: "contain" }}
+                    source={require("../../assets/matchFootball.png")}
+                    style={{ width: 18, height: 18, resizeMode: "contain" }}
                   />
                   <Text
                     style={{
