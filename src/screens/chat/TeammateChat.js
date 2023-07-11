@@ -88,6 +88,7 @@ export default TeammateChat = (props) => {
   ]);
   const route = useRoute();
   const playerName = route?.params?.playerName || "Player";
+  const playerId = route?.params?.playerId || "1";
   const toast = useToast();
 
   useEffect(() => {
@@ -196,8 +197,8 @@ export default TeammateChat = (props) => {
   }, [pusherChannel]);
   const getChatMessages = async () => {
     try {
-      const receiver_id = 1;
-      const response = await chatService.getMessage(receiver_id).then((res) => {
+      // const receiver_id = 1;
+      const response = await chatService.getMessage(playerId).then((res) => {
         // handleGetGame()
         // console.log("response.data messages list is", res?.data?.data);
         return res?.data?.data;
@@ -270,7 +271,7 @@ export default TeammateChat = (props) => {
       createdAt: moment(message.created_at).toDate(),
       user: {
         _id: message.receiver_id,
-        name: "awais",
+        name: null,
         avatar: null,
       },
     };
@@ -283,13 +284,17 @@ export default TeammateChat = (props) => {
   };
   // console.log("messages array is:#@#@#@", messagesArr);
   const onSend = async (messages) => {
-    console.log("messages array inside onSend Function:#@#@#@", messages);
+    console.log(
+      "messages array inside onSend Function:#@#@#@",
+      messages,
+      playerId
+    );
     try {
       if (true) {
         const { _id, createdAt, text, user } = messages[0];
         console.log("Send Message Response", messages);
         const data = {
-          receiver_id: 1,
+          receiver_id: playerId,
           message: text,
         };
         const response = await chatService.sendMessage(data).then(() => {
@@ -313,11 +318,16 @@ export default TeammateChat = (props) => {
 
   const renderBubble = (props) => {
     const message_sender_id = props.currentMessage.user._id;
-
+    console.log(
+      "sender id in bubble chat#@#@",
+      message_sender_id,
+      user.id,
+      props.currentMessage
+    );
     return (
       <Bubble
         {...props}
-        position={message_sender_id == 4 ? "right" : "left"}
+        position={message_sender_id == user.id ? "right" : "left"}
         textStyle={{
           right: {
             color: "#ffffff",

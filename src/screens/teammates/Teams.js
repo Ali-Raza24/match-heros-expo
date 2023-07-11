@@ -140,7 +140,14 @@ const Teams = (props) => {
                   // }
                   style={styles.teammateContainer}
                 >
-                  <View style={{ display: 'flex', flex: 2, alignItems: 'center', flexDirection: 'row' }}>
+                  <View
+                    style={{
+                      display: "flex",
+                      flex: 2,
+                      alignItems: "center",
+                      flexDirection: "row",
+                    }}
+                  >
                     <Image
                       style={styles.avatarStyle}
                       source={require("../../../assets/image/default_avatar.jpg")}
@@ -155,27 +162,31 @@ const Teams = (props) => {
                     <View
                       style={{
                         display: "flex",
-                        flexDirection: 'row',
+                        flexDirection: "row",
                         alignItems: "center",
                         justifyContent: "space-between",
-
                       }}
                     >
-                      <TouchableOpacity activeOpacity={0.6}
-                        onPress={() => props.navigation.navigate("TeammateChat", {
-                          playerName: item.name
-                        })}>
+                      <TouchableOpacity
+                        activeOpacity={0.6}
+                        onPress={() =>
+                          props.navigation.navigate("TeammateChat", {
+                            playerName: item.name,
+                            playerId: item?.id,
+                          })
+                        }
+                      >
                         <Image
                           source={require("../../../assets/chatIcon.png")}
                           style={{
                             height: 40,
                             width: 40,
                             resizeMode: "contain",
-
                           }}
                         />
                       </TouchableOpacity>
-                      <TouchableOpacity activeOpacity={0.6}
+                      <TouchableOpacity
+                        activeOpacity={0.6}
                         onPress={() =>
                           props.navigation.navigate("PublicProfile", {
                             id: item.id,
@@ -188,7 +199,6 @@ const Teams = (props) => {
                             height: 60,
                             width: 60,
                             resizeMode: "contain",
-
                           }}
                         />
                       </TouchableOpacity>
