@@ -57,6 +57,22 @@ export default class GameService extends ApiService {
         console.log("error in game services is", error);
       });
   }
+  async matchLobbyPlayersList() {
+    const token = await AsyncStorage.getItem("userToken");
+    return axios
+      .get(`${this.baseUrl}match/lobby`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.log("error match lobby API is", error);
+      });
+  }
   async gameReport(data) {
     const token = await AsyncStorage.getItem("userToken");
     return axios

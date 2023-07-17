@@ -3,11 +3,11 @@ import { View, Text, TouchableOpacity, Image, FlatList } from "react-native";
 import { Avatar } from "react-native-elements";
 import { STATUSES } from "../../../utils/game/invite-status";
 
-function MatchLobbyPlayerCard({ data }) {
+function MatchLobbyPlayerCard({ data, players }) {
   return (
     <FlatList
       columnWrapperStyle={{ justifyContent: "space-between" }}
-      data={data}
+      data={players}
       renderItem={({ index, item, separators }) => {
         return (
           <View
@@ -15,9 +15,10 @@ function MatchLobbyPlayerCard({ data }) {
             style={{
               display: "flex",
               backgroundColor: "#1E2646",
+              marginTop: 12,
               width: "45%",
               paddingVertical: 16,
-              borderWidth: 0.5,
+              borderWidth: item.status === STATUSES.ACCEPTED ? 1.5 : 0.5,
               borderColor:
                 item.status === STATUSES.ACCEPTED ? "#5FC73D" : "yellow",
               borderRadius: 6,
@@ -53,12 +54,13 @@ function MatchLobbyPlayerCard({ data }) {
                   fontWeight: "bold",
                 }}
               >
-                {item.player_name}
+                {item?.user?.name}
               </Text>
               <Text
                 style={{
                   fontSize: 14,
-                  color: "#0B8140",
+                  color:
+                    item.status === STATUSES.ACCEPTED ? "#0B8140" : "yellow",
                   lineHeight: 16,
                   fontWeight: "bold",
                 }}

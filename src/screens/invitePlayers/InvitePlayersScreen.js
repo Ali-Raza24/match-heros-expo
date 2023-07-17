@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import InvitePlayers from "../../component/molecules/InvitePlayers";
 import SvgImage from "../../../assets/signIn.svg";
 export default function InvitePlayersScreen(props) {
+  const gameId = props?.route?.params?.gameId;
   return (
     <>
       <SvgImage
@@ -17,6 +18,7 @@ export default function InvitePlayersScreen(props) {
       <InvitePlayers
         wizardRef={() => props.navigation.goBack()}
         headerText={false}
+        gameId={gameId}
       />
     </>
   );

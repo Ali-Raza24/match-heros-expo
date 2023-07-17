@@ -9,6 +9,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  Alert,
 } from "react-native";
 import React, { useEffect, useMemo, useState } from "react";
 import Colors from "../../../assets/Colors";
@@ -115,13 +116,53 @@ export default function InvitePlayers(props) {
       </View>
     );
   }
+  const invitePlayersToMatch = async () => {
+    console.log("players ids is:#@#@#@", invitePlayersList);
+    const data = {
+      player_ids: invitePlayersList,
+    };
+    try {
+      const response = await playerService.invitePlayersToMatch(
+        props?.gameId,
+        data
+      );
+      Alert.alert(
+        `Success!`,
+        "Invitation sent Successfully!",
+        [
+          {
+            text: "OK",
+            onPress: () => props.wizardRef(),
+          },
+        ],
+        { cancelable: false }
+      );
+    } catch (error) {
+      console.log("invitation API error is:#@#@#@", error?.response);
+      Alert.alert(
+        `Sorry!`,
+        "Please try again!" + props?.gameId,
+        [
+          {
+            text: "OK",
+            onPress: () => props.wizardRef(),
+          },
+        ],
+        { cancelable: false }
+      );
+    }
+  };
   const selectedFunc = () => {
     const myArray = invitePlayersList.map((str) => ({ id: str }));
-    props.setValues({ ...props.values, player_ids: [...myArray] });
-    props.wizardRef();
+    if (props?.setValues) {
+      props?.setValues({ ...props.values, player_ids: [...myArray] });
+
+      props.wizardRef();
+    } else {
+      invitePlayersToMatch();
+    }
     // console.log("selected players is:#@#@#", myArray);
   };
-  console.log("players list is:#@#@", players);
   return (
     <View style={{ flex: 1 }}>
       {props?.headerText && <Text style={styles.text}>Invite Players</Text>}

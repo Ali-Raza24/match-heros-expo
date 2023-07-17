@@ -23,45 +23,42 @@ import GameService from "../../../services/GameService";
 import { gameSizes } from "../../../utils/game-types";
 import SvgImage from "../../../../assets/signIn.svg";
 import FloatingButton from "../../../component/_shared/FloatingButton";
+import { useSelector } from "react-redux";
 const gameService = new GameService();
 export const GameLobbyScreen = () => {
   const route = useRoute();
   const navigation = useNavigation();
+  const user = useSelector((state) => state.user);
+  // const authServces = new AuthService();
   const gameId = route.params.gameId;
   const gameCreator = route.params.gameCreator;
   const gameObj = route.params.game;
   const [game, setGame, refGame] = useState(null);
+  const [playersList, setPlayersList] = useState([]);
   const [loading, setLoading] = useState();
   const [mounted, setMounted, refMounted] = useState(false);
   useEffect(() => {
-    console.log("gameId is in useEffect#@#@#", gameId);
+    console.log("gameId is in useEffect#@#@#", gameId, gameCreator, user?.id);
     setMounted(true);
-    handleGame(gameId);
+    handleGame();
     return () => {
       setMounted(false);
     };
-  }, [gameId]);
-  console.log(
-    "game sizes is:!...",
-    gameSizes[0].label,
-    gameCreator,
-    refGame.current,
-    mounted,
-    route.params
-  );
-  const handleGame = async (gameid) => {
+  }, []);
+
+  const handleGame = async () => {
     setLoading(true);
     try {
-      const data = {
-        game_id: gameid
-      };
       // const regex = "/,(?!s*?[{[\"'w])/g";
       // const json = await data.replace(regex, "");
       // const dataModify = await JSON.parse(json);
-      console.log("game id is:#@#@#@", data);
-      const usersList = await gameService.getGameRequestUsers(gameid);
-      console.log("getGameRequestUsers list#@#@#@#", usersList);
-      refMounted.current && setGame(usersList);
+
+      const usersList = await gameService
+        .matchLobbyPlayersList()
+        .catch((error) => console.log("error is:#@#@", error));
+
+      refMounted.current && setGame(usersList?.matchLobby);
+      setPlayersList([...usersList?.matchLobby]);
       setLoading(false);
     } catch (error) {
       console.log("GAME LOBBY SCREEN ERROR: ", error?.response?.data, error);
@@ -80,7 +77,6 @@ export const GameLobbyScreen = () => {
       </SafeAreaView>
     );
   }
-  console.log("Game Lobby", gameId, refGame.current);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       {/* <LinearGradient style={{ flex: 1 }} colors={["#5E89E2", "#0E1326"]}> */}
@@ -128,6 +124,7 @@ export const GameLobbyScreen = () => {
                     gameId={gameId ? gameId : null}
                     creatorId={gameCreator}
                     teams={refGame.current?.teams}
+                    playersList={playersList}
                   />
                 )}
               </View>
@@ -136,17 +133,33 @@ export const GameLobbyScreen = () => {
           {/* </ImageBackground> */}
         </>
       ) : (
-        // If Game Not Found
-        <View style={styles.gameNotFoundContainer}>
-          <Text style={[styles.whiteText, styles.gameNotFoundText]}>
-            Game Not Found.
-          </Text>
-        </View>
+        <>
+          <SvgImage
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 16,
+              bottom: 0,
+            }}
+          />
+          <View style={styles.gameNotFoundContainer}>
+            <Text style={[styles.whiteText, styles.gameNotFoundText]}>
+              Player Not Found.
+            </Text>
+          </View>
+        </>
       )}
-      {/* <FloatingButton
-        onPress={() => console.log("first")}
-        // onPress={() => this.props.navigation.navigate('CreateGame')}
-      /> */}
+      {gameCreator == user?.id && (
+        <FloatingButton
+          onPress={() =>
+            navigation.navigate("InvitePlayersScreen", {
+              gameId: gameId,
+            })
+          }
+          // onPress={() => this.props.navigation.navigate('CreateGame')}
+        />
+      )}
       {/* </LinearGradient> */}
     </SafeAreaView>
   );

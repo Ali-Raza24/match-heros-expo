@@ -44,7 +44,7 @@ const Teams = (props) => {
       const response = await playerService.getAllTeammates();
       const data = response.data.teamPlayers;
       console.log("teammates data##@#@#@#", data);
-      const _teams = formatTeammate(data.data);
+      const _teams = formatTeammate(data[0].team_mates);
       setTeams(_teams);
       setNextLink(data?.links?.next);
       setTimeout(() => {
@@ -98,8 +98,8 @@ const Teams = (props) => {
 
   function formatTeammate(_teams) {
     return _teams.map((member) => ({
-      id: member.player_id,
-      name: member.player_name,
+      id: member?.id,
+      name: member?.name,
     }));
   }
 

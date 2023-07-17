@@ -31,6 +31,7 @@ export const HomeAndAwayTeamList = ({
   creatorId,
   gameStatus,
   teams,
+  playersList,
 }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [invitedPlayers, setInvitedPlayers] = useState([]);
@@ -211,10 +212,7 @@ export const HomeAndAwayTeamList = ({
         </>
       );
     }
-    console.log(
-      "isJoinRequestSentByAuthUser.status before if",
-      isJoinRequestSentByAuthUser?.status
-    );
+
     if (
       isJoinRequestSentByAuthUser?.status === STATUSES.PENDING &&
       isAuthPlayerInvited?.status === STATUSES.PENDING
@@ -242,10 +240,11 @@ export const HomeAndAwayTeamList = ({
   if (loading && invitedPlayers.length < 0) {
     return <Loader loading={loading} />;
   }
-  console.log("Home Players is:!...", hometeam, awayTeam);
   return (
     <View style={styles.container}>
-      {selectedIndex === 0 && <MatchLobbyPlayerCard data={creatorId} />}
+      {selectedIndex === 0 && (
+        <MatchLobbyPlayerCard data={creatorId} players={playersList} />
+      )}
     </View>
   );
 };

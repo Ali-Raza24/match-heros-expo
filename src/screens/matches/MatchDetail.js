@@ -684,7 +684,7 @@ class MatchDetail extends Component {
                       onSelect={() =>
                         this.props.navigation.navigate("GameLobby", {
                           gameId: this.state?.game?.id,
-                          gameCreator: this.state?.game?.player_ids,
+                          gameCreator: this.state?.game?.creator_id,
                           game: this.state.game,
                         })
                       }
@@ -712,7 +712,7 @@ class MatchDetail extends Component {
                       onSelect={() =>
                         this.props.navigation.navigate("GameLobby", {
                           gameId: this.state?.game?.id,
-                          gameCreator: this.state?.game?.player_ids,
+                          gameCreator: this.state?.game?.creator_id,
                           game: this.state.game,
                         })
                       }

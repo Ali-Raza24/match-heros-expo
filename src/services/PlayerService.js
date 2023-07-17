@@ -1,5 +1,6 @@
 import ApiService from "./ApiService";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default class PlayerService extends ApiService {
   async getPlayers(params = null) {
@@ -35,7 +36,15 @@ export default class PlayerService extends ApiService {
     //team invitations
     return axios.get(this.baseUrl + `invitations`);
   }
-
+  async invitePlayersToMatch(matchId, myArray) {
+    const token = await AsyncStorage.getItem("userToken");
+    return axios.post(this.baseUrl + `games/${matchId}/invitations`, myArray, {
+      headers: {
+        "content-type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
   async acceptTeamInvitation(inviteId) {
     return axios.post(this.baseUrl + `invitations/${inviteId}/accept`, null);
   }
