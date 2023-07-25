@@ -15,7 +15,7 @@ import TextInputField from "../../component/molecules/TextInputField";
 import GreenLinearGradientButton from "../../component/molecules/GreenLinearGradientButton";
 import PaymentService from "../../services/PaymentService";
 function WithdrawFunds() {
-  const paymentService = new PaymentService()
+  const paymentService = new PaymentService();
   const [withdrawFunds, setWithdrawFunds] = useState("");
   const [fullname, setFullName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -40,16 +40,28 @@ function WithdrawFunds() {
         })
         .catch((error) => {
           alert("Something went wrong please try again");
-          console.log("error in catch block is:#@#@#@", error?.response)
+          console.log("error in catch block is:#@#@#@", error?.response);
           setLoading(false);
         });
       setLoading(false);
     } catch (error) {
-      console.log("error in catch block is:#@#@#@", error?.response)
+      console.log("error in catch block is:#@#@#@", error?.response);
       setLoading(false);
     }
 
     // console.log("response is:#@#@", card)
+  };
+  const isDisable = () => {
+    if (
+      withdrawFunds.length == 0 ||
+      fullname.length == 0 ||
+      phoneNumber.length == 0 ||
+      ibn.length < 15
+    ) {
+      return true;
+    } else {
+      return false;
+    }
   };
   return (
     <>
@@ -113,6 +125,7 @@ function WithdrawFunds() {
                   onChangeText={(text) => setWithdrawFunds(text)}
                   textAlign="center"
                   //   onChangeText={onChangeText}
+                  maxLength={5}
                   style={{
                     height: 50,
                     fontSize: 16,
@@ -161,6 +174,7 @@ function WithdrawFunds() {
                 onSubmitEditing={() => console.log("first")}
                 value={fullname}
                 onChangeText={(text) => setFullName(text)}
+                maxLength={22}
               />
               <TextInputField
                 placeHolder={"Phone Number"}
@@ -173,6 +187,7 @@ function WithdrawFunds() {
                 onSubmitEditing={() => console.log("first")}
                 value={phoneNumber}
                 onChangeText={(text) => setPhoneNumber(text)}
+                maxLength={22}
               />
               <TextInputField
                 placeHolder={"Ibn"}
@@ -185,16 +200,21 @@ function WithdrawFunds() {
                 onSubmitEditing={() => console.log("first")}
                 value={ibn}
                 onChangeText={(text) => setIbn(text)}
+                maxLength={64}
               />
             </View>
             <View style={{ marginVertical: 32 }}>
               <GreenLinearGradientButton
                 title={"WITHDRAW FUNDS"}
+                disabled={isDisable()}
                 onSelect={handleCashOutAPI}
                 // onSelect={() => this.props.navigation.navigate("Profile")}
                 height={45}
                 loading={loading}
-                color={["#0B8140", "#0A5129"]}
+                titleColor={isDisable() ? "#121212" : "#ffffff"}
+                color={
+                  isDisable() ? ["#f2f2f2", "#ffffff"] : ["#0B8140", "#0A5129"]
+                }
               />
             </View>
           </View>

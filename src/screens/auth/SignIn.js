@@ -130,7 +130,13 @@ class SignIn extends Component {
   async _getToken() {
     return await AsyncStorage.getItem("userToken");
   }
-
+  isDisable() {
+    if (this.state.email.includes("@") && this.state.password.length > 4) {
+      return false;
+    } else {
+      return true;
+    }
+  }
   render() {
     return (
       <>
@@ -244,7 +250,13 @@ class SignIn extends Component {
                     // onSelect={() => this.props.navigation.navigate("Profile")}
                     height={45}
                     loading={this.state.buttonLoading}
-                    color={["#0B8140", "#0A5129"]}
+                    titleColor={this.isDisable() ? "#121212" : "#ffffff"}
+                    color={
+                      this.isDisable()
+                        ? ["#f2f2f2", "#ffffff"]
+                        : ["#0B8140", "#0A5129"]
+                    }
+                    disabled={this.isDisable()}
                   />
 
                   {this.props.loginFail && (

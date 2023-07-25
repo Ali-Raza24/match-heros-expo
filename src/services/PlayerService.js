@@ -34,7 +34,9 @@ export default class PlayerService extends ApiService {
 
   async getPlayerInvitations() {
     //team invitations
-    return axios.get(this.baseUrl + `invitations`);
+    return (await axios.get(this.baseUrl + `invitations`)).catch((err) =>
+      console.log("getPlayerInvitations is:#@#@#@", err?.response)
+    );
   }
   async invitePlayersToMatch(matchId, myArray) {
     const token = await AsyncStorage.getItem("userToken");

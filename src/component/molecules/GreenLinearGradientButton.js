@@ -9,6 +9,7 @@ function GreenLinearGradientButton({
   loading,
   disabled,
   color,
+  titleColor,
 }) {
   return (
     <LinearGradient
@@ -42,7 +43,7 @@ function GreenLinearGradientButton({
               fontWeight: "bold",
               lineHeight: 21.8,
               textAlign: "center",
-              color: "#ffffff",
+              color: titleColor ? titleColor : "#ffffff",
             }}
           >
             {title}

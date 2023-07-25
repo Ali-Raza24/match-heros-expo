@@ -98,13 +98,25 @@ function TopUp(props) {
       // setCcv(text)
     } else {
       if (ccv.length > 2) {
-        alert("CCV cannot Exceed upto 3 character");
+        // alert("CCV cannot Exceed upto 3 character");
       } else {
         setCcv(text);
       }
     }
   };
-
+  const isDisable = () => {
+    if (
+      cardHolderName.length == 0 ||
+      cardDateValue.length == 0 ||
+      ccv.length == 0 ||
+      cardValue.length < 15 ||
+      amount == 0
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
   return (
     <>
       <SvgImage
@@ -204,6 +216,7 @@ function TopUp(props) {
               placeholderTextColor={"#ccc"}
               value={cardValue}
               defaultValue={cardValue}
+              maxLength={20}
               inputStyle={{
                 color: "#ffffff",
                 fontWeight: "bold",
@@ -259,7 +272,9 @@ function TopUp(props) {
                   profile={true}
                   onSubmitEditing={() => console.log("first")}
                   value={ccv}
+                  maxLength={3}
                   onChangeText={handleCCVText}
+                  secureEntry={true}
                 />
               </View>
             </View>
@@ -289,17 +304,14 @@ function TopUp(props) {
           <View style={{ marginBottom: 20, width: "80%", alignSelf: "center" }}>
             <GreenLinearGradientButton
               title={"PAY NOW"}
-              disabled={
-                cardHolderName.length == 0 ||
-                cardDateValue.length == 0 ||
-                ccv.length == 0 ||
-                cardValue.length == 0 ||
-                amount == 0
-              }
+              disabled={isDisable()}
               onSelect={handlerSubmitPaymentAPI}
               height={45}
               loading={loading}
-              color={["#0B8140", "#0A5129"]}
+              titleColor={isDisable() ? "#121212" : "#ffffff"}
+              color={
+                isDisable() ? ["#f2f2f2", "#ffffff"] : ["#0B8140", "#0A5129"]
+              }
             />
           </View>
         </ScrollView>

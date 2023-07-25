@@ -20,7 +20,8 @@ import * as ImagePicker from "expo-image-picker";
 import { Icon } from "react-native-elements";
 //   import Echo from "laravel-echo";
 import Pusher from "pusher-js/react-native";
-import io from "socket.io-client";
+import Socketio from "socket.io-client";
+import Echo from "laravel-echo/dist/echo";
 import {
   GiftedChat,
   Send,
@@ -67,7 +68,7 @@ const pusher = new Pusher("054ed4ae6f8bf42469eb", {
 export default TeammateChat = (props) => {
   const user = useSelector((state) => state.user);
   // const authServces = new AuthService();
-  console.log("user data is in menue:#@#@#@", user?.id);
+  // console.log("user data is in menue:#@#@#@", user?.id);
   const [state, setState] = useState(initialState);
   const [conversation, setConversation] = useState(null);
   const [startCamera, setStartCamera] = useState(false);
@@ -97,8 +98,20 @@ export default TeammateChat = (props) => {
       .then((user) => setState((prev) => ({ ...prev, loggedInUser: user })));
     //   handleGetGame();
     getChatMessages();
+    let echo = new Echo({
+      broadcaster: "socket.io",
+      host: "ws://your.host:6001",
+      client: Socketio,
+    });
+    console.log(
+      "messages in event listener is:#@#@3",
+      echo.private("chat").listen("MessageSent", (event) => event)
+    );
+    echo?.private("chat").listen("MessageSent", (event) => {
+      console.log("messages in event listener is:#@#@3", event);
+      //Handle event
+    });
   }, []);
-
   useLayoutEffect(() => {
     props.navigation.setOptions({
       title: "",
@@ -184,14 +197,14 @@ export default TeammateChat = (props) => {
     //});
   }, []);
   useEffect(() => {
-    console.log("Updated data : ");
+    // console.log("Updated data : ");
     if (pusherChannel && pusherChannel.bind) {
-      console.log("Unbinding Event");
+      // console.log("Unbinding Event");
       pusherChannel.unbind("message-sent");
-      console.log("Rebinding Event");
+      // console.log("Rebinding Event");
       pusherChannel.bind("message-sent", (pusherData) => {
         // USE UPDATED "data" here
-        console.log("updated pusher data is:#@#@#@$$@", pusherData);
+        // console.log("updated pusher data is:#@#@#@$$@", pusherData);
       });
     }
   }, [pusherChannel]);
@@ -203,13 +216,13 @@ export default TeammateChat = (props) => {
         // console.log("response.data messages list is", res?.data?.data);
         return res?.data?.data;
       });
-      console.log("messages list is:#@#@#@", response);
+      // console.log("messages list is:#@#@#@", response);
       const formatMessages = formatDataForChat(response);
-      console.log("format messages is :3@#@#@", formatMessages);
+      // console.log("format messages is :3@#@#@", formatMessages);
       setMessages([...formatMessages]);
       // setMessages([...messagesArr, messages[0]]);
     } catch (err) {
-      console.log("Send Chat Message Error: ", err?.response);
+      // console.log("Send Chat Message Error: ", err?.response);
       if (err) {
         alert("Something went wrong!");
         // toast.show("Something went wrong.", {
@@ -256,11 +269,11 @@ export default TeammateChat = (props) => {
     const result = await ImagePicker.launchCameraAsync();
 
     // Explore the result
-    console.log("image object is:#@#@", result);
+    // console.log("image object is:#@#@", result);
 
     if (!result.canceled) {
       setPickedImagePath(result.assets[0].uri);
-      console.log("image path is:#@#@#@", result.assets[0].uri);
+      // console.log("image path is:#@#@#@", result.assets[0].uri);
       return result.assets[0].uri;
     }
   };
@@ -284,15 +297,15 @@ export default TeammateChat = (props) => {
   };
   // console.log("messages array is:#@#@#@", messagesArr);
   const onSend = async (messages) => {
-    console.log(
-      "messages array inside onSend Function:#@#@#@",
-      messages,
-      playerId
-    );
+    // console.log(
+    //   "messages array inside onSend Function:#@#@#@",
+    //   messages,
+    //   playerId
+    // );
     try {
       if (true) {
         const { _id, createdAt, text, user } = messages[0];
-        console.log("Send Message Response", messages);
+        // console.log("Send Message Response", messages);
         const data = {
           receiver_id: playerId,
           message: text,
@@ -304,7 +317,7 @@ export default TeammateChat = (props) => {
       }
       // setMessages([...messagesArr, messages[0]]);
     } catch (err) {
-      console.log("Send Chat Message Error: ", err?.response);
+      // console.log("Send Chat Message Error: ", err?.response);
       if (err) {
         alert("Something went wrong!");
         // toast.show("Something went wrong.", {
@@ -318,12 +331,12 @@ export default TeammateChat = (props) => {
 
   const renderBubble = (props) => {
     const message_sender_id = props.currentMessage.user._id;
-    console.log(
-      "sender id in bubble chat#@#@",
-      message_sender_id,
-      user.id,
-      props.currentMessage
-    );
+    // console.log(
+    //   "sender id in bubble chat#@#@",
+    //   message_sender_id,
+    //   user.id,
+    //   props.currentMessage
+    // );
     return (
       <Bubble
         {...props}

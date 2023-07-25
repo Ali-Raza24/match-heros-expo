@@ -24,9 +24,9 @@ function PayRequest() {
   const handlePaymentRequest = async () => {
     setLoading(true);
     var data = {
-      "amount": 777.90,
-      "purpose": purpose,
-      "receiver_email": email
+      amount: 777.9,
+      purpose: purpose,
+      receiver_email: email,
     };
 
     try {
@@ -37,8 +37,11 @@ function PayRequest() {
           alert("Paid successfully!");
         })
         .catch((error) => {
-          if (error.response?.data?.error?.message == "Undefined variable $receiver") {
-            alert(`receiver email doesn't found`)
+          if (
+            error.response?.data?.error?.message ==
+            "Undefined variable $receiver"
+          ) {
+            alert(`receiver email doesn't found`);
             setLoading(false);
           } else {
             alert("Something went wrong please try again");
@@ -47,8 +50,20 @@ function PayRequest() {
         });
       setLoading(false);
     } catch (error) {
-      console.log("error is:#@#@#", error?.response)
+      console.log("error is:#@#@#", error?.response);
       setLoading(false);
+    }
+  };
+  const isDisable = () => {
+    if (email.length == 0 || amount.length == 0 || purpose.length == 0) {
+      return true;
+    } else {
+      if (email.includes("@")) {
+        return false;
+      } else {
+        return true;
+      }
+      // return false;
     }
   };
   return (
@@ -120,12 +135,15 @@ function PayRequest() {
             <View style={{ marginVertical: 32 }}>
               <GreenLinearGradientButton
                 title={"SEND PAY REQUEST"}
-                disabled={email.length == 0 || purpose.length == 0 || amount.length == 0}
+                disabled={isDisable()}
                 onSelect={handlePaymentRequest}
                 // onSelect={() => this.props.navigation.navigate("Profile")}
                 height={45}
                 loading={loading}
-                color={["#0B8140", "#0A5129"]}
+                titleColor={isDisable() ? "#121212" : "#ffffff"}
+                color={
+                  isDisable() ? ["#f2f2f2", "#ffffff"] : ["#0B8140", "#0A5129"]
+                }
               />
             </View>
           </View>

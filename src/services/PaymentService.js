@@ -28,13 +28,13 @@ export default class PaymentService extends ApiService {
   }
   makeFormData(data) {
     const formData = new FormData();
-    for (const [key, value] of Object.entries(data)) {
-      formData.append(`${key}: ${value}`);
-    }
-    // formData.append("name", data.name);
-    // formData.append("email", data.email);
-    // formData.append("town", data?.town);
-    // formData.append("country_id", data?.country_id);
+    // for (const [key, value] of Object.entries(data)) {
+    //   formData.append(`${key}: ${value}`);
+    // }
+    formData.append("full_name", data.full_name);
+    formData.append("iban", data.iban);
+    formData.append("phone_number", data?.phone_number);
+    formData.append("withdraw_amount", data?.withdraw_amount);
     // formData.append("minOponentAge", Number(data?.minOponentAge));
     // formData.append("maxOponentAge", Number(data?.maxOponentAge));
     // formData.append("_method", "PATCH");

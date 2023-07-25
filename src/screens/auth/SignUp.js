@@ -116,7 +116,18 @@ export default class SignUp extends Component {
   showOrHideRepeatPass = (e) => {
     this.setState({ repeatPassHidden: !this.state.repeatPassHidden });
   };
-
+  isDisable() {
+    if (
+      this.state.email.includes("@") &&
+      this.state.password.length > 4 &&
+      this.state.confirmPassword == this.state.password &&
+      this.state.name.length > 2
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  }
   render() {
     return (
       <>
@@ -290,7 +301,13 @@ export default class SignUp extends Component {
                       // onSelect={() => this.props.navigation.navigate("Profile")}
                       height={45}
                       loading={this.state.buttonLoading}
-                      color={["#0B8140", "#0A5129"]}
+                      titleColor={this.isDisable() ? "#121212" : "#ffffff"}
+                      color={
+                        this.isDisable()
+                          ? ["#f2f2f2", "#ffffff"]
+                          : ["#0B8140", "#0A5129"]
+                      }
+                      disabled={this.isDisable()}
                     />
                     {/* <View style={{  marginVertical:22 }}> */}
                     <TouchableOpacity
