@@ -45,17 +45,28 @@ export default function InvitePlayers(props) {
   const getAllPlayers = async () => {
     setLoading(true);
     try {
-      const response = await playerService.getAllPlayers();
-      let users = response?.data;
+      // playerService.getAllTeammates()
+      const response = await playerService?.getAllTeammates();
+      let users = [
+        ...response?.data?.teamPlayers[0]?.related_mates,
+        ...response?.data?.teamPlayers[0]?.team_mates,
+      ];
       users =
         users?.length > 0 &&
         users?.map((u) => ({
           id: u.role_id,
           name: u.name,
         }));
-      console.log("Friends", users, response?.data);
+      console.log(
+        "Friends",
+        users,
+        response?.data?.teamPlayers[0]?.related_mates
+      );
       setNextLink(response?.data);
-      setPlayers(response?.data?.data);
+      setPlayers([
+        ...response?.data?.teamPlayers[0]?.related_mates,
+        ...response?.data?.teamPlayers[0]?.team_mates,
+      ]);
     } catch (error) {
       console.log(error);
       console.log("Step SIX Error" + JSON.stringify(error.response?.data));

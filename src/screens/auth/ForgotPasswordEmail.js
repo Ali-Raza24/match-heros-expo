@@ -43,6 +43,7 @@ class ForgotPasswordEmail extends Component {
         .resetPasswordEmail({ email: this.state.email })
         .then((res) => {
           this.setState({ emailSuccess: res.data.message, loading: false });
+          alert("Email has been sent your email Address");
         })
         .catch((err) => {
           this.setState({
@@ -164,9 +165,12 @@ class ForgotPasswordEmail extends Component {
                 )}
                 <GreenLinearGradientButton
                   title={"SEND"}
-                  onSelect={() => this.props.navigation.goBack()}
+                  onSelect={() => {
+                    this.handleSubmit();
+                    // this.props.navigation.goBack();
+                  }}
                   height={45}
-                  onPress={this.handleSubmit}
+                  // onPress={this.handleSubmit}
                   loading={false}
                   color={["#0B8140", "#0A5129"]}
                 />

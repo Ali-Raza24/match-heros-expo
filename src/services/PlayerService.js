@@ -33,10 +33,14 @@ export default class PlayerService extends ApiService {
   }
 
   async getPlayerInvitations() {
+    const token = await AsyncStorage.getItem("userToken");
     //team invitations
-    return (await axios.get(this.baseUrl + `invitations`)).catch((err) =>
-      console.log("getPlayerInvitations is:#@#@#@", err?.response)
-    );
+    return await axios.get(this.baseUrl + `invitations`, {
+      headers: {
+        "content-type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+    });
   }
   async invitePlayersToMatch(matchId, myArray) {
     const token = await AsyncStorage.getItem("userToken");

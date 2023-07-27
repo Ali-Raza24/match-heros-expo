@@ -12,8 +12,9 @@ export default class ChatService extends ApiService {
     });
   }
   async getMessage(receiver_id) {
+    console.log("receiver_id is in chatServices", receiver_id);
     const token = await AsyncStorage.getItem("userToken");
-    return axios.get(this.baseUrl + `messages?receiver_id=${receiver_id}`, {
+    return axios.get(this.baseUrl + `get-messages?receiver_id=${receiver_id}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,

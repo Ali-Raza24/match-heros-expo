@@ -22,6 +22,7 @@ import { Icon } from "react-native-elements";
 import Pusher from "pusher-js/react-native";
 import Socketio from "socket.io-client";
 import Echo from "laravel-echo/dist/echo";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   GiftedChat,
   Send,
@@ -51,7 +52,7 @@ const imageService = new ImageService();
 const initialState = {
   loggedInUser: null,
 };
-const SOCKET_URL = "https://unpand.dmteknologi.com/api/messages.php";
+const SOCKET_URL = "http://63.33.237.96";
 // const pusher = new Pusher("054ed4ae6f8bf42469eb", {
 //   cluster: "mt1",
 //   auth: {
@@ -97,20 +98,36 @@ export default TeammateChat = (props) => {
       .getUser()
       .then((user) => setState((prev) => ({ ...prev, loggedInUser: user })));
     //   handleGetGame();
+
     getChatMessages();
-    let echo = new Echo({
-      broadcaster: "socket.io",
-      host: "ws://your.host:6001",
-      client: Socketio,
-    });
-    console.log(
-      "messages in event listener is:#@#@3",
-      echo.private("chat").listen("MessageSent", (event) => event)
-    );
-    echo?.private("chat").listen("MessageSent", (event) => {
-      console.log("messages in event listener is:#@#@3", event);
-      //Handle event
-    });
+
+    // (async () => {
+    //   const token = await AsyncStorage.getItem("userToken");
+    //   let echo = new Echo({
+    //     broadcaster: "socket.io",
+    //     host: "ws://your.host:6001",
+    //     client: Socketio,
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Authorization: `Bearer ${token}`,
+    //     },
+    //   });
+    //   console.log(
+    //     "messages in event listener is:#@#@3",
+    //     echo.private("chat").listen("message-sent", (event) => event)
+    //   );
+    //   echo?.private("chat").listen("message-sent", (event) => {
+    //     console.log("messages in event listener is:#@#@3", event);
+    //     //Handle event
+    //   });
+    // })();
+    (() => {
+      const ws = new WebSocket("http://63.33.237.96:6001");
+      ws.onopen = () => {
+        console.log("websocket-connected");
+      };
+      console.log("web socket response is:#@#@", ws);
+    })();
   }, []);
   useLayoutEffect(() => {
     props.navigation.setOptions({
@@ -210,6 +227,9 @@ export default TeammateChat = (props) => {
   }, [pusherChannel]);
   const getChatMessages = async () => {
     try {
+      const data = {
+        receiver_id: playerId,
+      };
       // const receiver_id = 1;
       const response = await chatService.getMessage(playerId).then((res) => {
         // handleGetGame()

@@ -45,7 +45,8 @@ const Teams = (props) => {
       const data = response.data.teamPlayers;
       console.log("teammates data##@#@#@#", data);
       const _teams = formatTeammate(data[0].team_mates);
-      setTeams(_teams);
+      const _relatedTeams = formatTeammate(data[0]?.related_mates);
+      setTeams([..._teams, ..._relatedTeams]);
       setNextLink(data?.links?.next);
       setTimeout(() => {
         setLoading(false);
