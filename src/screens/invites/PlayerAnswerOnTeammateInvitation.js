@@ -250,6 +250,7 @@ export default class PlayerAnswerOnTeammateInvitation extends Component {
                     inviteeable={invite.inviteeable}
                     onPressAccept={() => this.handleInvite(invite)}
                     onPressDecline={() => this.declineInviteDialog(invite)}
+                    navigation={this.props.navigation}
                   />
                 </View>
               );

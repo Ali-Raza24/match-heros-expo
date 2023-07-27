@@ -15,7 +15,7 @@ import SvgImage from "../../../assets/signIn.svg";
 import GreenLinearGradientButton from "../../component/molecules/GreenLinearGradientButton";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import AuthService from "../../services/AuthService";
-
+import * as Linking from "expo-linking";
 class ForgotPasswordEmail extends Component {
   constructor(props) {
     super(props);
@@ -36,6 +36,9 @@ class ForgotPasswordEmail extends Component {
   // };
 
   handleSubmit() {
+    const resetEmailUrl = Linking?.makeUrl("NewPassword/");
+    console.log("reset email url is:#@#@#@#@", resetEmailUrl);
+    Linking.openURL(`${resetEmailUrl}`);
     this.setState({ emailError: "", emailSuccess: "" });
     if (/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(this.state.email)) {
       this.setState({ loading: true });

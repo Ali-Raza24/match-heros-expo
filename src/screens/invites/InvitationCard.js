@@ -60,7 +60,11 @@ export default class InvitationCard extends Component {
             <View style={styles.teamNameContainer}>
               <Text style={styles.teamName}>{this.state.inviteText}</Text>
               <TouchableOpacity
-                onPress={this.props.onViewPlayer}
+                onPress={() =>
+                  this.props?.navigation?.navigate("PublicProfile", {
+                    id: this.props?.invitedable?.id,
+                  })
+                }
                 style={{
                   flexDirection: "row",
                   alignItems: "center",
@@ -168,7 +172,11 @@ export default class InvitationCard extends Component {
             </View>
             <View style={{}}>
               <TouchableOpacity
-                onPress={this.props.onViewGame}
+                onPress={
+                  this.props.inviteType == "invited_teammate"
+                    ? null
+                    : this.props.onViewGame
+                }
                 style={{
                   display: "flex",
                   flexDirection: "row",
@@ -179,11 +187,17 @@ export default class InvitationCard extends Component {
                   paddingRight: 15,
                 }}
               >
-                <Text
-                  style={{ fontWeight: "bold", fontSize: 14, color: "#4272B8" }}
-                >
-                  View Match
-                </Text>
+                {this.props.inviteType != "invited_teammate" && (
+                  <Text
+                    style={{
+                      fontWeight: "bold",
+                      fontSize: 14,
+                      color: "#4272B8",
+                    }}
+                  >
+                    View Match
+                  </Text>
+                )}
                 <View
                   style={{ justifyContent: "center", alignItems: "center" }}
                 >
