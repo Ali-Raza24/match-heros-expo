@@ -44,6 +44,10 @@ class Tokens extends Component {
   };
 
   render() {
+    console.log(
+      "user object inside token.js main screen",
+      this.props?.user?.balance
+    );
     return (
       <>
         <SvgImage
@@ -96,7 +100,7 @@ class Tokens extends Component {
                       color: "#ffffff",
                     }}
                   >
-                    € 987.41
+                    € {this.props?.user?.balance}
                   </Text>
                 </View>
               </View>
@@ -254,7 +258,7 @@ const styles = StyleSheet.create({
 function mapStateToProps(state) {
   return {
     userTokens: state.userTokens,
+    user: state.user,
   };
 }
-
 export default connect(mapStateToProps, null)(Tokens);

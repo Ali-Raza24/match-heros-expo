@@ -24,7 +24,7 @@ function PayRequest() {
   const handlePaymentRequest = async () => {
     setLoading(true);
     var data = {
-      amount: 777.9,
+      amount: parseInt(amount),
       purpose: purpose,
       receiver_email: email,
     };
