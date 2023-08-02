@@ -34,7 +34,6 @@ export const authUser = () => {
     const token = await AsyncStorage.getItem("userToken");
     const userData = await AsyncStorage.getItem("userData");
     const parsUserData = await JSON.parse(userData);
-    console.log("user data is:#@#@#@#", parsUserData?.user, token);
     await apiService.setDefaultHeaders(token);
     if (token) {
       if (token) {

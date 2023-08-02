@@ -28,13 +28,11 @@ function Menue(props) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   // const authServces = new AuthService();
-  console.log("user data is in menue:#@#@#@", user?.id, user, isFocused);
   useEffect(() => {
     const getUser = async () => {
       try {
         authServices.getLoginUserProfile(user?.id).then((res) => {
           setUserProfile(res.data);
-          console.log("user profile is:#@#@#@#", res?.data);
         });
       } catch (error) {
         alert("something went wrong getting user profile");
@@ -44,7 +42,6 @@ function Menue(props) {
       getUser();
     }
   }, [user || isFocused]);
-  console.log("userProfile", userProfile?.images?.avatar);
   return (
     <>
       <SvgImage

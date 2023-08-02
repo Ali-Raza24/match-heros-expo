@@ -150,7 +150,11 @@ class Match extends Component {
       })
       .catch((err) => console.log("error", err));
   }
-
+  checkMatchExpire(createdMatchDate) {
+    const newDate = new Date();
+    const createdMatchNewDate = new Date(createdMatchDate);
+    return newDate.getTime() / 1000 > createdMatchNewDate.getTime() / 1000;
+  }
   handleShowingFilter = () => {
     this.setState({ showFilter: !this.state.showFilter });
   };
@@ -216,6 +220,9 @@ class Match extends Component {
                 addLine={true}
                 key={item.id}
                 game={item}
+                isExpiredMatch={() =>
+                  this.checkMatchExpire(item?.starts_at?.split(" ")[0])
+                }
               />
             </View>
           )}

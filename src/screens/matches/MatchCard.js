@@ -32,16 +32,6 @@ export default class GameCard extends Component {
   }
 
   componentDidMount() {
-    console.log(
-      "single game object",
-      this.props?.game,
-      this.props?.loggedInUser
-    );
-    // this.setState({
-    //   game: { ...this.props?.game },
-    //   gameTeams: [...this.props?.game?.teams],
-    // });
-
     this.AuthService.getUser().then((response) => {
       this.setState({ loggedInUserId: response?.id });
     });
@@ -102,15 +92,6 @@ export default class GameCard extends Component {
   }
 
   render() {
-    console.log(
-      "Game data in Match Card Component is:#@#@#@#",
-      this.props?.game,
-      this.props.game?.booking?.pitch?.venue?.name,
-      this.state?.loggedInUserId,
-      this.props?.fromInviteHeroMatch,
-      this.props?.game?.creator_id,
-      this.props?.onClickPlayerId
-    );
     return (
       <LinearGradient
         style={{
@@ -206,6 +187,19 @@ export default class GameCard extends Component {
                     {this.props.game?.booking?.pitch?.venue?.name ||
                       "Glebe North Astro"}
                   </Text>
+
+                  {this.props?.isExpiredMatch() && (
+                    <Text
+                      style={{
+                        textAlign: "center",
+                        fontWeight: "bold",
+                        backgroundColor: "red",
+                        color: "#ffffff",
+                      }}
+                    >
+                      Expired
+                    </Text>
+                  )}
                 </View>
               </View>
             </View>
@@ -342,118 +336,3 @@ export default class GameCard extends Component {
     },
   });
 }
-//
-// const this.styles = this.StyleSheet.create({
-//     cardStyle: {
-//         height:200,
-//         marginBottom: 5,
-//         marginTop: 5,
-//         marginLeft: 5,
-//         marginRight: 5,
-//         borderRadius: 10,
-//         backgroundColor: "white",
-//         justifyContent:'space-between',
-//         shadowColor: "#000",
-//         shadowOffset: {
-//             width: 0,
-//             height: 3,
-//         },
-//         shadowOpacity: 0.16,
-//         shadowRadius: 3.84,
-//         elevation: 6,
-//     },
-//     topSectionStyle:{
-//         shadowColor: "#000",
-//         flex:1,
-//         justifyContent:'space-between',
-//         shadowOffset: {
-//             width: 0,
-//             height: 3,
-//         },
-//         shadowOpacity: 2,
-//         shadowRadius: 3.84,
-//         elevation: 6,
-//     },
-//     dateTextStyle:{
-//         fontSize: 14
-//     },
-//     halfTimeScoreStyle:{
-//         fontSize: 16,
-//         fontFamily:'SourceSansPro-Regular'
-//     },
-//     scoreStyle:{
-//         fontSize: 30,
-//         fontFamily:'SourceSansPro-Regular'
-//     },
-//     teamNameStyle:{
-//         color: 'black',
-//         fontSize:16,
-//         fontFamily:'AvenirNextLTPro-Regular'
-//     },
-//     leftTeamContainer: {
-//         width: '40%',
-//         justifyContent: 'flex-start',
-//         alignItems: 'center',
-//         paddingTop: 10
-//     },
-//     resultContainer: {
-//         width: '20%',
-//         justifyContent: 'center',
-//         alignItems: 'center'
-//     },
-//     rightTeamContainer: {
-//         width: '40%',
-//         justifyContent: 'flex-start',
-//         alignItems: 'center',
-//         paddingTop: 10
-//     },
-//     previewImage: {
-//         width: 75,
-//         height: 75
-//     },
-//     teamNameContainer: {
-//         paddingBottom: 10
-//     },
-//     dateContainer: {
-//         flex: 1,
-//         justifyContent: 'center',
-//         alignItems: 'center',
-//         borderRadius: 10,
-//         padding: 10,
-//         backgroundColor: "white"
-//     },
-//     finishedGameDateContainer: {
-//         flex: 1,
-//         justifyContent: 'center',
-//         alignItems: 'center',
-//         paddingTop: 10,
-//         paddingBottom: 10,
-//         backgroundColor: 'white'
-//     },
-//     locationContainer: {
-//         flexDirection: 'row',
-//         justifyContent: 'center',
-//         alignItems: 'center',
-//         height:45,
-//         borderBottomRightRadius:10,
-//         borderBottomLeftRadius:10,
-//         backgroundColor: "#E5E5E5"
-//     },
-//     teamsContainer: {
-//         alignItems:'center',
-//         flexDirection: 'row',
-//         shadowColor: "#000",
-//         shadowOffset: {
-//             width: 0,
-//             height: 3,
-//         },
-//         shadowOpacity: 1,
-//         shadowRadius: 3.84,
-//         elevation: 6,
-//     },
-//     addressTextStyle: {
-//         color: 'black',
-//         fontSize:14,
-//         fontFamily:'AvenirNextLTPro-Regular'
-//     }
-// });

@@ -126,6 +126,9 @@ export default TeammateChat = (props) => {
       ws.onopen = () => {
         console.log("websocket-connected");
       };
+      ws?.onmessage(() => {
+        console.log("message received");
+      });
       console.log("web socket response is:#@#@", ws);
     })();
   }, []);

@@ -32,6 +32,12 @@ export default class MyGames extends Component {
         console.log("My Games Screen Err: ComponentdidMount", err)
       )
     );
+    // const date = new Date();
+    // const secondDate = new Date(this.props.games[0]?.created_at);
+    // console.log(
+    //   "user Matches Array date in component did mount is:#@#@#@#",
+    //   this.props.games[0]?.starts_at.split(" ")[0]
+    // );
   }
 
   componentWillUnmount() {
@@ -49,18 +55,17 @@ export default class MyGames extends Component {
       }
     );
   };
-
+  checkMatchExpire(createdMatchDate) {
+    const newDate = new Date();
+    const createdMatchNewDate = new Date(createdMatchDate);
+    return newDate.getTime() / 1000 > createdMatchNewDate.getTime() / 1000;
+  }
   renderGames() {
-    console.log(
-      "Single Match item in My Match Card",
-      this.state?.games,
-      this.props?.onClickPlayerId
-    );
     return (
       <FlatList
         keyExtractor={(item, index) => index.toString()}
         style={{ backgroundColor: "transparent" }}
-        data={this.state?.games}
+        data={this.props?.games}
         renderItem={({ item, index }) => (
           <View
             style={{
@@ -82,6 +87,9 @@ export default class MyGames extends Component {
               loggedInUser={this?.state?.loggedInUser}
               fromInviteHeroMatch={this.props?.fromInviteHeroMatch}
               onClickPlayerId={this?.props?.onClickPlayerId}
+              isExpiredMatch={() =>
+                this.checkMatchExpire(item?.starts_at?.split(" ")[0])
+              }
             />
           </View>
         )}
