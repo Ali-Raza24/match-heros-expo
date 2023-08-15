@@ -39,14 +39,16 @@ export default function InvitePlayers(props) {
   useEffect(() => {
     getAllPlayers();
   }, []);
-
+  console.log("isAllPlayers list is:#@#@#@", props?.isAllPlayers);
   // Get All players from the api
   // console.log("Step Six Component Called loading value is", props.loading);
   const getAllPlayers = async () => {
     setLoading(true);
     try {
       // playerService.getAllTeammates()
-      const response = await playerService?.getAllTeammates();
+      const response = props?.isAllPlayers
+        ? await playerService?.getAllTeammates()
+        : await playerService?.getAllPlayers();
       let users = [
         ...response?.data?.teamPlayers[0]?.related_mates,
         ...response?.data?.teamPlayers[0]?.team_mates,
@@ -63,10 +65,12 @@ export default function InvitePlayers(props) {
         response?.data?.teamPlayers[0]?.related_mates
       );
       setNextLink(response?.data);
-      setPlayers([
-        ...response?.data?.teamPlayers[0]?.related_mates,
-        ...response?.data?.teamPlayers[0]?.team_mates,
-      ]);
+      props?.isAllPlayers
+        ? setPlayers([...response?.data])
+        : setPlayers([
+            ...response?.data?.teamPlayers[0]?.related_mates,
+            ...response?.data?.teamPlayers[0]?.team_mates,
+          ]);
     } catch (error) {
       console.log(error);
       console.log("Step SIX Error" + JSON.stringify(error.response?.data));

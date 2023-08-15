@@ -40,6 +40,7 @@ import { formatGame } from "./format-game";
 import { displayDangerToast, displaySuccessToast } from "../../../utils/toast";
 import StepSeven from "./StepSeven";
 import SvgImage from "../../../../assets/signIn.svg";
+import StepEight from "./StepEight";
 const EditGameSchema = Yup.object().shape({
   game_type: Yup.string().required("Game type is required!"),
   game_size: Yup.string().required("Game size is required!"),
@@ -457,6 +458,20 @@ export default function EditGameScreen(props) {
             // addPlayer={addPlayer}
             // handleSubmit={handleSubmit}
             // loading={loading}
+          />
+        ),
+      },
+      {
+        content: (
+          <StepEight
+            values={values}
+            setFieldValue={setFieldValue}
+            setValues={setValues}
+            errors={errors}
+            isLastStep={isLastStep}
+            wizardRef={wizard}
+            navigation={props.navigation}
+            {...props}
           />
         ),
       },
