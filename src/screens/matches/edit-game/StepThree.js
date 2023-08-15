@@ -31,7 +31,7 @@ export default function StepThree(props) {
   const [openDropdown, setOpenDropdown] = useState(false);
   const [matchDuration, setMatchDuration] = useState("");
   const [currentDate, setCurrentDate] = useState(props.values.starts_at);
-  const [duration, setDuration] = useState("");
+  const [duration, setDuration] = useState(props?.values?.match_duration || "");
 
   const showPicker = () => {
     setState((prev) => ({ ...prev, isVisibleDatePicker: true }));
@@ -40,7 +40,7 @@ export default function StepThree(props) {
   const hidePicker = () => {
     setState((prev) => ({ ...prev, isVisibleDatePicker: false }));
   };
-
+  console.log("Match duration is:#@#@#@", props?.values?.match_duration);
   const durations = useMemo(
     () => [
       { key: 1, label: "30 Minutes", value: 30 },

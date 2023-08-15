@@ -43,4 +43,20 @@ export default class PaymentService extends ApiService {
   async paymentRequest(data) {
     return axios.post(`${this.baseUrl}send-payment-request`, data);
   }
+  async getUserBalance() {
+    const token = await AsyncStorage.getItem("userToken");
+    return axios.get(`${this.baseUrl}available-amount`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
+  async tranferPaymentToPlayer(data) {
+    const token = await AsyncStorage.getItem("userToken");
+    return axios.post(`${this.baseUrl}transfer-money`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
 }

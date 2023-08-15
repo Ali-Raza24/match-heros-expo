@@ -14,12 +14,27 @@ import SvgImage from "../../../assets/signIn.svg";
 import { LinearGradient } from "expo-linear-gradient";
 import GreenLinearGradientButton from "../../component/molecules/GreenLinearGradientButton";
 import { useSelector } from "react-redux";
-function TransferPayment() {
+import PaymentService from "../../services/PaymentService";
+function TransferPayment(props) {
+  const player_id = props.route.params.player_id;
   const user = useSelector((state) => state.user);
+  const paymentServices = new PaymentService();
   const [transferAmount, setTransferAmount] = useState("");
-  const onTransferMoney = () => {
+  const onTransferMoney = async () => {
     if (parseInt(user?.balance) < parseInt(transferAmount)) {
       alert("You don't have enough available balance");
+      return;
+    } else {
+      const data = {
+        receiver_userId: player_id,
+        amount: transferAmount,
+      };
+      try {
+        const response = await paymentServices.tranferPaymentToPlayer(data);
+        console.log("Amount Transfer,#@#@", response);
+      } catch (error) {
+        console.log("error in transferPayment catch block is:#@#@", error);
+      }
     }
   };
   return (

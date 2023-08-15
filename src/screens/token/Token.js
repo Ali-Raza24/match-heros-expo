@@ -21,20 +21,25 @@ import { getStatusBarHeight } from "react-native-status-bar-height";
 import { connect } from "react-redux";
 import SvgImage from "../../../assets/signIn.svg";
 import GreenLinearGradientButton from "../../component/molecules/GreenLinearGradientButton";
+import PaymentService from "../../services/PaymentService";
 const { width, height } = Dimensions.get("window");
 
 class Tokens extends Component {
   constructor(props) {
     super(props);
     this.AuthService = new AuthService();
+    this.PaymentService = new PaymentService();
     this.subscription = {};
     this.state = {
       userTokens: "",
       transactionModal: false,
       showCancellationModal: false,
+      userBalance: null,
     };
   }
-
+  componentDidMount() {
+    this.getUserBalance();
+  }
   showModal = () => {
     this.setState({ showCancellationModal: true });
   };
@@ -42,11 +47,15 @@ class Tokens extends Component {
   hideModal = () => {
     this.setState({ showCancellationModal: false });
   };
-
+  getUserBalance = async () => {
+    const userBalance = await this.PaymentService.getUserBalance();
+    this.setState({ userBalance: userBalance?.data?.amount });
+  };
   render() {
     console.log(
       "user object inside token.js main screen",
-      this.props?.user?.balance
+      this.props?.user?.balance,
+      this?.state?.userBalance
     );
     return (
       <>
@@ -100,7 +109,7 @@ class Tokens extends Component {
                       color: "#ffffff",
                     }}
                   >
-                    € {this.props?.user?.balance}
+                    € {this.state.userBalance || "0"}
                   </Text>
                 </View>
               </View>

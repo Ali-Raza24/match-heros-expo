@@ -49,7 +49,7 @@ const PopupStyles = StyleSheet.create({
  * @returns The React Component
  */
 export default function StepFive(props) {
-  const [fee, setFee] = useState(0);
+  const [fee, setFee] = useState(props?.values?.game_fee);
   const inputRef = useRef();
   const handleFeeType = (feeType) => {
     if (props.values.fee_type.includes(feeType)) {
@@ -79,11 +79,15 @@ export default function StepFive(props) {
               borderBottomColor={"#ffffff"}
               borderBottomWidth={1.7}
               profile={true}
+              value={fee}
               onSubmitEditing={() => {
                 // this.passwordTextInput.focus();
               }}
               onChangeText={(text) => {
-                props.setValues({ ...props.values, game_fee: text });
+                props.setValues({
+                  ...props.values,
+                  game_fee: text,
+                });
                 setFee(text);
               }}
             />

@@ -33,10 +33,22 @@ export default function StepSeven(props) {
   const [nextLink, setNextLink] = useState("");
   const [errors, setErrors] = useState("");
   const [loading, setLoading] = useState(false);
-  const [publicToggle, setPublicToggle] = useState(false);
-  const [keepPrivate, setKeepPrivate] = useState(false);
+  const [publicToggle, setPublicToggle] = useState(
+    props?.values?.makePublic == "1" ? true : false
+  );
+  const [keepPrivate, setKeepPrivate] = useState(
+    props?.values?.keepPrivate == "1" ? true : false
+  );
+  const [reqPlayers, setReqPlayers] = useState(props?.values?.numOfReqPlayers);
   const currentUser = useSelector((store) => store.user);
-  console.log("props.onsubMit in StepSeven", props?.onSubmit, props?.loading);
+  console.log(
+    "props.onsubMit in StepSeven",
+    props?.loading,
+    props?.values?.numOfReqPlayers,
+    reqPlayers,
+    keepPrivate,
+    publicToggle
+  );
   return (
     <View>
       <View style={{ width: "80%", alignSelf: "center", marginTop: 42 }}>
@@ -68,11 +80,13 @@ export default function StepSeven(props) {
               textAlign: "center",
             }}
             keyboardType="number-pad"
-            placeholder="0"
-            onChangeText={(val) =>
-              props.setValues({ ...props.values, numOfReqPlayers: val })
-            }
-            value={props?.values?.numOfReqPlayers}
+            // placeholder="0"
+            // value={reqPlayers}
+            value={`${reqPlayers}`}
+            onChangeText={(val) => {
+              props.setValues({ ...props.values, numOfReqPlayers: val });
+              setReqPlayers(val);
+            }}
           />
         </View>
         <View style={{ marginVertical: 8 }}>

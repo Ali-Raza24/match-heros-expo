@@ -206,6 +206,7 @@ export default function EditGameScreen(props) {
     gameService
       .getGame(route.params.gameId)
       .then((data) => {
+        console.log("Match Data is:#@#@#@#", data);
         let _game = formatGame(data);
         setLoading(false);
         setGame(data);

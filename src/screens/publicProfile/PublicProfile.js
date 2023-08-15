@@ -355,7 +355,9 @@ class PublicProfile extends Component {
                   activeOpacity={0.6}
                   style={{ marginTop: 16 }}
                   onPress={() =>
-                    this.props.navigation.navigate("TransferPayment")
+                    this.props.navigation.navigate("TransferPayment", {
+                      player_id: this.state.id,
+                    })
                   }
                 >
                   <Image
