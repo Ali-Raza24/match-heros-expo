@@ -17,11 +17,10 @@ export default class PaymentService extends ApiService {
     return axios.post(`${this.baseUrl}deposit`, data);
   }
   async cashOutPayment(data) {
-    const modifyFormData = await this.makeFormData(data);
+    // const modifyFormData = await this.makeFormData(data);
     const token = await AsyncStorage.getItem("userToken");
-    return axios.post(`${this.baseUrl}cash-payout`, modifyFormData, {
+    return axios.post(`${this.baseUrl}withdraw-money`, data, {
       headers: {
-        "content-type": "multipart/form-data",
         Authorization: `Bearer ${token}`,
       },
     });

@@ -213,13 +213,8 @@ export default function EditGameScreen(props) {
         setGame(data);
         setFeeTypes(data.fee_type ? data.fee_type : []);
         if (data.booking) {
-          const venue = data.booking.pitch.venue;
           _game = {
             ..._game,
-            venue_name: venue.name,
-            area: venue.area,
-            county: venue.county,
-            surface_type: venue.surface_type,
           };
         }
         console.log("_GAME", _game);

@@ -3,7 +3,7 @@ import { SafeAreaView, View, Text } from "react-native";
 import PlayerList from "./PlayerList";
 import SvgImage from "../../../assets/signIn.svg";
 function SearchPlayersList(props) {
-  const playerList = props.route.params.players;
+  const playerList = props?.route?.params?.players;
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <SvgImage
@@ -15,7 +15,7 @@ function SearchPlayersList(props) {
           bottom: 0,
         }}
       />
-      {playerList.length > 0 ? (
+      {playerList?.length > 0 ? (
         <PlayerList players={playerList} navigation={props.navigation} />
       ) : (
         <View

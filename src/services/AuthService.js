@@ -114,7 +114,13 @@ export default class AuthService extends ApiService {
   }
 
   async update(data) {
-    let formData = this.makeFormData(data);
+    console.log(
+      "Updated Profile data is:#@#@#@",
+      data,
+      data?.avatar_image?.assets[0]?.uri,
+      data?.avatar_image?.fileName
+    );
+    let formData = await this.makeFormData(data);
 
     const token = await AsyncStorage.getItem("userToken");
     return axios
@@ -156,10 +162,10 @@ export default class AuthService extends ApiService {
     // let formatDate = myDate[2] + "-" + myDate[1] + "-" + myDate[0];
     formData.append("name", data.name);
     formData.append("email", data.email);
-    if (data?.avatarObject) {
+    if (data?.avatar_image) {
       formData.append("avatar_image", {
-        uri: data.avatarObject.assets[0].uri,
-        name: data.avatarObject.fileName,
+        uri: data?.avatar_image?.assets[0]?.uri,
+        name: data?.avatar_image?.fileName,
         type: "image/jpeg",
       });
     }

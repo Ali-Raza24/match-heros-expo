@@ -26,7 +26,7 @@ function WithdrawFunds() {
   const handleCashOutAPI = async () => {
     setLoading(true);
     const data = {
-      withdraw_amount: withdrawFunds,
+      amount: withdrawFunds,
       full_name: fullname,
       phone_number: phoneNumber,
       iban: ibn,
@@ -39,13 +39,18 @@ function WithdrawFunds() {
           alert("Withdraw successfully!");
         })
         .catch((error) => {
-          alert("Something went wrong please try again");
-          console.log("error in catch block is:#@#@#@", error?.response);
+          alert(
+            `${error?.response?.data?.message || "Something went wrong!"} `
+          );
+          console.log(
+            "error in then catch block is:#@#@#@",
+            error?.response?.data?.message
+          );
           setLoading(false);
         });
       setLoading(false);
     } catch (error) {
-      console.log("error in catch block is:#@#@#@", error?.response);
+      console.log("error in try catch block is:#@#@#@", error?.response?.data);
       setLoading(false);
     }
 
@@ -56,7 +61,7 @@ function WithdrawFunds() {
       withdrawFunds.length == 0 ||
       fullname.length == 0 ||
       phoneNumber.length == 0 ||
-      ibn.length < 15
+      ibn.length < 3
     ) {
       return true;
     } else {

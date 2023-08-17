@@ -81,7 +81,11 @@ function TopUp(props) {
         })
         .catch((error) => {
           alert("Something went wrong please try again");
-          console.log("error in then catch block is:#@#@#@", error);
+          console.log(
+            "error in then catch block is:#@#@#@",
+            error?.response,
+            data
+          );
           setLoading(false);
         });
       setLoading(false);

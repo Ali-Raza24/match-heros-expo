@@ -24,5 +24,8 @@ export const formatGame = (data) => {
   _game.numOfReqPlayers = data.numOfReqPlayers;
   _game.keepPrivate = data.keepPrivate;
   _game.makePublic = data.makePublic;
+  _game.venue_name = data.venue_name;
+  _game.location = data.location;
+  _game.surface_type = data.surface_type;
   return _game;
 };

@@ -11,6 +11,8 @@ import {
   Alert,
 } from "react-native";
 import SvgImage from "../../../assets/signIn.svg";
+import * as ImagePicker from "expo-image-picker";
+import moment from "moment";
 import EditProfile from "../../../assets/editProfile.svg";
 import TextInputField from "../../component/molecules/TextInputField";
 import TwoWaySlider from "../../component/molecules/TwoWaySlider";
@@ -60,7 +62,26 @@ function Profile(props) {
     setProfileImage(res?.assets[0]?.uri);
     setProfileImageObj(res);
   };
+  const pickImageHandler = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
 
+    console.log(result);
+
+    if (!result.canceled) {
+      let response = { ...result };
+      if (!response.fileName) {
+        response.fileName =
+          "IMG_" + moment().format("MM-DD-YY-HH:mm").toString();
+      }
+      handleCoverImage(response);
+      // this.setState({ photo: result })
+    }
+  };
   const handleValidation = () => {
     let errors = {};
     if (name === "") {
@@ -102,7 +123,7 @@ function Profile(props) {
       country_id: county_id,
       minOponentAge: minimumAge,
       maxOponentAge: maximumAge,
-      avatarObject: profileImageObj,
+      avatar_image: profileImageObj,
     };
     try {
       authService
@@ -147,7 +168,11 @@ function Profile(props) {
               [{ text: "OK", onPress: () => props.navigation.goBack() }],
               { cancelable: false }
             );
-            console.log("Api call error", error?.response, error);
+            console.log(
+              "Api call error in then option",
+              error?.response,
+              error
+            );
           }
         )
         .catch((error) => {
@@ -211,19 +236,21 @@ function Profile(props) {
             }}
           >
             {profileImage.length > 0 || userProfile?.images?.avatar ? (
-              <Image
-                source={{
-                  uri: profileImage
-                    ? profileImage
-                    : userProfile?.images?.avatar,
-                }}
-                style={{
-                  resizeMode: "cover",
-                  height: 134,
-                  width: 134,
-                  borderRadius: 134 / 2,
-                }}
-              />
+              <TouchableOpacity activeOpacity={0.6} onPress={pickImageHandler}>
+                <Image
+                  source={{
+                    uri: profileImage
+                      ? profileImage
+                      : userProfile?.images?.avatar,
+                  }}
+                  style={{
+                    resizeMode: "cover",
+                    height: 134,
+                    width: 134,
+                    borderRadius: 134 / 2,
+                  }}
+                />
+              </TouchableOpacity>
             ) : (
               <PhotoUpload
                 renderElement="IconCamera"

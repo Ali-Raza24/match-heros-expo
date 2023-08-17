@@ -304,7 +304,7 @@ const PlayerSearchScreen = (props) => {
               )}
               <BlueLinearGradientButton
                 title={"Clear"}
-                onSelect={() => dispatch(playerSearchClearAction())}
+                onSelect={() => props.navigation.goBack()}
                 height={45}
               />
             </View>

@@ -11,7 +11,7 @@ import {
   ScrollView,
   ImageBackground,
 } from "react-native";
-import React, { useLayoutEffect, useMemo, useState } from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import ToolTip from "react-native-walkthrough-tooltip";
 import Colors from "../../../../assets/Colors";
 import Countries from "../../../component/_shared/Counties";
@@ -100,6 +100,11 @@ export default function Steptwo(props) {
   if (!props.values) {
     return null;
   }
+  useEffect(() => {
+    if (item?.name) {
+      props.setValues({ ...props.values, venue_name: item?.name });
+    }
+  }, [item?.name]);
   const handleSurfaceType = (callback) => {
     props.setFieldValue("surface_type", callback(props.values.surface_type));
   };
@@ -167,9 +172,9 @@ export default function Steptwo(props) {
             onSubmitEditing={() => {
               // this.passwordTextInput.focus();
             }}
-            value={props.values.area}
+            value={props.values?.location}
             onChangeText={(val) =>
-              props.setValues({ ...props.values, area: val })
+              props.setValues({ ...props.values, location: val })
             }
           />
 
