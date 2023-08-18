@@ -113,6 +113,7 @@ export default function StepSix(props) {
         headerText={true}
         setValues={props.setValues}
         values={props.values}
+        step={"6"}
       />
     </>
   );

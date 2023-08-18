@@ -47,26 +47,27 @@ export default function InvitePlayers(props) {
     try {
       // playerService.getAllTeammates()
       const response = props?.isAllPlayers
-        ? await playerService?.getAllTeammates()
-        : await playerService?.getAllPlayers();
-      let users = [
-        ...response?.data?.teamPlayers[0]?.related_mates,
-        ...response?.data?.teamPlayers[0]?.team_mates,
-      ];
-      users =
-        users?.length > 0 &&
-        users?.map((u) => ({
-          id: u.role_id,
-          name: u.name,
-        }));
-      console.log(
-        "Friends",
-        users,
-        response?.data?.teamPlayers[0]?.related_mates
-      );
+        ? await playerService?.getAllPlayers()
+        : await playerService?.getAllTeammates();
+      console.log("players list is:#@#@#@#", response?.data?.data);
+      //   let users = [
+      //   ...response?.data?.teamPlayers[0]?.related_mates,
+      //   ...response?.data?.teamPlayers[0]?.team_mates,
+      // ];
+      // users =
+      //   users?.length > 0 &&
+      //   users?.map((u) => ({
+      //     id: u.role_id,
+      //     name: u.name,
+      //   }));
+      // console.log(
+      //   "Friends",
+      //   users,
+      //   response?.data?.teamPlayers[0]?.related_mates
+      // );
       setNextLink(response?.data);
       props?.isAllPlayers
-        ? setPlayers([...response?.data])
+        ? setPlayers([...response?.data?.data])
         : setPlayers([
             ...response?.data?.teamPlayers[0]?.related_mates,
             ...response?.data?.teamPlayers[0]?.team_mates,
@@ -178,65 +179,88 @@ export default function InvitePlayers(props) {
     }
     // console.log("selected players is:#@#@#", myArray);
   };
+  console.log("selected players is:#@#@#", players);
   return (
     <View style={{ flex: 1 }}>
-      {props?.headerText && <Text style={styles.text}>Invite Players</Text>}
-      <View style={{ marginVertical: props?.headerText ? 10 : 0, flex: 1 }}>
-        <FlatList
-          data={players}
-          renderItem={({ item, index }) => {
-            return (
-              <>
-                <TouchableOpacity
-                  onPress={() => {
-                    if (invitePlayersList.includes(item?.id)) {
-                      let newInvitesPlayer = invitePlayersList.filter(
-                        (data) => data != item?.id
-                      );
-                      setInvitePlayersList(newInvitesPlayer);
-                    } else {
-                      setInvitePlayersList([...invitePlayersList, item?.id]);
-                    }
-                  }}
-                  key={item?.id}
-                  style={styles.teammateContainer}
-                >
-                  <Image
-                    style={styles.avatarStyle}
-                    source={require("../../../assets/image/default_avatar.jpg")}
-                  />
-                  <Text style={styles.teammateNameStyle}>{item.name}</Text>
-                  <View
-                    // onPress={() => props.navigation.navigate("ViewPlayer", { id: item.id })}
-                    style={styles.teammateViewProfileButton}
+      {props?.headerText && (
+        <Text style={styles.text}>
+          {props?.step == "6" ? "Invite Team Players" : "Invite Players"}
+        </Text>
+      )}
+      {players?.length > 0 ? (
+        <View style={{ marginVertical: props?.headerText ? 10 : 0, flex: 1 }}>
+          <FlatList
+            data={players}
+            renderItem={({ item, index }) => {
+              return (
+                <>
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (invitePlayersList.includes(item?.id)) {
+                        let newInvitesPlayer = invitePlayersList.filter(
+                          (data) => data != item?.id
+                        );
+                        setInvitePlayersList(newInvitesPlayer);
+                      } else {
+                        setInvitePlayersList([...invitePlayersList, item?.id]);
+                      }
+                    }}
+                    key={item?.id}
+                    style={styles.teammateContainer}
                   >
-                    <Text style={styles.teammateViewProfileText}></Text>
-                    <View style={{ marginLeft: 8 }}>
-                      <Image
-                        source={
-                          invitePlayersList.includes(item?.id)
-                            ? require("../../../assets/checkedGreen.png")
-                            : require("../../../assets/emptyBox.png")
-                        }
-                        style={{ width: 21, height: 21, resizeMode: "contain" }}
-                      />
+                    <Image
+                      style={styles.avatarStyle}
+                      source={require("../../../assets/image/default_avatar.jpg")}
+                    />
+                    <Text style={styles.teammateNameStyle}>{item.name}</Text>
+                    <View
+                      // onPress={() => props.navigation.navigate("ViewPlayer", { id: item.id })}
+                      style={styles.teammateViewProfileButton}
+                    >
+                      <Text style={styles.teammateViewProfileText}></Text>
+                      <View style={{ marginLeft: 8 }}>
+                        <Image
+                          source={
+                            invitePlayersList.includes(item?.id)
+                              ? require("../../../assets/checkedGreen.png")
+                              : require("../../../assets/emptyBox.png")
+                          }
+                          style={{
+                            width: 21,
+                            height: 21,
+                            resizeMode: "contain",
+                          }}
+                        />
+                      </View>
                     </View>
-                  </View>
-                </TouchableOpacity>
-                <View style={styles.itemSeprator} />
-              </>
-            );
+                  </TouchableOpacity>
+                  <View style={styles.itemSeprator} />
+                </>
+              );
+            }}
+            keyExtractor={(item, index) => index}
+            ListFooterComponent={renderFooter}
+            // ListEmptyComponent={renderEmptyList}
+            // onEndReached={handleLoadMore}
+            showsVerticallScrollIndicator={false}
+            onEndReachedThreshold={0.5}
+            // onRefresh={onRefresh}
+            // refreshing={refreshing}
+          />
+        </View>
+      ) : (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
           }}
-          keyExtractor={(item, index) => index}
-          ListFooterComponent={renderFooter}
-          // ListEmptyComponent={renderEmptyList}
-          // onEndReached={handleLoadMore}
-          showsVerticallScrollIndicator={false}
-          onEndReachedThreshold={0.5}
-          // onRefresh={onRefresh}
-          // refreshing={refreshing}
-        />
-      </View>
+        >
+          <Text style={{ color: "#ffffff", fontWeight: "bold", fontSize: 20 }}>
+            You don't have any team Yet
+          </Text>
+        </View>
+      )}
       {/* <View style={styles.segmentSection}>
           <SegmentedControlTab
             values={["Players List", "Group List"]}

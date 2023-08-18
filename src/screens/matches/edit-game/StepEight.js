@@ -100,6 +100,7 @@ export default function StepEight(props) {
         setValues={props.setValues}
         values={props.values}
         isAllPlayers={true}
+        step={"8"}
       />
     </>
   );

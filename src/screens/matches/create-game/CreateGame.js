@@ -29,6 +29,7 @@ import StepThree from "./StepThree";
 import StepFour from "./StepFour";
 import StepFive from "./StepFive";
 import StepSix from "./StepSix";
+import StepEight from "./StepEight";
 import ReactNativeModal from "react-native-modal";
 import { generateLoopOfNumbers } from "../../../utils/fns";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -379,6 +380,20 @@ const CreateMatch = ({ navigation, ...props }) => {
             // addPlayer={addPlayer}
             // handleSubmit={handleSubmit}
             // loading={loading}
+          />
+        ),
+      },
+      {
+        content: (
+          <StepEight
+            values={values}
+            setFieldValue={setFieldValue}
+            setValues={setValues}
+            errors={errors}
+            isLastStep={isLastStep}
+            wizardRef={wizard}
+            navigation={props.navigation}
+            {...props}
           />
         ),
       },

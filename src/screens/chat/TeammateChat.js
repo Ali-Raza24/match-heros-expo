@@ -121,16 +121,16 @@ export default TeammateChat = (props) => {
     //     //Handle event
     //   });
     // })();
-    (() => {
-      const ws = new WebSocket("http://63.33.237.96:6001");
-      ws.onopen = () => {
-        console.log("websocket-connected");
-      };
-      ws?.onmessage(() => {
-        console.log("message received");
-      });
-      console.log("web socket response is:#@#@", ws);
-    })();
+    // (() => {
+    //   const ws = new WebSocket("http://63.33.237.96:6001");
+    //   ws.onopen = () => {
+    //     console.log("websocket-connected");
+    //   };
+    //   ws?.onmessage(() => {
+    //     console.log("message received");
+    //   });
+    //   console.log("web socket response is:#@#@", ws);
+    // })();
   }, []);
   useLayoutEffect(() => {
     props.navigation.setOptions({
@@ -340,7 +340,7 @@ export default TeammateChat = (props) => {
       }
       // setMessages([...messagesArr, messages[0]]);
     } catch (err) {
-      // console.log("Send Chat Message Error: ", err?.response);
+      console.log("Send Chat Message Error: ", err?.response);
       if (err) {
         alert("Something went wrong!");
         // toast.show("Something went wrong.", {
