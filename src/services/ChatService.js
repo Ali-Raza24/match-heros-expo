@@ -4,7 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default class ChatService extends ApiService {
   async sendMessage(data) {
     const token = await AsyncStorage.getItem("userToken");
-    return axios.post(this.baseUrl + `messages`, data, {
+    return axios.post(this.baseUrl + `send-messages`, data, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,

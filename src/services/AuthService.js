@@ -169,7 +169,7 @@ export default class AuthService extends ApiService {
         type: "image/jpeg",
       });
     }
-
+    formData.append("phone", data?.phone);
     formData.append("town", data?.town);
     formData.append("country_id", data?.country_id);
     formData.append("minOponentAge", Number(data?.minOponentAge));

@@ -38,6 +38,7 @@ function Profile(props) {
   const [profileImage, setProfileImage] = useState("");
   const [name, setName] = useState(userProfile?.name);
   const [email, setEmail] = useState(userProfile?.email);
+  const [phoneNumber, setPhoneNumber] = useState(userProfile?.phone);
   const [location, setLocation] = useState(userProfile?.address?.town);
   const [errors, setValidationErrors] = useState({});
   const [minimumAge, setMinimumAge] = useState(
@@ -124,6 +125,7 @@ function Profile(props) {
       minOponentAge: minimumAge,
       maxOponentAge: maximumAge,
       avatar_image: profileImageObj,
+      phone: phoneNumber,
     };
     try {
       authService
@@ -303,6 +305,22 @@ style = {{
                 {errors.errors.email}
               </Text>
             )}
+            <TextInputField
+              placeHolder={"Phone No"}
+              keyboardType={"number-pad"}
+              placeHolderColor={"#ffffff"}
+              inputFieldBackColor={"transparent"}
+              inputColor="#ffffff"
+              borderBottomColor={"#636C92"}
+              profile={true}
+              onChangeText={(text) => setPhoneNumber(text)}
+              value={phoneNumber}
+            />
+            {/* {errors?.errors?.email && (
+              <Text style={{ color: "red", top: -22 }}>
+                {errors.errors.email}
+              </Text>
+            )} */}
             <Text style={{ fontSize: 16, lineHeight: 19.36, color: "#ffffff" }}>
               Prefer age for oponents
             </Text>
