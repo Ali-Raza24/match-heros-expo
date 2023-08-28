@@ -220,7 +220,7 @@ export default class Venues extends Component {
               />
               {/* Navigate to Player Search Filter Screen */}
               <TouchableOpacity
-              //   onPress={() => this.props.navigation.navigate("SearchPlayerFilter")}
+                onPress={() => this.props.navigation.navigate("VenueSearchScreen")}
               >
                 <View
                   style={{

@@ -52,6 +52,7 @@ import PrivacyPolicy from "../screens/privacypolicy/PrivacyPolicy";
 import InviteHeroMatchClick from "../screens/publicProfile/InviteHeroMatchClick";
 import EditGameScreen from "../screens/matches/edit-game";
 import TeammateChat from "../screens/chat/TeammateChat";
+import VenueSearchScreen from "../screens/venue/VenueSearch";
 const Stack = createStackNavigator();
 
 function MyStack() {
@@ -179,6 +180,19 @@ function MyStack() {
             headerTintColor: "green",
           }}
         />
+         <Stack.Screen
+          name="VenueSearchScreen"
+          component={VenueSearchScreen}
+          options={{
+            headerTitle: "Venue Search",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#11172D" },
+            headerTitleStyle: { color: "#ffffff" },
+            headerTintColor: "#ffffff",
+            headerTintColor: "green",
+          }}
+        />
+        {/* VenueSearchScreen */}
         <Stack.Screen
           name="Notifications"
           component={Notifications}
