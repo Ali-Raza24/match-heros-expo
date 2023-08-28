@@ -1,12 +1,8 @@
 export const gameTypes = [
-    { label: "Social Football", value: "social-football" },
-    { label: "Futsal", value: 'futsal' },
-    { label: "Training Session", value: 'training-session' },
-    { label: "Tournament Game", value: 'tournament-game' },
-    { label: "League Game", value: 'league-game' },
-    { label: "Ladies Game", value: 'ladies-game' },
-    { label: "Walking Football", value: 'walking-football' },
-    { label: "Academy", value: 'academy' },
+    { label: "Friendly Match", value: "Friendly Match" },
+    { label: "Futsal", value: "Futsal" },
+    { label: "Ladies Football", value: "Ladies Football" },
+    { label: "Walking Football", value: "Walking Football" },
 ]
 
 export const gameSizes = [

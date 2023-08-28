@@ -61,9 +61,10 @@ const MatchSearch = (props) => {
   const [openGameType, setOpenGameType] = useState(false);
   const [matchType, setMatchType] = useState("");
   const [matchtypes, setMatchTypes] = useState([
-    { label: "Social Match", value: "Social Match" },
+    { label: "Friendly Match", value: "Friendly Match" },
     { label: "Futsal", value: "Futsal" },
-    { label: "Women's Football", value: "Women's Football" },
+    { label: "Ladies Football", value: "Ladies Football" },
+    { label: "Walking Football", value: "Walking Football" },
   ]);
   const [openMatchSpeed, setOpenMatchSpeed] = useState(false);
   const [matchSped, setMatchSpeed] = useState("");
