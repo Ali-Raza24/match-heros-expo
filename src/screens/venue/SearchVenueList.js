@@ -22,6 +22,9 @@ import {
 import SvgImage from "../../../assets/signIn.svg";
 function SearchVenueList(props) {
   const venuesList = props?.route?.params?.venues;
+  const routes = props.navigation.getState()?.routes;
+  const prevRoute = routes[routes?.length - 2];
+  console.log("previous route name is:#@#@#@", prevRoute?.name);
   renderEmptyList = () => {
       return (
         <View
@@ -85,14 +88,18 @@ function SearchVenueList(props) {
             style={{ backgroundColor: "transparent" }}
             onPress={() =>
               prevRoute?.name == "Dashboard"
-                ? this.props.navigation.navigate("VenuesInfo", {
+                ? props.navigation.navigate("VenuesInfo", {
                     item: item,
                   })
                 : prevRoute?.name == "EditGameScreen"
-                ? this.props.navigation.navigate("EditGameScreen", {
+                ? props.navigation.navigate("EditGameScreen", {
                     item: item,
                   })
-                : this.props.navigation.navigate("CreateMatch", {
+                : prevRoute?.name == "VenueSearchScreen" 
+                ? props.navigation.navigate("VenuesInfo", {
+                  item: item,
+                }) 
+                : props.navigation.navigate("CreateMatch", {
                     item: item,
                   })
             }

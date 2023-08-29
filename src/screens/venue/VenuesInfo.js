@@ -14,9 +14,9 @@ import GreenLinearGradientButton from "../../component/molecules/GreenLinearGrad
 import RenderHtml from "react-native-render-html";
 function VenuesInfo(props) {
   const { item } = props?.route?.params;
-  console.log("venue info is:#@#@#", item.name);
+  console.log("venue info is:#@#@#", item); 
   const source = {
-    html: item?.terms,
+    html: item?.terms ? item?.terms : "<div></div>",
   };
   return (
     <>
@@ -79,14 +79,14 @@ function VenuesInfo(props) {
                   textAlign: "center",
                 }}
               >
-                {item.name || "Antrim Road"}
+                {item?.name || "Antrim Road"}
               </Text>
               <Image
                 source={require("../../../assets/venueBadge.png")}
                 style={{ height: 28, width: 23, resizeMode: "contain" }}
               />
             </View>
-            <View
+             <View
               style={{
                 display: "flex",
                 flexDirection: "row",
@@ -173,7 +173,7 @@ function VenuesInfo(props) {
                   textAlign: "center",
                 }}
               >
-                {item?.address || "Antrim Road"}
+                {item?.address?.country?.name || "Antrim Road"}
               </Text>
             </View>
             <View
@@ -199,18 +199,9 @@ function VenuesInfo(props) {
                   contentWidth={Dimensions.get("window").width}
                   source={source}
                 />
-                {/* <Text
-                  style={{
-                    fontSize: 14,
-                    lineHeight: 20,
-                    color: "#ffffff",
-                    textAlign: "left",
-                  }}
-                >
-                  <RenderHtml  contentWidth={"100%"} source={source} />
-                </Text> */}
+               
               </View>
-            </View>
+            </View> 
             <View
               style={{ marginVertical: 22, width: "80%", alignSelf: "center" }}
             >

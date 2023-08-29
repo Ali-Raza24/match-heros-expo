@@ -703,6 +703,7 @@ function VenueDetail(props) {
                   addLine={true}
                   key={item?.id}
                   game={item}
+                  isExpiredMatch = {() => false}
                 />
               ))
             ) : (
