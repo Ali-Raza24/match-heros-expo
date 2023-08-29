@@ -38,8 +38,10 @@ import {
     import BlueLinearGradientButton from "../../component/molecules/BlueLinearGradientButton";
     import { useRoute } from "@react-navigation/native";
     import PlayerService from "../../services/PlayerService";
+    import VenueService from "../../services/VenueService";
+    
     const VenueSearchScreen = (props) => {
-      const playerService = new PlayerService();
+      const venueService = new VenueService();
       const route = useRoute();
     
       const [countyOpen, setCountyOpen] = useState(false);
@@ -60,22 +62,22 @@ import {
       const handleSubmit = () => {
         setLoading(true);
         const data = {
-          name: venueName,
-          location: venueLocation,
-          startTime: "00:00",
-          endTime: "00:00",
+          venue: venueName,
+          address: venueLocation,
+          open_time: startTime,
+          close_time: endTime,
         };
         try {
-          playerService
-            .searchPlayers(data)
+          venueService
+            .getSearchedVenueList(data)
             .then((res) => {
               console.log(
-                "search player response is:#@#@#@",
-                res?.data?.data?.data
+                "search venue response is:#@#@#@",
+                res?.data?.length
               );
               setLoading(false);
-              props.navigation.navigate("SearchPlayersList", {
-                players: res?.data?.data?.data,
+              props.navigation.navigate("SearchVenueList", {
+                venues: res?.data,
               });
             })
             .catch((error) => {

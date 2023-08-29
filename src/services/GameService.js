@@ -57,10 +57,10 @@ export default class GameService extends ApiService {
         console.log("error in game services is", error);
       });
   }
-  async matchLobbyPlayersList() {
+  async matchLobbyPlayersList(id) {
     const token = await AsyncStorage.getItem("userToken");
     return axios
-      .get(`${this.baseUrl}match/lobby`, {
+      .get(`${this.baseUrl}games/${id}/invited-players`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

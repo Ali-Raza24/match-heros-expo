@@ -54,11 +54,11 @@ export const GameLobbyScreen = () => {
       // const dataModify = await JSON.parse(json);
 
       const usersList = await gameService
-        .matchLobbyPlayersList()
+        .matchLobbyPlayersList(gameId)
         .catch((error) => console.log("error is:#@#@", error));
 
-      refMounted.current && setGame(usersList?.matchLobby);
-      setPlayersList([...usersList?.matchLobby]);
+      refMounted.current && setGame(usersList?.invitedTeam);
+      setPlayersList([...usersList?.invitedTeam]);
       setLoading(false);
     } catch (error) {
       console.log("GAME LOBBY SCREEN ERROR: ", error?.response?.data, error);

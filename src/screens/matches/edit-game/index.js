@@ -456,20 +456,20 @@ export default function EditGameScreen(props) {
           />
         ),
       },
-      {
-        content: (
-          <StepEight
-            values={values}
-            setFieldValue={setFieldValue}
-            setValues={setValues}
-            errors={errors}
-            isLastStep={isLastStep}
-            wizardRef={wizard}
-            navigation={props.navigation}
-            {...props}
-          />
-        ),
-      },
+      // {
+      //   content: (
+      //     <StepEight
+      //       values={values}
+      //       setFieldValue={setFieldValue}
+      //       setValues={setValues}
+      //       errors={errors}
+      //       isLastStep={isLastStep}
+      //       wizardRef={wizard}
+      //       navigation={props.navigation}
+      //       {...props}
+      //     />
+      //   ),
+      // },
       {
         content: (
           <StepSeven

@@ -26,4 +26,8 @@ export default class VenueService extends ApiService {
     return axios.get(this.baseUrl + "venues/" + id)
       .then(response => response.data);
   }
+  async getSearchedVenueList(data){
+    return axios.get(this.baseUrl + `venues?page=1&venue=${data?.venue}&address=${data?.address}&open_time=${data?.open_time}&close_time=${data?.close_time}`)
+      .then(response => response.data);
+  }
 }

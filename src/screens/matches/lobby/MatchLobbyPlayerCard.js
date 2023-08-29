@@ -54,7 +54,7 @@ function MatchLobbyPlayerCard({ data, players }) {
                   fontWeight: "bold",
                 }}
               >
-                {item?.user?.name}
+                {item?.player_name}
               </Text>
               <Text
                 style={{

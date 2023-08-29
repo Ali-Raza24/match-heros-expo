@@ -53,6 +53,7 @@ import InviteHeroMatchClick from "../screens/publicProfile/InviteHeroMatchClick"
 import EditGameScreen from "../screens/matches/edit-game";
 import TeammateChat from "../screens/chat/TeammateChat";
 import VenueSearchScreen from "../screens/venue/VenueSearch";
+import SearchVenueList from "../screens/venue/SearchVenueList";
 const Stack = createStackNavigator();
 
 function MyStack() {
@@ -193,6 +194,19 @@ function MyStack() {
           }}
         />
         {/* VenueSearchScreen */}
+        <Stack.Screen
+          name="SearchVenueList"
+          component={SearchVenueList}
+          options={{
+            headerTitle: "Venue Search",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#11172D" },
+            headerTitleStyle: { color: "#ffffff" },
+            headerTintColor: "#ffffff",
+            headerTintColor: "green",
+          }}
+        />
+        {/* SearchVenueList */}
         <Stack.Screen
           name="Notifications"
           component={Notifications}
