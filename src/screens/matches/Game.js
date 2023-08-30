@@ -153,7 +153,7 @@ class Match extends Component {
   checkMatchExpire(createdMatchDate) {
     const newDate = new Date();
     const createdMatchNewDate = new Date(createdMatchDate);
-    return newDate.getTime() / 1000 > createdMatchNewDate.getTime() / 1000;
+    return newDate.getTime() / 1000 >= createdMatchNewDate.getTime() / 900;
   }
   handleShowingFilter = () => {
     this.setState({ showFilter: !this.state.showFilter });
